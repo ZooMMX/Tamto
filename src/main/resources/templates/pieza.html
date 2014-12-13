@@ -1,0 +1,188 @@
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Pieza</h4>
+    </div>
+    <!-- BEGIN FORM-->
+    <form action="#" class="horizontal-form" id="formi">
+    <div class="modal-body">
+            <div class="form-body">
+                <div class="alert alert-danger display-hide">
+                    <button class="close" data-close="alert"></button>
+                    Los datos tienen algunos errores. Por favor revise la información que capturó.
+                </div>
+                <div class="alert alert-success display-hide">
+                    <button class="close" data-close="alert"></button>
+                    La validación del formulario es correcta.
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Descripción</label>
+                            <input type="text" id="descripcion" class="form-control" placeholder="Nombre o descripción de la pieza" th:value="${descripcion}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group has-error">
+                            <label class="control-label">Descripción SAP</label>
+                            <input type="text" id="nombre_sap" class="form-control" placeholder="Equivalente en SAP" th:value="${nombreSap}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Tipo</label>
+                            <select id="tipo" class="form-control">
+                                <option value="PE" th:selected="${tipo.toString().equals('PE')}">PE</option>
+                                <option value="PC" th:selected="${tipo.toString().equals('PC')}">PC</option>
+                                <option value="PL" th:selected="${tipo.toString().equals('PL')}">PL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">W.O. Date</label>
+                            <input type="text" class="form-control" placeholder="dd/mm/yyyy" id="work_order_date" th:value="${workOrderDate}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-error">
+                            <label class="control-label">W.O. ID</label>
+                            <input type="text" id="work_order_no" class="form-control" placeholder="Número de orden de trabajo" th:value="${workOrderNo}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group has-error">
+                            <label class="control-label">Cliente</label>
+                            <input type="text" id="cliente" class="form-control" placeholder="Nombre o razón social del cliente" th:value="${cliente}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <h3 class="form-section">Archivos/Activos digitales</h3>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>
+                                         #
+                                    </th>
+                                    <th>
+                                         Nombre del archivo
+                                    </th>
+                                    <th>
+                                         Formato
+                                    </th>
+                                    <th>
+                                         Último cambio
+                                    </th>
+                                    <th>
+                                         Acciones
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--<tr>
+                                    <td>
+                                         1
+                                    </td>
+                                    <td>
+                                         PiezaX.dwg
+                                    </td>
+                                    <td>
+                                        <span class="label label-sm label-success">
+                                            AUTOCAD
+                                        </span>
+                                    </td>
+                                    <td>
+                                         9 de Septiembre de 2014
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                         2
+                                    </td>
+                                    <td>
+                                         PiezaX.pdf
+                                    </td>
+                                    <td>
+                                        <span class="label label-sm label-danger">
+                                            PDF
+                                        </span>
+                                    </td>
+                                    <td>
+                                         19 de Noviembre de 2014
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                         3
+                                    </td>
+                                    <td>
+                                         PiezaX.xlsx
+                                    </td>
+                                    <td>
+                                        <span class="label label-sm label-warning">
+                                            EXCEL
+                                        </span>
+                                    </td>
+                                    <td>
+                                         17 de Mayo de 2014
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                                    </td>
+                                </tr>-->
+                                <tr th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
+                                    <td th:text="${iterationStatus.count}">1</td>
+                                    <td th:text="${archivo.getFileName()}">Nombre.xls</td>
+                                    <td th:utext="${archivo.getFileTypeHtml()}">EXCEL</td>
+                                    <td >9 de Diciembre de 2014</td>
+                                    <td th:utext="${archivo.getFileActionsHtml()}">Descargar - Sustituir</td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+                <h3 class="form-section">Notas</h3>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <textarea id="notas" th:text="${notas}" class="form-control" rows="6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn default" data-dismiss="modal">Cerrar</button>
+    </div>
+    </form>
+    <!-- END FORM-->
+
+

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+    <th:block layout:fragment="titulo">
+        Título <small>subtítulo</small>
+    </th:block>
+    <th:block layout:fragment="breadcrumb">
+        <li>
+            <a href="/usuarios">Usuarios</a>
+        </li>
+    </th:block>
+    <div layout:fragment="content">
+        <!-- BEGIN TABLE PORTLET-->
+        <!-- BEGIN DASHBOARD STATS -->
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="dashboard-stat dashboard-stat-light purple-soft">
+                    <div class="visual">
+                        <i class="fa fa-group"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number" th:text="${noUsuarios}">
+
+                        </div>
+                        <div class="desc">
+                             Usuarios
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END DASHBOARD STATS -->
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-users"></i>Usuarios
+                </div>
+                <div class="actions">
+                    <a href="/usuarioNuevo" class="btn btn-default btn-circle">
+                    <i class="fa fa-plus"></i>
+                    <span class="hidden-480"><div sec:authorize="hasRole('ROLE_VENTAS')">Prueba</div>
+                    Agregar usuario </span>
+                    </a>
+                    <div class="btn-group">
+                        <a class="btn btn-default btn-circle" href="#" data-toggle="dropdown">
+                        <i class="fa fa-share"></i>
+                        <span class="hidden-480">
+                        Herramientas </span>
+                        <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#">
+                                Exportar a Excel </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                Exportar a CSV </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                Exportar a XML </a>
+                            </li>
+                            <li class="divider">
+                            </li>
+                            <li>
+                                <a href="#">
+                                Imprimir </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                             #
+                        </th>
+                        <th>
+                             Nombre completo
+                        </th>
+                        <th>
+                             Nombre de usuario
+                        </th>
+                        <th>
+                             Roles
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user,iterationStatus  : ${users}">
+                            <td th:text="${iterationStatus.count}">1</td>
+                            <td th:text="${user.getFullname()}">ZooMMX</td>
+                            <td th:utext="${user.getUsername()}">Octavio Ruiz</td>
+                            <td th:utext="${user.getUserRoleString()}">Roles</td>
+                            <td th:utext="${user.getUserActionsHtml()}">Editar - Borrar</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END TABLE PORTLET-->
+        <!-- Modal -->
+        <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+            <div class="page-loading page-loading-boxed">
+                <img src="img/loading-spinner-grey.gif" alt="" class="loading"/>
+                <span>
+                &nbsp;&nbsp;Cargando... </span>
+            </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+    </div>
+    <!-- END CONTENT -->
+    <div layout:fragment="scripts">
+        <!-- BEGIN PAGE LEVEL STYLES -->
+        <link href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+        <!-- END PAGE LEVEL STYLES -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
+        <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
+        <!-- END PAGE LEVEL PLUGINS-->
+    </div>
+</body>
+</html>

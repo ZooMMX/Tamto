@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+    <th:block layout:fragment="titulo">
+        Título <small>subtítulo</small>
+    </th:block>
+    <th:block layout:fragment="breadcrumb">
+        <li>
+            <a href="/usuarios">Dashboard</a>
+        </li>
+    </th:block>
+    <div layout:fragment="content">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
+                <div class="dashboard-stat blue-madison">
+                    <div class="visual">
+                        <i class="fa fa-briefcase fa-icon-medium"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number">
+                             3,080
+                        </div>
+                        <div class="desc">
+                             Piezas
+                        </div>
+                    </div>
+                    <a class="more" href="/piezas">
+                    Ver <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="dashboard-stat red-intense">
+                    <div class="visual">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number">
+                             1,127,390
+                        </div>
+                        <div class="desc">
+                             Dato interesante
+                        </div>
+                    </div>
+                    <a class="more" href="#">
+                    Ver <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="dashboard-stat green-haze">
+                    <div class="visual">
+                        <i class="fa fa-group fa-icon-medium"></i>
+                    </div>
+                    <div class="details">
+                        <div class="number">
+                             8
+                        </div>
+                        <div class="desc">
+                             Usuarios
+                        </div>
+                    </div>
+                    <a class="more" href="/usuarios">
+                    Ver <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-share font-blue-steel hide"></i>
+                            <span class="caption-subject font-blue-steel bold uppercase">Actividad reciente</span>
+                        </div>
+                        <div class="actions">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-default btn-circle" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                Filter By <i class="fa fa-angle-down"></i>
+                                </a>
+                                <div class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
+                                    <label><input type="checkbox"/> Finance</label>
+                                    <label><input type="checkbox" checked=""/> Membership</label>
+                                    <label><input type="checkbox"/> Customer Support</label>
+                                    <label><input type="checkbox" checked=""/> HR</label>
+                                    <label><input type="checkbox"/> System</label>
+                                </div>
+                            </div>
+                            <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
+                            <ul class="feeds">
+                                <li>
+                                    <a href="#">
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-success">
+                                                    <i class="fa fa-bar-chart-o"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Reporte financiero 2014 generado.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             20 mins
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-danger">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Usuario eliminado
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             24 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-info">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Nuevo pedido recibido <span class="label label-sm label-success">
+                                                    Número de referencia: 23923 </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             30 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-success">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Nuevo usuario registrado
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             24 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-default">
+                                                    <i class="fa fa-briefcase"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Nueva pieza registrada
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             20 mins
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-default">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Se cambió el perfil de Carlos a administrador
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             24 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-info">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Nuevo pedido recibido <span class="label label-sm label-success">
+                                                    Número de referencia: 89012 </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             30 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-success">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Nuevo usuario registrado: Perla.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             24 mins
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-warning">
+                                                    <i class="fa fa-bell-o"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Factura 9601. <span class="label label-sm label-default ">
+                                                    Atrasada </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             2 hours
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                    <div class="col1">
+                                        <div class="cont">
+                                            <div class="cont-col1">
+                                                <div class="label label-sm label-info">
+                                                    <i class="fa fa-briefcase"></i>
+                                                </div>
+                                            </div>
+                                            <div class="cont-col2">
+                                                <div class="desc">
+                                                     Reporte de auditoría de piezas generado.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col2">
+                                        <div class="date">
+                                             20 mins
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="scroller-footer">
+                            <div class="btn-arrow-link pull-right">
+                                <a href="#">Ver todos los registros</a>
+                                <i class="icon-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="portlet box purple">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>Tipos de piezas
+                        </div>
+                        <div class="tools">
+                            <a href="#portlet-config" data-toggle="modal" class="config">
+                            </a>
+                            <a href="javascript:;" class="reload">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!--<h4>Gráfica de pie coloreada, con leyendas semi-transparentes.</h4>-->
+                        <div id="pie_chart" class="chart">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+        </div>
+
+    </div>
+    <!-- Page level scripts -->
+    <th:block layout:fragment="scripts">
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/plugins/flot/jquery.flot.min.js"></script>
+        <script src="/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="/plugins/flot/jquery.flot.pie.min.js"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+        <script src="scripts/dashboard.js"></script>
+        <script>
+            jQuery(document).ready(function() {
+                Dashboard.init();
+                Dashboard.initPieCharts();
+            });
+        </script>
+    </th:block>
+</body>
+</html>
