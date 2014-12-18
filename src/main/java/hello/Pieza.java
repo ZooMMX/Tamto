@@ -148,6 +148,7 @@ public class Pieza {
         archivos.add(a);
     }
 
+    @Deprecated
     public String getHtmlAction() {
         StringBuilder builder = new StringBuilder();
         builder.append(new String("<a href=\"pieza/"+ getId() +"\" data-target=\"#ajax\" data-toggle=\"modal\" class=\"btn btn-xs blue\"><i class=\"fa fa-search\"></i> Ver</a>"));

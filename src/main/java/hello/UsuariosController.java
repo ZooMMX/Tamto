@@ -28,7 +28,7 @@ public class UsuariosController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PreAuthorize("hasRole('ROLE_VENTAS')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuarios")
     public String usuarios(Model model) {
 
@@ -40,6 +40,7 @@ public class UsuariosController {
         return "usuarios";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuario/{username}")
     public String usuarioVer(@PathVariable("username") String username, Model model) {
         User user = userRepository.findByUsername(username);
@@ -57,7 +58,7 @@ public class UsuariosController {
         return "usuario";
     }
 
-    @PreAuthorize("hasRole('ROLE_VENTAS')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuarioNuevo")
     public String usuarioNuevo(Model model) {
 
@@ -67,7 +68,7 @@ public class UsuariosController {
         return "usuario_nuevo";
     }
 
-    @PreAuthorize("hasRole('ROLE_VENTAS')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/usuarioNuevo", method = RequestMethod.POST)
     public String usuarioNuevoPost(
             @ModelAttribute User user,
@@ -98,6 +99,7 @@ public class UsuariosController {
         return "usuario_nuevo";
 
     }
+
     @RequestMapping(value = "/usuarioCheckUsername")
     public @ResponseBody String usuarioCheckUsername(@RequestParam("username") String username) {
 
@@ -107,6 +109,13 @@ public class UsuariosController {
             return String.valueOf(!userRepository.exists(username));
     }
 
+    /**
+     * Editar usuario. Primer paso GET
+     * @param username
+     * @param model
+     * @return
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuarioEdicion/{username}")
     public String usuarioNuevo(@PathVariable String username, Model model) {
 
@@ -125,6 +134,15 @@ public class UsuariosController {
         return "usuario_edicion";
     }
 
+    /**
+     * Editar usuario. 2do Paso POST
+     * @param username
+     * @param user
+     * @param roles
+     * @param model
+     * @return
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/usuarioEdicion/{username}", method = RequestMethod.POST)
         public String usuarioEdicionPost(
                 @PathVariable String username,

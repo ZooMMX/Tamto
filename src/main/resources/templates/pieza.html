@@ -156,9 +156,11 @@
                                 <tr th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
                                     <td th:text="${iterationStatus.count}">1</td>
                                     <td th:text="${archivo.getFileName()}">Nombre.xls</td>
-                                    <td th:utext="${archivo.getFileTypeHtml()}">EXCEL</td>
+                                    <td th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</td>
                                     <td >9 de Diciembre de 2014</td>
-                                    <td th:utext="${archivo.getFileActionsHtml()}">Descargar - Sustituir</td>
+                                    <td>
+                                        <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                                    </td>
                                 </tr>
                                 </tbody>
                                 </table>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -76,6 +76,8 @@
     <orderEntry type="library" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-envers:4.2.7.Final" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.27" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.ocpsoft.prettytime:prettytime:3.2.5.Final" level="project" />
   </component>
 </module>
 

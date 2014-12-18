@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.access.PermissionEvaluator;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
@@ -34,6 +35,12 @@ public class Application {
         factory.setMaxFileSize("128MB");
         factory.setMaxRequestSize("128MB");
         return factory.createMultipartConfig();
+    }
+
+    @Bean
+    public PermissionEvaluator permissionEvaluator() {
+        TamtoPermissionEvaluator bean = new TamtoPermissionEvaluator();
+        return bean;
     }
 
 }

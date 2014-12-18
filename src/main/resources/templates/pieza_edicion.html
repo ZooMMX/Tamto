@@ -129,12 +129,31 @@
                             <div class="form-group">
                                 <!-- Start Upload FORM -->
                                 <form action="#" th:action="@{/piezaUpload/__${piezaId}__}" th:object="${pieza}" class="horizontal-form" id="fileupload"  method="POST" enctype="multipart/form-data">
-                                    <div style="width:500px;padding:20px">
-                                        <input id="fileupload" type="file" name="file" data-url="@{/piezaUpload/__${piezaId}__}" multiple="multiple"/>
-                                        <div id="dropzone">Arrastra aquí</div>
-                                        <div id="progress">
-                                            <div style="width: 0%;"></div>
+                                    <div class="note note-info">
+                                        <h4>Agregar archivo</h4>
+                                        <p>
+                                        <div class="col-md-6">
+                                            <p><label class="control-label">1. Selecciona tipo de archivo</label></p>
+                                            <div class="btn-group" data-toggle="buttons">
+                                                <label class="btn blue active">
+                                                <input name="tipo" type="radio" class="toggle" value="ITEM" checked="checked"/> Item </label>
+                                                <label class="btn blue">
+                                                <input name="tipo" type="radio" class="toggle" value="PROGRAMA"/> Programa </label>
+                                                <label class="btn blue">
+                                                <input name="tipo" type="radio" class="toggle" value="DIBUJO"/> Dibujo </label>
+                                            </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <p><label class="control-label">2. Selecciona el archivo</label></p>
+                                            <span class="btn btn-success fileinput-button">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                <span>Selecciona archivos...</span>
+                                                <!-- The file input field used as target for the file upload widget -->
+                                                <input id="fileupload" type="file" name="file" data-url="@{/piezaUpload/__${piezaId}__}" multiple="multiple"/>
+                                            </span>
+                                        </div>
+                                        &nbsp;
+                                        </p>
                                     </div>
                                 </form>
                                 <!-- END FORM-->
@@ -149,7 +168,7 @@
                                              Nombre del archivo
                                         </th>
                                         <th>
-                                             Formato
+                                             Tipo
                                         </th>
                                         <th>
                                              Último cambio
@@ -180,52 +199,19 @@
                                             <a href="#" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Sustituir</a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                             2
-                                        </td>
-                                        <td>
-                                             PiezaX.pdf
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-danger">
-                                                PDF
-                                            </span>
-                                        </td>
-                                        <td>
-                                             19 de Noviembre de 2014
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                            <a href="#" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Sustituir</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                             3
-                                        </td>
-                                        <td>
-                                             PiezaX.xlsx
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-warning">
-                                                EXCEL
-                                            </span>
-                                        </td>
-                                        <td>
-                                             17 de Mayo de 2014
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                            <a href="#" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Sustituir</a>
-                                        </td>
-                                    </tr> -->
+                                    -->
                                     <tr th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
                                         <td th:text="${iterationStatus.count}">1</td>
                                         <td th:text="${archivo.getFileName()}">Nombre.xls</td>
-                                        <td th:utext="${archivo.getFileTypeHtml()}">EXCEL</td>
-                                        <td >9 de Diciembre de 2014</td>
-                                        <td th:utext="${archivo.getFileActionsHtml()}">Descargar - Sustituir</td>
+                                        <td th:utext="${archivo.getTamtoTypeHtml()}">Dibujo</td>
+                                        <!-- Ejemplo de cómo obtener permisos para editar un archivo desde un template
+                                        <td th:utext="${@permissionEvaluator.permisosArchivos(roles, archivo, 'EDITAR')}">9 de Diciembre de 2014</td>
+                                        -->
+                                        <td>9 de Diciembre de 2014</td>
+                                        <td>
+                                            <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                                            <a th:href="${'/archivoEdicion/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'EDITAR')}" data-target="#ajax" data-toggle="modal" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Editar</a>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     </table>
@@ -238,11 +224,27 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+            <div class="page-loading page-loading-boxed">
+                <img src="/img/loading-spinner-grey.gif" alt="" class="loading"/>
+                <span>
+                &nbsp;&nbsp;Cargando... </span>
+            </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
     </div>
     <!-- END content -->
     <th:block layout:fragment="scripts">
 
         <!-- BEGIN PAGE LEVEL STYLES -->
+        <link href="/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css" rel="stylesheet"/>
+        <link href="/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet"/>
+        <link href="/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet"/>
         <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
         <!-- END PAGE LEVEL STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
@@ -259,6 +261,7 @@
         <!-- END PAGE LEVEL PLUGINS-->
         <!-- BEGIN:File Upload Plugin JS files-->
         <script src="/scripts/form-fileupload.js"></script>
+        <script src="/scripts/form-editar-fileupload.js"></script>
         <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
         <script src="/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
         <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->

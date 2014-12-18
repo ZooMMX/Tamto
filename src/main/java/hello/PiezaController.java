@@ -2,6 +2,10 @@ package hello;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -12,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -29,6 +34,7 @@ public class PiezaController {
     @Autowired
     ArchivoRepository archivoRepository;
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'somePermissionName')")
     @RequestMapping("/pieza/{piezaId}")
     public String pieza(@PathVariable Long piezaId, Model model) {
         Pieza p = piezaRepository.findOne(piezaId);
@@ -43,15 +49,18 @@ public class PiezaController {
         model.addAttribute("workOrderNo", p.getWorkOrderNo());
         model.addAttribute("pieza", p);
         model.addAttribute("selectedMenu", "piezas");
+        model.addAttribute("roles", getCurrentRoles());
         return "pieza";
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'somePermissionName')")
     @RequestMapping(value = "/piezaEdicion/{piezaId}", method = RequestMethod.GET)
     public String piezaEdicion(@PathVariable Long piezaId, Model model) {
         Pieza p = piezaRepository.findOne(piezaId);
         model.addAttribute("piezaId", piezaId);
         model.addAttribute("pieza", p);
         model.addAttribute("selectedMenu", "piezas");
+        model.addAttribute("roles", getCurrentRoles());
         return "pieza_edicion";
     }
 
@@ -84,21 +93,20 @@ public class PiezaController {
 
     }
 
-    @RequestMapping(value = "/piezaNueva", method = RequestMethod.GET)
-    public String piezaNueva(Model model) {
-        model.addAttribute("selectedMenu", "piezas");
-        model.addAttribute("pieza", new Pieza());
-        return "pieza_nueva";
-    }
-
     @RequestMapping(value = "/piezaNueva", method = RequestMethod.POST)
     public String piezaNuevaPost(
             @ModelAttribute Pieza pieza,
             @RequestParam("file") MultipartFile[]  file,
+            @RequestParam("tipo0") TipoArchivo tipo0,
+            @RequestParam("tipo1") TipoArchivo tipo1,
+            @RequestParam("tipo2") TipoArchivo tipo2,
+            @RequestParam("tipo3") TipoArchivo tipo3,
             Model model) {
 
+        TipoArchivo[] tipos = new TipoArchivo[] { tipo0,tipo1,tipo2,tipo3 };
         /* Preparar archivos para su carga */
         StringBuilder msg = new StringBuilder();
+        int i = 0;
         for(MultipartFile f : file) {
             try {
                 //Si el archivo está vacío, se lo salta
@@ -110,6 +118,7 @@ public class PiezaController {
                 archivo.setFileName(f.getOriginalFilename());
                 archivo.setFileSize(String.valueOf(f.getSize()));
                 archivo.setFileType(f.getContentType());
+                archivo.setTamtoType( tipos[i] );
                 archivo.setBytes(blob);
 
                 pieza.addArchivo(archivo);
@@ -119,6 +128,7 @@ public class PiezaController {
                 msg.append( "Falla al cargar archivo " + f.getOriginalFilename() + ": " + e.getMessage() +"<br/>" );
                 e.printStackTrace();
             }
+            i++;
         }
         /* Guardar registro */
 
@@ -134,6 +144,13 @@ public class PiezaController {
 
     }
 
+    @RequestMapping(value = "/piezaNueva", method = RequestMethod.GET)
+    public String piezaNueva(Model model) {
+        model.addAttribute("selectedMenu", "piezas");
+        model.addAttribute("pieza", new Pieza());
+        return "pieza_nueva";
+    }
+
     @Transactional
     private void savePiezaDeeply(Pieza p) {
         //Guardo primero la pieza para obtener un ID
@@ -146,6 +163,14 @@ public class PiezaController {
             }
     }
 
+    /**
+     * Descarga un archivo. Aplica los permisos de VER un archivo.
+     * @param piezaArchivoId
+     * @param response
+     * @return
+     */
+    //TODO Pasar a ArchivoController y cambiar nomenclatura
+    @PreAuthorize("hasPermission(#piezaArchivoId, 'archivo', 'VER')")
     @RequestMapping("/piezaDownload/{piezaArchivoId}")
     public String download(@PathVariable("piezaArchivoId")
             Long piezaArchivoId, HttpServletResponse response) {
@@ -171,12 +196,23 @@ public class PiezaController {
         return null;
     }
 
+    /**
+     * Agrega un nuevo archivo a una pieza existente.
+     * @param piezaId
+     * @param pieza
+     * @param files
+     * @param tipo
+     * @param model
+     * @return
+     */
+    //TODO Pasar a ArchivoController y cambiar nomenclatura
     @RequestMapping(value = "/piezaUpload/{piezaId}", method = RequestMethod.POST)
     public @ResponseBody
     List<Archivo> upload(
             @PathVariable Long piezaId,
             @ModelAttribute Pieza pieza,
             @RequestParam("file") MultipartFile[] files,
+            @RequestParam("tipo") TipoArchivo tipo,
             Model model) {
 
         /* Guardar archivos */
@@ -194,6 +230,7 @@ public class PiezaController {
                             archivo.setFileName(files[i].getOriginalFilename());
                             archivo.setFileSize(String.valueOf(files[i].getSize()));
                             archivo.setFileType(files[i].getContentType());
+                            archivo.setTamtoType(tipo);
                             archivo.setBytes(blob);
                             archivo.setPieza_fk(piezaId);
 
@@ -221,5 +258,20 @@ public class PiezaController {
     public @ResponseBody String metodoDisponible(@PathVariable Long piezaId) {
         return "ok";
 
+    }
+
+    /**
+     * Método interno para obtener los roles del usuario que tiene sesión abierta. Lo utilizan los métodos del controlador.
+     * @return
+     */
+    private HashSet<Roles> getCurrentRoles() {
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
+
+        HashSet<Roles> roles = new HashSet<>();
+        for(GrantedAuthority ga : a.getAuthorities()) {
+            roles.add(Roles.valueOf( ga.getAuthority() ));
+        }
+
+        return roles;
     }
 }

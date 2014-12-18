@@ -29,6 +29,10 @@ public class Archivo {
     @Column
     String fileType;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    TipoArchivo tamtoType;
+
     @Lob
     private Blob bytes;
 
@@ -79,6 +83,14 @@ public class Archivo {
         this.fileType = fileType;
     }
 
+    public TipoArchivo getTamtoType() {
+        return tamtoType;
+    }
+
+    public void setTamtoType(TipoArchivo tamtoType) {
+        this.tamtoType = tamtoType;
+    }
+
     public long getId() {
         return id;
     }
@@ -98,6 +110,7 @@ public class Archivo {
     public String getFileActionsHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<a href=\"/piezaDownload/"+getId()+"\" class=\"btn btn-xs green\"><i class=\"icon-cloud-download\"></i> Descargar</a>");
+        sb.append("<a href=\"/archivoEdicion/"+getId()+"\" data-target=\"#ajax\" data-toggle=\"modal\" class=\"btn btn-xs red\"><i class=\"icon-cloud-upload\"></i> Editar</a>");
         return sb.toString();
     }
 
@@ -122,5 +135,34 @@ public class Archivo {
 
         return sb.toString();
     }
+
+    public String getTamtoTypeHtml() {
+            String type = getTamtoType().name();
+            if(type == null) return "";
+
+            StringBuilder sb = new StringBuilder();
+
+            if (type.equals("DIBUJO")) {
+                if(getFileType().contains("application/pdf")) sb.append("<span class=\"label label-sm label-default\">PDF</span>&nbsp;");
+                sb.append("<span class=\"label label-sm label-warning\">");
+                sb.append("Dibujo");
+
+            } else if (type.equals("PROGRAMA")) {
+                sb.append("<span class=\"label label-sm label-info\">");
+                sb.append("Programa");
+
+            } else if (type.equals("ITEM")) {
+                            sb.append("<span class=\"label label-sm label-success\">");
+                            sb.append("Item de configuración");
+
+            } else {
+                sb.append("<span class=\"label label-sm label-error\">");
+                sb.append(type);
+            }
+
+            sb.append("</span>");
+
+            return sb.toString();
+        }
 
 }

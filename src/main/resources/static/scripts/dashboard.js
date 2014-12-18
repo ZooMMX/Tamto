@@ -3,25 +3,26 @@ var Dashboard = function() {
     return {
         //main function to initiate the module
 
-        init: function() {
-
+        init: function(data) {
+            Dashboard.initPieCharts(data);
             Metronic.addResizeHandler(function() {
-                Charts.initPieCharts();
+                Dashboard.initPieCharts(data);
             });
 
         },
 
-        initPieCharts: function() {
-            var data = [];
-            var series = Math.floor(Math.random() * 10) + 1;
-            series = series < 5 ? 5 : series;
-
+        initPieCharts: function(data) {
+            //var data = [];
+            //var series = Math.floor(Math.random() * 10) + 1;
+            //series = series < 5 ? 5 : series;
+            var series = 3;
+            /*
             for (var i = 0; i < series; i++) {
                 data[i] = {
                     label: "Series" + (i + 1),
                     data: Math.floor(Math.random() * 100) + 1
                 };
-            }
+            } */
 
             // GRAPH
             if ($('#pie_chart').size() !== 0) {
@@ -34,7 +35,7 @@ var Dashboard = function() {
                                 show: true,
                                 radius: 3 / 4,
                                 formatter: function(label, series) {
-                                    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                                    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '% ('+series.data[0][1]+')</div>';
                                 },
                                 background: {
                                     opacity: 0.5,

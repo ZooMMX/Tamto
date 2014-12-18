@@ -1,11 +1,11 @@
-var FormFileUpload = function () {
+var FormEditarFileUpload = function () {
 
 
     return {
         //main function to initiate the module
         init: function () {
             $(function () {
-                $('#fileupload').fileupload({
+                $('#editar-fileupload').fileupload({
                     dataType: 'json',
                     /* Agrega primero el elemento a HTML antes de permitir cargarlo
                     add: function (e, data) {
@@ -18,19 +18,10 @@ var FormFileUpload = function () {
                     }, */
 
                     done: function (e, data) {
-                        $("tr:has(td)").remove();
-                        var i = 0;
-                        $.each(data.result, function (index, file) {
-                            i++;
-                            $("#uploaded-files").append(
-                                    $('<tr/>')
-                                    .append($('<td/>').text(i))
-                                    .append($('<td/>').text(file.fileName))
-                                    .append($('<td/>').html(file.tamtoTypeHtml))
-                                    .append($('<td/>').text(file.fileSize))
-                                    .append($('<td/>').html(file.fileActionsHtml))
-                                    )//end $("#uploaded-files").append()
-                        });
+                        $('#fileName').val(data.result.fileName);
+                        $('#fileSize').val(data.result.fileSize);
+                        $('#tipo')    .html(data.result.tamtoTypeHtml);
+                        alert('Archivo actualizado');
                     },
 
                     progressall: function (e, data) {

@@ -116,10 +116,33 @@
                         <div class="row">
                             <div class="col-md-12 ">
                                 <div class="form-group">
-                                    <input id="file" type="file" name="file" multiple="multiple"/>
-                                    <input id="file" type="file" name="file" multiple="multiple"/>
-                                    <input id="file" type="file" name="file" multiple="multiple"/>
-                                    <input id="file" type="file" name="file" multiple="multiple"/>
+                                    <!-- START File upload input decorated ( four times )-->
+                                    <div class="fileinput fileinput-new" data-provides="fileinput" th:each="i, iStat : ${#numbers.sequence(0, 3)}">
+                                        <div class="col-md-4 btn-group" data-toggle="buttons">
+                                            <label class="btn blue active">
+                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="ITEM" checked="checked"/> Item </label>
+                                            <label class="btn blue">
+                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="PROGRAMA"/> Programa </label>
+                                            <label class="btn blue">
+                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="DIBUJO"/> Dibujo </label>
+                                        </div>
+                                        <div class="col-md-8 input-group">
+                                            <div class="form-control uneditable-input" data-trigger="fileinput">
+                                                <i class="fa fa-file fileinput-exists"></i>&nbsp; <span class="fileinput-filename">
+                                                </span>
+                                            </div>
+                                            <span class="input-group-addon btn default btn-file">
+                                                <span class="fileinput-new">
+                                                Selecciona un archivo </span>
+                                                <span class="fileinput-exists">
+                                                Cambiar </span>
+                                                <input id="file" type="file" name="file" multiple="multiple"/>
+                                            </span>
+                                            <a href="#" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput">
+                                            Quitar </a>
+                                        </div>
+                                    </div>
+                                    <!-- END File upload input decorated -->
                                 </div>
                             </div>
                         </div>
@@ -148,11 +171,11 @@
     <th:block layout:fragment="scripts">
 
         <!-- BEGIN PAGE LEVEL STYLES -->
-        <link href="/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet"/>
-        <link href="/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet"/>
         <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+        <link href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
         <!-- END PAGE LEVEL STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/plugins/bootstrap-fileinput/bootstrap-fileinput.js"></script>
         <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
         <script src="/scripts/form-inputmasks.js"></script>
         <script src="/scripts/form-validation.js"></script>
