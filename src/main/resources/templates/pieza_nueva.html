@@ -54,7 +54,7 @@
                             </div>
                             <!--/span-->
                             <div class="col-md-6">
-                                <div class="form-group has-error">
+                                <div class="form-group">
                                     <label class="control-label">Descripción SAP</label>
                                     <div class="input-icon right">
                                         <i class="fa"></i>
@@ -66,7 +66,17 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Código universal</label>
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input type="text" class="form-control" placeholder="" id="universalCode" th:field="*{universalCode}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Tipo</label>
                                     <select id="tipo" class="form-control" th:field="*{tipoPieza}">
@@ -77,7 +87,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">W.O. Date</label>
                                     <div class="input-icon right">
@@ -91,7 +101,7 @@
                         <!--/row-->
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group has-error">
+                                <div class="form-group">
                                     <label class="control-label">W.O. No.</label>
                                     <div class="input-icon right">
                                         <i class="fa"></i>
@@ -101,7 +111,7 @@
                             </div>
                             <!--/span-->
                             <div class="col-md-6">
-                                <div class="form-group has-error">
+                                <div class="form-group">
                                     <label class="control-label">Cliente</label>
                                     <div class="input-icon right">
                                         <i class="fa"></i>

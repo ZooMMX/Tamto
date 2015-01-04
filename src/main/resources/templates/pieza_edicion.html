@@ -62,7 +62,17 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Código universal</label>
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input type="text" id="codigoUniversal" class="form-control" placeholder="" th:field="*{universalCode}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Tipo</label>
                                     <select id="tipo" class="form-control" th:field="*{tipoPieza}">
@@ -73,7 +83,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">W.O. Date</label>
                                     <div class="input-icon right">
@@ -179,27 +189,6 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <!--<tr>
-                                        <td>
-                                             1
-                                        </td>
-                                        <td>
-                                             PiezaX.dwg
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-success">
-                                                AUTOCAD
-                                            </span>
-                                        </td>
-                                        <td>
-                                             9 de Septiembre de 2014
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                            <a href="#" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Sustituir</a>
-                                        </td>
-                                    </tr>
-                                    -->
                                     <tr th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
                                         <td th:text="${iterationStatus.count}">1</td>
                                         <td th:text="${archivo.getFileName()}">Nombre.xls</td>
@@ -207,11 +196,36 @@
                                         <!-- Ejemplo de cómo obtener permisos para editar un archivo desde un template
                                         <td th:utext="${@permissionEvaluator.permisosArchivos(roles, archivo, 'EDITAR')}">9 de Diciembre de 2014</td>
                                         -->
-                                        <td>9 de Diciembre de 2014</td>
+                                        <td th:text="${archivo.getUpdatedFormatted()}">9 de Diciembre de 2014</td>
                                         <td>
                                             <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
                                             <a th:href="${'/archivoEdicion/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'EDITAR')}" data-target="#ajax" data-toggle="modal" class="btn btn-xs red"><i class="icon-cloud-upload"></i> Editar</a>
                                         </td>
+                                    </tr>
+                                    </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                    <h3 class="form-section">Auditoría</h3>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                             Cambios
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="cambio,iterationStatus  : ${auditoria}">
+                                        <td th:text="${cambio}">1</td>
                                     </tr>
                                     </tbody>
                                     </table>

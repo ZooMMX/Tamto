@@ -60,30 +60,30 @@
                         </a>
                         <ul class="dropdown-menu pull-right">
                             <li>
-                                <a href="#">
+                                <a href="#" id="xlsLink" download="usuarios.xls" onClick ="$('#table').tableExport({type:'excel',escape:'false'});">
                                 Exportar a Excel </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="#" id="csvLink" download="usuarios.csv" onclick="$('#table').tableExport({type:'csv',escape:'false'});">
                                 Exportar a CSV </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="#" id="xmlLink" download="usuarios.xml" onclick="$('#table').tableExport({type:'xml',escape:'false'});">
                                 Exportar a XML </a>
                             </li>
-                            <li class="divider">
+                            <!--<li class="divider">
                             </li>
                             <li>
                                 <a href="#">
                                 Imprimir </a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="portlet-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover" id="table">
                     <thead>
                     <tr>
                         <th>
@@ -139,6 +139,8 @@
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
         <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
+        <script type="text/javascript" src="/plugins/htmltable_export/tableExport.js"></script>
+            <script type="text/javascript" src="/plugins/htmltable_export/jquery.base64.js"></script>
         <!-- END PAGE LEVEL PLUGINS-->
     </div>
 </body>

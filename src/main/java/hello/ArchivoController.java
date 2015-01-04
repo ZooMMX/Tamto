@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Blob;
 import java.util.List;
@@ -77,5 +78,19 @@ public class ArchivoController {
 
         fileMeta = archivoRepository.findOne(archivoId);
         return fileMeta;
+    }
+
+    @PreAuthorize("hasPermission(#archivoId, 'archivo', 'EDITAR')")
+    @RequestMapping(value = "/archivoEliminacion/{archivoId}")
+    public ModelAndView archivoEliminacion(
+        @PathVariable Long archivoId,
+        Model model)
+    {
+        Archivo archivo = archivoRepository.findOne(archivoId);
+
+        /* Guardar archivos */
+        archivoRepository.delete(archivo);
+
+        return new ModelAndView("redirect:/piezaEdicion/"+archivo.getPieza_fk());
     }
 }

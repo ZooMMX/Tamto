@@ -23,6 +23,9 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     ArchivoRepository archivoRepository;
 
+    @Autowired
+    PiezaRepository piezaRepository;
+
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
@@ -34,7 +37,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     public boolean hasPermission(Authentication authentication,
             Serializable targetId, String targetType, Object permission) {
         log.info("hasPermission(Authentication, Serializable, String, Object) called");
-        System.out.println("TargetID: "+targetId+", targetType: "+targetType+", permission: "+permission);
+        log.info("TargetID: "+targetId+", targetType: "+targetType+", permission: "+permission);
 
         //Guardo los roles del usuario actual en un simple HashSet
         HashSet<Roles> roles = new HashSet<>();
@@ -46,6 +49,8 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
         if(targetType.equalsIgnoreCase("ARCHIVO")) {
             //Permisos para las entidades Archivo
             return _permisosArchivos(roles, (Long)targetId, (String) permission);
+        } else if(targetType.equalsIgnoreCase("PIEZA")) {
+            return _permisosPiezas(roles, (Long) targetId, (String) permission);
         }
 
         return false;
@@ -165,5 +170,37 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
 
         //Comportamiento pesimista
         return false;
+    }
+
+    /**
+     * Método wrapper para consultar permisos de una pieza por ID
+     * @param roles
+     * @param id
+     * @param permiso
+     * @return
+     */
+    private boolean _permisosPiezas(HashSet<Roles> roles, Long id, String permiso) {
+        Pieza p = piezaRepository.findOne(id);
+        return permisosPiezas(roles, p, permiso);
+    }
+
+    /**
+     * Método para consultar los permisos de una Pieza dado el objeto Pieza.
+     * Optimista a menos que:
+     * VER,EDITAR -> ROLE_* -> ENABLED -> FALSE (Piezas inactivas)
+     * @param roles
+     * @param p
+     * @param permiso
+     * @return
+     */
+    private boolean permisosPiezas(HashSet<Roles> roles, Pieza p, String permiso) {
+        switch(permiso) {
+            case "AGREGAR": break;
+            case "VER":
+            case "EDITAR":
+                if(!p.isEnabled()) return false;
+                break;
+        }
+        return true;
     }
 }

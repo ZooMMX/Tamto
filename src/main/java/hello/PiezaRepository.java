@@ -17,4 +17,6 @@ public interface PiezaRepository extends PagingAndSortingRepository<Pieza, Long>
     @Query("SELECT p.tipoPieza, count(p.tipoPieza) FROM Pieza p GROUP BY p.tipoPieza")
     List<Object[]> countByType();
 
+    @Query("SELECT count(p) FROM Pieza p WHERE p.enabled = 1")
+    public Long countEnabled();
 }

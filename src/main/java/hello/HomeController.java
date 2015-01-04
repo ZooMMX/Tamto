@@ -14,7 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -38,7 +42,7 @@ public class HomeController {
     EntityManager em;
 
     @RequestMapping("/")
-    public String pieza(Model model) {
+    public String dashboard(Model model) {
 
         List usuarios = (List) userRepository.findActiveUsers();
         Long piezaSize = piezaRepository.count();
@@ -60,6 +64,18 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping("/403")
+    public String prohibido(Model model) {
+        model.addAttribute("selectedMenu", "dashboard");
+        return "403";
+    }
+
+    @RequestMapping("/404")
+    public String noEncontrado(Model model) {
+        model.addAttribute("selectedMenu", "dashboard");
+        return "404";
+    }
+
     /**
      * Crea un String que contiene un arreglo de objetos tipo hash en lenguaje javascript. P.e.: [{"key":"val"},{"key2":"val2"}]
      * @return
@@ -79,7 +95,7 @@ public class HomeController {
     }
 
     private HashMap<String, User> getUsuarios() {
-        HashMap<String, User> usuarios = new HashMap<>();
+        HashMap<String, User> usuarios = new HashMap<String, User>();
         for(User user : userRepository.findActiveUsers()) {
             usuarios.put(user.getUsername(), user);
         }
@@ -109,7 +125,7 @@ public class HomeController {
             }
         }
 
-        ArrayList<Rev> revisiones = new ArrayList<>();
+        ArrayList<Rev> revisiones = new ArrayList<Rev>();
         for (Rev rev : map.values()) {
             revisiones.add(rev);
         }
@@ -168,21 +184,21 @@ public class HomeController {
             if(getEntityClass() == Pieza.class) {
                 switch(getChangeType()) {
                     case ADD:
-                        return "<div class=\"label label-sm label-success\"><i class=\"fa fa-briefcase\"></i></div>";
+                        return "<div class=\"label label-sm label-success\"><i class=\"icon-puzzle\"></i></div>";
                     case DEL:
-                        return "<div class=\"label label-sm label-danger\"><i class=\"fa fa-briefcase\"></i></div>";
+                        return "<div class=\"label label-sm label-danger\"><i class=\"icon-puzzle\"></i></div>";
                     case MOD:
-                        return "<div class=\"label label-sm label-default\"><i class=\"fa fa-briefcase\"></i></div>";
+                        return "<div class=\"label label-sm label-default\"><i class=\"icon-puzzle\"></i></div>";
                 }
             }
             else if(getEntityClass() == Archivo.class) {
                 switch(getChangeType()) {
                     case ADD:
-                        return "<div class=\"label label-sm label-success\"><i class=\"fa fa-bell-o\"></i></div>";
+                        return "<div class=\"label label-sm label-success\"><i class=\"fa fa-briefcase\"></i></div>";
                     case DEL:
-                        return "<div class=\"label label-sm label-danger\"><i class=\"fa fa-bell-o\"></i></div>";
+                        return "<div class=\"label label-sm label-danger\"><i class=\"fa fa-briefcase\"></i></div>";
                     case MOD:
-                        return "<div class=\"label label-sm label-default\"><i class=\"fa fa-bell-o\"></i></div>";
+                        return "<div class=\"label label-sm label-default\"><i class=\"fa fa-briefcase\"></i></div>";
                 }
             }
             else if(getEntityClass() == User.class) {

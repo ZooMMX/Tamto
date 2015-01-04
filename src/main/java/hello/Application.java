@@ -4,11 +4,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.PermissionEvaluator;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -41,6 +44,17 @@ public class Application {
     public PermissionEvaluator permissionEvaluator() {
         TamtoPermissionEvaluator bean = new TamtoPermissionEvaluator();
         return bean;
+    }
+
+    @Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
+       return (container -> {
+            //ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED, "/403");
+            ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
+            //ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500");
+
+            container.addErrorPages(error404Page);
+       });
     }
 
 }

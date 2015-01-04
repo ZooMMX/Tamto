@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css"/>
+<link href="plugins/font-awesome/css/font-awesome.min.css" th:href="@{/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+<link href="plugins/simple-line-icons/simple-line-icons.min.css" th:href="@{/plugins/simple-line-icons/simple-line-icons.min.css}" rel="stylesheet" type="text/css"/>
+<link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+<link href="plugins/uniform/css/uniform.default.css" rel="stylesheet" th:href="@{/plugins/uniform/css/uniform.default.css}" type="text/css"/>
+<link href="plugins/bootstrap-switch/css/bootstrap-switch.min.css" th:href="@{/plugins/bootstrap-switch/css/bootstrap-switch.min.css}" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link href="css/components.css" th:href="@{/css/components.css}" id="style_components" rel="stylesheet" type="text/css"/>
+<link href="css/plugins.css" th:href="@{/css/plugins.css}" rel="stylesheet" type="text/css"/>
+<link href="css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet" type="text/css"/>
+<link id="style_color" th:href="@{/css/themes/grey.css}" href="css/themes/grey.css" rel="stylesheet" type="text/css"/>
+<link href="css/custom.css" th:href="@{/css/custom.css}" rel="stylesheet" type="text/css"/>
+<!-- END THEME STYLES -->
+
+    <head>
+        <title>¡Página no encontrada!</title>
+    </head>
+    <body class="page-404-full-page">
+    <div class="row">
+        <div class="col-md-12 page-404">
+            <div class=" number">
+                 404
+            </div>
+            <div class=" details">
+                <h3>Página no encontrada.</h3>
+                <p>
+                     Lo siento<br/>
+                    Lo que buscas no se encuentra aquí.<br/><br/>
+                </p>
+            </div>
+            <img src="/img/error-404.png"/>
+        </div>
+    </div>
+
+    <!-- Page level styles -->
+    <link href="/css/errors.css" rel="stylesheet" type="text/css"/>
+    <!-- End of page level styles -->
+
+    </body>
+</html>

@@ -38,23 +38,23 @@
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 <li>
-                                    <a href="#">
+                                    <a href="#" id="xlsLink" download="piezas.xls" onClick ="$('#datatable_ajax').tableExport({type:'excel',escape:'false'});">
                                     Exportar a Excel </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#" id="csvLink" download="piezas.csv" onclick="$('#datatable_ajax').tableExport({type:'csv',escape:'false'});">
                                     Exportar a CSV </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#" id="xmlLink" download="piezas.xml" onclick="$('#datatable_ajax').tableExport({type:'xml',escape:'false'});">
                                     Exportar a XML </a>
                                 </li>
-                                <li class="divider">
+                                <!--<li class="divider">
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#" id="pdfLink" download="piezas.pdf" onclick="$('#datatable_ajax').tableExport({type:'pdf',escape:'false'});">
                                     Imprimir </a>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                             </span>
                             <select class="table-group-action-input form-control input-inline input-small input-sm">
                                 <option value="">Acción grupal...</option>
-                                <option value="softdelete">Ocultar</option>
+                                <option value="softdelete">Archivar/Ocultar</option>
                             </select>
                             <button class="btn btn-sm yellow table-group-action-submit"><i class="fa fa-check"></i> Aplicar</button>
                         </div>
@@ -167,7 +167,7 @@
                     <span>
                     &nbsp;&nbsp;Cargando... </span>
                 </div>
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                     </div>
                 </div>
@@ -188,6 +188,8 @@
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="scripts/datatable.js" th:href="@{/scripts/datatable.js}"></script>
     <script src="scripts/table-ajax.js" th:href="@{/scripts/table-ajax.js}"></script>
+    <script type="text/javascript" src="/plugins/htmltable_export/tableExport.js"></script>
+    <script type="text/javascript" src="/plugins/htmltable_export/jquery.base64.js"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
     <script>
             jQuery(document).ready(function() {

@@ -20,19 +20,23 @@ import java.io.StringWriter;
  */
 @ControllerAdvice
 class GlobalDefaultExceptionHandler {
-    public static final String DEFAULT_ERROR_VIEW = "error";
+    public static final String DEFAULT_ERROR_VIEW = "500";
 
     @ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 
-        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-            throw e;
+        //Delego el tratamiento de la AccessDeniedException
+        if(e instanceof AccessDeniedException) throw e;
+
+        //if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
+        //    throw e;
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
         mav.addObject("url", req.getRequestURL());
         mav.addObject("type", e.getClass().toGenericString());
         mav.addObject("error", e.getMessage());
+        mav.addObject("selectedMenu", "dashboard");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

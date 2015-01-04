@@ -9,7 +9,7 @@
     <div class="modal-body">
             <div class="form-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label class="control-label">Nombre de archivo</label>
                             <div class="input-icon right">
@@ -19,7 +19,18 @@
                         </div>
                     </div>
                     <!--/span-->
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Tamaño</label>
+                            <div class="input-icon right">
+                                <i class="fa"></i>
+                                <input type="text" id="fileSize" th:field="*{fileSize}" class="form-control" placeholder="" readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Tipo</label>
                             <div class="input-icon right">
@@ -29,29 +40,32 @@
                         </div>
                     </div>
                     <!--/span-->
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label class="control-label">Tamaño</label>
+                            <label class="control-label">Acciones</label>
                             <div class="input-icon right">
-                                <i class="fa"></i>
-                                <input type="text" id="fileSize" th:field="*{fileSize}" class="form-control" placeholder="" readonly="readonly"/>
+                                <a th:href="@{/archivoEliminacion/__${archivo.getId()}__}" class="btn red" onclick="return confirm('¿Estás seguro de eliminar el archivo?')">
+                                    <i class="fa fa-times"></i>
+                                    Eliminar
+                                </a>
                             </div>
                         </div>
                     </div>
+                    <!--/span-->
                 </div>
                 <!--/row-->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="control-label">Actualizar archivo</label>
-                            <span class="btn btn-success fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Selecciona archivo...</span>
-                                <!-- The file input field used as target for the file upload widget -->
-                                <input id="editar-fileupload" type="file" name="file"/>
-                            </span>
+                            <div class="input-icon right">
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Selecciona archivo...</span>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="editar-fileupload" type="file" name="file"/>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <!--/span-->

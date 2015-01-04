@@ -42,7 +42,7 @@ var TableAjax = function () {
                 },
                 "columns": [
                     { "data": "htmlCheckbox" },
-                    { "data": "barcode" },
+                    { "data": "universalCode" },
                     { "data": "descripcion"},
                     { "data": "tipoPieza"},
                     { "data": "nombreSap"},
@@ -59,7 +59,9 @@ var TableAjax = function () {
         grid.getTableWrapper().on('click', '.table-group-action-submit', function (e) {
             e.preventDefault();
             var action = $(".table-group-action-input", grid.getTableWrapper());
-            if (action.val() != "" && grid.getSelectedRowsCount() > 0) {
+            if (action.val() != "" && grid.getSelectedRowsCount() > 0
+                && confirm("¿Está seguro de archivar? Tome en cuenta que requerirá de soporte técnico para recuperar las piezas archivadas."))
+            {
                 grid.setAjaxParam("customActionType", "group_action");
                 grid.setAjaxParam("customActionName", action.val());
                 grid.setAjaxParam("id", grid.getSelectedRows());
@@ -69,7 +71,7 @@ var TableAjax = function () {
                 Metronic.alert({
                     type: 'danger',
                     icon: 'warning',
-                    message: 'Please select an action',
+                    message: 'Primero selecciona una acción',
                     container: grid.getTableWrapper(),
                     place: 'prepend'
                 });
@@ -77,7 +79,7 @@ var TableAjax = function () {
                 Metronic.alert({
                     type: 'danger',
                     icon: 'warning',
-                    message: 'No record selected',
+                    message: 'No se seleccionaron registros',
                     container: grid.getTableWrapper(),
                     place: 'prepend'
                 });
@@ -92,6 +94,7 @@ var TableAjax = function () {
 
             initPickers();
             handleRecords();
+
         }
 
     };

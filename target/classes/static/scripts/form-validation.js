@@ -20,7 +20,11 @@ var FormValidation = function () {
                         },
                         nombreSap: {
                             minlength: 3,
-                            required: true
+                            required: false
+                        },
+                        universalCode: {
+                            maxlength: 20,
+                            required: false
                         },
                         workOrderDate: {
                             dateITA: true,
@@ -32,7 +36,7 @@ var FormValidation = function () {
                         },
                         cliente: {
                             minlength: 3,
-                            required: true
+                            required: false
                         }
                     },
 
@@ -44,6 +48,9 @@ var FormValidation = function () {
                         nombreSap: {
                             required: "Por favor escribe alguna descripción",
                             minlength: jQuery.validator.format("Escribe al menos {0} caractéres")
+                        },
+                        universalCode: {
+                            maxlength: jQuery.validator.format("Pasaste el límite de {0} caractéres")
                         },
                         workOrderDate: {
                             required: "Es necesario que escribas una fecha",
@@ -77,8 +84,10 @@ var FormValidation = function () {
                     },
 
                     unhighlight: function (element) { // revert the change done by hightlight
+                        var icon = $(element).parent('.input-icon').children('i');
                         $(element)
                             .closest('.form-group').removeClass('has-error'); // set error class to the control group
+                        icon.removeClass("fa-warning");
                     },
 
                     success: function (label, element) {

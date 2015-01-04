@@ -1,6 +1,7 @@
 package hello;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -12,12 +13,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
@@ -34,12 +38,15 @@ public class PiezaController {
     @Autowired
     ArchivoRepository archivoRepository;
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'somePermissionName')")
+    @Autowired
+    EntityManager em;
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'VER')")
     @RequestMapping("/pieza/{piezaId}")
     public String pieza(@PathVariable Long piezaId, Model model) {
         Pieza p = piezaRepository.findOne(piezaId);
         model.addAttribute("descripcion", p.getDescripcion());
-        model.addAttribute("barcode", p.getBarcode());
+        model.addAttribute("universalCode", p.getUniversalCode());
         model.addAttribute("cliente", p.getCliente());
         model.addAttribute("descripcion", p.getDescripcion());
         model.addAttribute("nombreSap", p.getNombreSap());
@@ -50,10 +57,11 @@ public class PiezaController {
         model.addAttribute("pieza", p);
         model.addAttribute("selectedMenu", "piezas");
         model.addAttribute("roles", getCurrentRoles());
+        model.addAttribute("auditoria", createRevisionsPieza(piezaId));
         return "pieza";
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'somePermissionName')")
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'EDITAR')")
     @RequestMapping(value = "/piezaEdicion/{piezaId}", method = RequestMethod.GET)
     public String piezaEdicion(@PathVariable Long piezaId, Model model) {
         Pieza p = piezaRepository.findOne(piezaId);
@@ -61,9 +69,11 @@ public class PiezaController {
         model.addAttribute("pieza", p);
         model.addAttribute("selectedMenu", "piezas");
         model.addAttribute("roles", getCurrentRoles());
+        model.addAttribute("auditoria", createRevisionsPieza(piezaId));
         return "pieza_edicion";
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'EDITAR')")
     @RequestMapping(value = "/piezaEdicion/{piezaId}", method = RequestMethod.POST)
     public String editar(
             @PathVariable Long piezaId,
@@ -79,6 +89,7 @@ public class PiezaController {
         p.setTipoPieza( pieza.getTipoPieza() );
         p.setWorkOrderDate( pieza.getWorkOrderDate() );
         p.setWorkOrderNo( pieza.getWorkOrderNo() );
+        p.setUniversalCode( pieza.getUniversalCode() );
         p.setNotas(pieza.getNotas());
 
         piezaRepository.save(p);
@@ -88,11 +99,14 @@ public class PiezaController {
         model.addAttribute("piezaId", piezaId);
         model.addAttribute("pieza", p);
         model.addAttribute("selectedMenu", "piezas");
+        model.addAttribute("roles", getCurrentRoles());
+        model.addAttribute("auditoria", createRevisionsPieza(piezaId));
 
         return "pieza_edicion";
 
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'AGREGAR')")
     @RequestMapping(value = "/piezaNueva", method = RequestMethod.POST)
     public String piezaNuevaPost(
             @ModelAttribute Pieza pieza,
@@ -144,6 +158,7 @@ public class PiezaController {
 
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'AGREGAR')")
     @RequestMapping(value = "/piezaNueva", method = RequestMethod.GET)
     public String piezaNueva(Model model) {
         model.addAttribute("selectedMenu", "piezas");
@@ -273,5 +288,96 @@ public class PiezaController {
         }
 
         return roles;
+    }
+
+
+    private List<String> createRevisionsPieza(Long piezaId) {
+
+        //  (Índices del array)--------->      [0]    [1]             [2]      [3]          [4]         [5]         [6]              [7]            [8]                 [9]          [10]             [11]            [12]       [13]            [14]                 [15]               [16]       [17]
+        Query q = em.createNativeQuery("SELECT pa.id, universal_code, cliente, descripcion, nombre_sap, tipo_pieza, work_order_date, work_order_no, universal_code_mod, cliente_mod, descripcion_mod, nombre_sap_mod, notas_mod, tipo_pieza_mod, work_order_date_mod, work_order_no_mod, timestamp, u.fullname FROM pieza_aud pa JOIN revision r ON pa.rev = r.id JOIN user u ON r.username = u.username where pa.id = "+piezaId+" LIMIT 10");
+        List rl = q.getResultList();
+
+        List<String> resultados = new ArrayList<>();
+
+        for(Object object : rl) {
+            Object[] r = (Object[]) object;
+            // Mapeo manual de campos
+            String universalCode = (String) r[1];
+            String cliente = (String) r[2];
+            String descripcion = (String) r[3];
+            String nombreSap = (String) r[4];
+            TipoPieza tipoPieza = TipoPieza.valueOf((String) r[5]);
+            Date workOrderDate = (Date) r[6];
+            String workOrderNo = (String) r[7];
+            Boolean universalCodeMod = (Boolean) r[8];
+            Boolean clienteMod = (Boolean) r[9];
+            Boolean descripcionMod = (Boolean) r[10];
+            Boolean nombreSapMod = (Boolean) r[11];
+            Boolean notasMod = (Boolean) r[12];
+            Boolean tipoPiezaMod = (Boolean) r[13];
+            Boolean workOrderDateMod = (Boolean) r[14];
+            Boolean workOrderNoMod = (Boolean) r[15];
+            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[16]).longValue()));
+            String usuario = (String) r[17];
+
+            // Ejemplo de la descripción de la revisión: "Juan modificó el código universal a 1009, cliente a Tamto, descripción a 'Nueva Descripción' hace 3 días"
+            StringBuilder descripcionRev = new StringBuilder();
+            descripcionRev.append(usuario + " ");
+
+            Boolean coma = false;
+            if(universalCodeMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("modificó el código universal al valor \""+ universalCode +"\"");
+                coma = true;
+            }
+            if(clienteMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("cambió el cliente por \""+cliente+"\"");
+                coma = true;
+            }
+            if(descripcionMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("cambió la descripción por \""+descripcion+"\"");
+                coma = true;
+            }
+            if(nombreSapMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("alteró el código SAP a \""+nombreSap+"\"");
+                coma = true;
+            }
+            if(notasMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("modificó las notas");
+                coma = true;
+            }
+            if(tipoPiezaMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("alteró el tipo de pieza por \""+tipoPieza+"\"");
+                coma = true;
+            }
+            if(workOrderDateMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("cambió la fecha de orden de trabajo a \""+workOrderDate+"\"");
+                coma = true;
+            }
+            if(workOrderNoMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("cambió el número de orden de trabajo a \""+workOrderNo+"\"");
+                coma = true;
+            }
+            if(!coma) {
+                descripcionRev.append("modificó la pieza");
+            }
+
+            descripcionRev.append(" "+ getElapsedTimeString(revisionDate));
+            resultados.add( descripcionRev.toString() );
+        }
+
+        return resultados;
+    }
+
+    private String getElapsedTimeString(Date d) {
+        PrettyTime p = new PrettyTime(new Locale("es"));
+        return p.format(d);
     }
 }

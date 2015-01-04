@@ -2,9 +2,13 @@ package hello;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
@@ -33,6 +37,12 @@ public class Archivo {
     @Enumerated(EnumType.STRING)
     TipoArchivo tamtoType;
 
+    @Column
+    Date created;
+
+    @Column
+    Date updated;
+
     @Lob
     private Blob bytes;
 
@@ -42,6 +52,15 @@ public class Archivo {
 
     @Column(name="pieza_fk")
     private Long pieza_fk;
+
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        updated = new Date();
+        if (created==null) {
+          created = new Date();
+        }
+    }
 
     public Pieza getPieza() {
         return pieza;
@@ -89,6 +108,28 @@ public class Archivo {
 
     public void setTamtoType(TipoArchivo tamtoType) {
         this.tamtoType = tamtoType;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public String getUpdatedFormatted() {
+        if(getUpdated()==null) return "";
+        DateFormat sdf = new SimpleDateFormat("dd MMM yyyy ' a las ' hh:mm aa");
+        return sdf.format(getUpdated());
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     public long getId() {

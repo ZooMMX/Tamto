@@ -24,7 +24,7 @@
                     </div>
                     <!--/span-->
                     <div class="col-md-6">
-                        <div class="form-group has-error">
+                        <div class="form-group">
                             <label class="control-label">Descripción SAP</label>
                             <input type="text" id="nombre_sap" class="form-control" placeholder="Equivalente en SAP" th:value="${nombreSap}"/>
                         </div>
@@ -33,7 +33,14 @@
                 </div>
                 <!--/row-->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Código universal</label>
+                            <input type="text" class="form-control" placeholder="" id="universalCode" th:value="${universalCode}"/>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Tipo</label>
                             <select id="tipo" class="form-control">
@@ -44,7 +51,7 @@
                         </div>
                     </div>
                     <!--/span-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">W.O. Date</label>
                             <input type="text" class="form-control" placeholder="dd/mm/yyyy" id="work_order_date" th:value="${workOrderDate}"/>
@@ -55,14 +62,14 @@
                 <!--/row-->
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group has-error">
+                        <div class="form-group">
                             <label class="control-label">W.O. ID</label>
                             <input type="text" id="work_order_no" class="form-control" placeholder="Número de orden de trabajo" th:value="${workOrderNo}"/>
                         </div>
                     </div>
                     <!--/span-->
                     <div class="col-md-6">
-                        <div class="form-group has-error">
+                        <div class="form-group">
                             <label class="control-label">Cliente</label>
                             <input type="text" id="cliente" class="form-control" placeholder="Nombre o razón social del cliente" th:value="${cliente}"/>
                         </div>
@@ -96,68 +103,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!--<tr>
-                                    <td>
-                                         1
-                                    </td>
-                                    <td>
-                                         PiezaX.dwg
-                                    </td>
-                                    <td>
-                                        <span class="label label-sm label-success">
-                                            AUTOCAD
-                                        </span>
-                                    </td>
-                                    <td>
-                                         9 de Septiembre de 2014
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                         2
-                                    </td>
-                                    <td>
-                                         PiezaX.pdf
-                                    </td>
-                                    <td>
-                                        <span class="label label-sm label-danger">
-                                            PDF
-                                        </span>
-                                    </td>
-                                    <td>
-                                         19 de Noviembre de 2014
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                         3
-                                    </td>
-                                    <td>
-                                         PiezaX.xlsx
-                                    </td>
-                                    <td>
-                                        <span class="label label-sm label-warning">
-                                            EXCEL
-                                        </span>
-                                    </td>
-                                    <td>
-                                         17 de Mayo de 2014
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                    </td>
-                                </tr>-->
                                 <tr th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
                                     <td th:text="${iterationStatus.count}">1</td>
                                     <td th:text="${archivo.getFileName()}">Nombre.xls</td>
                                     <td th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</td>
-                                    <td >9 de Diciembre de 2014</td>
+                                    <td th:text="${archivo.getUpdatedFormatted()}" >9 de Diciembre de 2014</td>
                                     <td>
                                         <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
                                     </td>
@@ -175,6 +125,31 @@
                     <div class="col-md-12 ">
                         <div class="form-group">
                             <textarea id="notas" th:text="${notas}" class="form-control" rows="6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+                <h3 class="form-section">Auditoría</h3>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>
+                                         Cambios
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="cambio,iterationStatus  : ${auditoria}">
+                                    <td th:text="${cambio}">1</td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                 </div>

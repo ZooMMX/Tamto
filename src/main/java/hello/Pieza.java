@@ -2,7 +2,6 @@ package hello;
 
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.*;
 import java.text.DateFormat;
@@ -28,13 +27,16 @@ public class Pieza {
     @DateTimeFormat(pattern="dd/MM/yyyy")
     @Column(name = "work_order_date")
     private Date workOrderDate;         //Fecha de orden de trabajo
-    private String barcode;
+    @Column(name = "universal_code")
+    private String universalCode;
     @Enumerated(EnumType.STRING)
     private TipoPieza tipoPieza;        //Tipo de pieza
     @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY, mappedBy = "pieza")
     List<Archivo> archivos;
     @Column
     private String notas;
+    @Column(nullable = false)
+    private boolean enabled = true;
 
     protected Pieza() {}
 
@@ -106,12 +108,12 @@ public class Pieza {
         this.workOrderDate = workOrderDate;
     }
 
-    public String getBarcode() {
-        return barcode;
+    public String getUniversalCode() {
+        return universalCode;
     }
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
+    public void setUniversalCode(String universalCode) {
+        this.universalCode = universalCode;
     }
 
     public TipoPieza getTipoPieza() {
@@ -159,5 +161,13 @@ public class Pieza {
     public String getHtmlCheckbox() {
        String ret = new String("<input type=\"checkbox\" name=\"id[]\" value=\"" + getId() + "\">");
         return ret;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
