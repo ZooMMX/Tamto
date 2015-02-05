@@ -49,12 +49,12 @@ CREATE TABLE `user_role` (
 -- Dumping data for table `user`
 --
 
-LOCK TABLES `user` WRITE;
+-- LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('admin',1,'$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Nombre temporal');
+INSERT INTO `user` (username, enabled, password, fullname) VALUES ('admin',1,'$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Nombre temporal');
 INSERT INTO `user_role` (user_role_id,role,username) VALUES (1,'ROLE_ADMIN','admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
+-- UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
