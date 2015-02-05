@@ -14,12 +14,15 @@ var FormUserScripts = function () {
                     focusInvalid: false, // do not focus the last invalid input
                     ignore: "",  // validate all fields including form hidden input
                     rules: {
-                        fullName: {
+                        fullname: {
                             minlength: 7,
                             required: true
                         },
                         password: {
                             pass: true
+                        },
+                        password_confirm : {
+                            equalTo : "#password"
                         },
                         roles: {
                             required: true
@@ -27,13 +30,16 @@ var FormUserScripts = function () {
                     },
 
                     messages: { // Mensajes personalizados
-                        fullName: {
+                        fullname: {
                             required: "Escribe el nombre y apellidos del usuario",
                             minlength: jQuery.validator.format("Escribe al menos {0} caractéres")
                         },
                         password: {
                             required: "Es necesario que escribas una contraseña",
                             pass: "Tu password debe contener al menos 6 caracteres y contener al menos un número y una letra."
+                        },
+                        password_confirm: {
+                            equalTo: "Contraseña y confirmación difieren"
                         },
                         roles: {
                             required: "Es obligatorio agregar al menos un rol"

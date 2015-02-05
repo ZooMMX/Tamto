@@ -294,7 +294,7 @@ public class PiezaController {
     private List<String> createRevisionsPieza(Long piezaId) {
 
         //  (Índices del array)--------->      [0]    [1]             [2]      [3]          [4]         [5]         [6]              [7]            [8]                 [9]          [10]             [11]            [12]       [13]            [14]                 [15]               [16]       [17]
-        Query q = em.createNativeQuery("SELECT pa.id, universal_code, cliente, descripcion, nombre_sap, tipo_pieza, work_order_date, work_order_no, universal_code_mod, cliente_mod, descripcion_mod, nombre_sap_mod, notas_mod, tipo_pieza_mod, work_order_date_mod, work_order_no_mod, timestamp, u.fullname FROM pieza_aud pa JOIN revision r ON pa.rev = r.id JOIN user u ON r.username = u.username where pa.id = "+piezaId+" LIMIT 10");
+        Query q = em.createNativeQuery("SELECT pa.id, universal_code, cliente, descripcion, nombre_sap, tipo_pieza, work_order_date, work_order_no, universal_code_mod, cliente_mod, descripcion_mod, nombre_sap_mod, notas_mod, tipo_pieza_mod, work_order_date_mod, work_order_no_mod, timestamp, u.fullname FROM pieza_aud pa JOIN revision r ON pa.rev = r.id JOIN user u ON r.username = u.username where pa.id = "+piezaId+" ORDER BY timestamp DESC LIMIT 10");
         List rl = q.getResultList();
 
         List<String> resultados = new ArrayList<>();
@@ -308,7 +308,7 @@ public class PiezaController {
             String nombreSap = (String) r[4];
             TipoPieza tipoPieza = TipoPieza.valueOf((String) r[5]);
             Date workOrderDate = (Date) r[6];
-            String workOrderNo = (String) r[7];
+            BigInteger workOrderNo = (BigInteger) r[7];
             Boolean universalCodeMod = (Boolean) r[8];
             Boolean clienteMod = (Boolean) r[9];
             Boolean descripcionMod = (Boolean) r[10];

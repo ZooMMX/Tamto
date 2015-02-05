@@ -19,13 +19,16 @@ var FormUserScripts = function () {
                             remote: "/usuarioCheckUsername",
                             required: true
                         },
-                        fullName: {
+                        fullname: {
                             minlength: 7,
                             required: true
                         },
                         password: {
                             required: true,
                             pass: true
+                        },
+                        password_confirm : {
+                            equalTo : "#password"
                         },
                         roles: {
                             required: true
@@ -38,13 +41,16 @@ var FormUserScripts = function () {
                             minlength: jQuery.validator.format("Escribe al menos {0} caractéres"),
                             remote: "Nombre de usuario no disponible, elige otro"
                         },
-                        fullName: {
+                        fullname: {
                             required: "Escribe el nombre y apellidos del usuario",
                             minlength: jQuery.validator.format("Escribe al menos {0} caractéres")
                         },
                         password: {
                             required: "Es necesario que escribas una contraseña",
                             pass: "Tu password debe contener al menos 6 caracteres y contener al menos un número y una letra."
+                        },
+                        password_confirm: {
+                            equalTo: "Contraseña y confirmación difieren"
                         },
                         roles: {
                             required: "Es obligatorio agregar al menos un rol"

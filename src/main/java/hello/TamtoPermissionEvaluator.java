@@ -125,7 +125,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PC:
                             case PL:
                             case PE:
-                                if(roles.contains(Roles.ROLE_PRODUCCION)) return true; break;
+                                if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                         }
                         break;
                 }
@@ -161,7 +161,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PC:
                             case PL:
                             case PE:
-                                if(roles.contains(Roles.ROLE_PRODUCCION)) return true; break;
+                                if(roles.contains(Roles.ROLE_PRODUCCION) || roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                         }
                         break;
                 }
@@ -180,6 +180,8 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      * @return
      */
     private boolean _permisosPiezas(HashSet<Roles> roles, Long id, String permiso) {
+        if(id==null && permiso.equalsIgnoreCase("AGREGAR")) return true;
+
         Pieza p = piezaRepository.findOne(id);
         return permisosPiezas(roles, p, permiso);
     }

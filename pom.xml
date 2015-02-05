@@ -11,6 +11,7 @@
 		<mysql-version>5.1.27</mysql-version>
 		<apache-connection-pooling-version>1.4</apache-connection-pooling-version>
 		<start-class>hello.Application</start-class>
+        <java.version>1.8</java.version>
 	</properties>
 
     <parent>
