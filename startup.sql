@@ -4,6 +4,10 @@
 -- ------------------------------------------------------
 -- Server version	5.5.14-log
 
+DROP SCHEMA IF EXISTS tamto;
+CREATE SCHEMA tamto;
+USE tamto;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -31,13 +35,24 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE TABLE `user_role` (
+  `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  PRIMARY KEY (`user_role_id`),
+  UNIQUE KEY `UK_adnyt6agwl65jnnokuvnskhn2` (`role`,`username`),
+  KEY `FK_aphxiciwirrvuc0y7y2s2rufj` (`username`),
+  CONSTRAINT `FK_aphxiciwirrvuc0y7y2s2rufj` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1
+
 --
 -- Dumping data for table `user`
 --
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('abc',0,'$2a$10$DIXkMY9n2h.F.5m4eWMXjO8Puss9KVmteCilWmVUzV/YCDgab0KpW',NULL),('abc2',0,'$2a$10$XrlKUcfPLG3hnM850XKMzOmceFEbSuCI8iUux.V.m2bOl6MYgJb8S',NULL),('admin',1,'$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Octavio Ruiz'),('asd',1,'$2a$10$E4FDq9WNtkz5XbUWVL.dwelqt67OpXDiTOkvRGLFzEznwXk3ZKabm',NULL),('qwe',0,'$2a$10$4W2h9qU8JpycZbARgwhozueHjg12LLWVUhrrmF9Mc9yFEzTpLL1ya',NULL),('user',1,'$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Samir Duran'),('xuc',0,'$2a$10$h8PS1M5sJHiqRTEcFOxSVuI40j803e0tvdeWbEa56uYBk0mAZjQLq',NULL),('zxc',1,'$2a$10$GjFmojsY9fgsXPAOkYj98ORUAGBT.dMmOzQwBy9YIqPbDKdkUcEzy','Paula N Medina');
+INSERT INTO `user` VALUES ('admin',1,'$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y','Nombre temporal');
+INSERT INTO `user_role` (user_role_id,role,username) VALUES (1,'ROLE_ADMIN','admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
