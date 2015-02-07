@@ -90,6 +90,7 @@ Page Header
 .page-header.navbar .page-logo .logo-default {
   margin-top: 3px;
   margin-left: 35px;
+  z-index: 1001;
 }
 .page-header.navbar .page-logo .logo-mini {
   display: none;
