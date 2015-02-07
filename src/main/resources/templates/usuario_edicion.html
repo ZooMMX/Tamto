@@ -19,6 +19,14 @@
     </th:block>
     <div layout:fragment="content">
         <!-- Begin content -->
+        <div class="alert alert-success alert-dismissable" th:if="${successfulChange}">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+            <strong>Confirmación!</strong> Usuario modificado.
+        </div>
+        <div class="alert alert-success alert-dismissable" th:if="${successfulRegister}">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+            <strong>Confirmación!</strong> Usuario registrado.
+        </div>
         <!-- BEGIN FORM-->
         <form id="formi" th:action="@{/usuarioEdicion/__${user.getUsername()}__}" th:object="${user}" class="horizontal-form"  method="POST" enctype="multipart/form-data">
             <div class="portlet box purple">

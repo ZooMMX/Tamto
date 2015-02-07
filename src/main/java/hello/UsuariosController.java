@@ -89,14 +89,7 @@ public class UsuariosController {
 
         userRepository.save(user);
 
-        /* Preparar html */
-
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("user", user);
-        model.addAttribute("selectedMenu", "usuarios");
-        model.addAttribute("roleTypes", Roles.values());
-
-        return "usuario_nuevo";
+        return "redirect:/usuarioEdicion/"+user.getUsername()+"?successfulRegister=true";
 
     }
 
@@ -117,7 +110,11 @@ public class UsuariosController {
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuarioEdicion/{username}")
-    public String usuarioNuevo(@PathVariable String username, Model model) {
+    public String usuarioNuevo(
+            @PathVariable String username,
+            @RequestParam(required = false, defaultValue = "false") Boolean successfulChange,
+            @RequestParam(required = false, defaultValue = "false") Boolean successfulRegister,
+            Model model) {
 
         User user = userRepository.findByUsername(username);
 
@@ -130,6 +127,8 @@ public class UsuariosController {
         model.addAttribute("user", user);
         model.addAttribute("roleTypes", Roles.values());
         model.addAttribute("userRoles", userRoles);
+        model.addAttribute("successfulChange", successfulChange);
+        model.addAttribute("successfulRegister", successfulRegister);
 
         return "usuario_edicion";
     }
@@ -197,13 +196,8 @@ public class UsuariosController {
             for(UserRole ur : userFromBd.getUserRole())
                 userRoles.add(ur.getRole());
 
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("user", userFromBd);
-            model.addAttribute("selectedMenu", "usuarios");
-            model.addAttribute("roleTypes", Roles.values());
-            model.addAttribute("userRoles", userRoles);
 
-            return "usuario_edicion";
+            return "redirect:/usuarioEdicion/"+username+"?successfulChange=true";
 
         }
 

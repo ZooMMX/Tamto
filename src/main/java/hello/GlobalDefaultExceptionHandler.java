@@ -1,10 +1,13 @@
 package hello;
 
 import org.apache.tomcat.util.ExceptionUtils;
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,8 +22,15 @@ import java.io.StringWriter;
  * Time: 14:43
  */
 @ControllerAdvice
-class GlobalDefaultExceptionHandler {
+class GlobalDefaultExceptionHandler implements ErrorController{
     public static final String DEFAULT_ERROR_VIEW = "500";
+
+    private static final String PATH = "/error";
+
+    @Override
+    public String getErrorPath() {
+        return PATH;
+    }
 
     @ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {

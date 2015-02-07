@@ -39,8 +39,12 @@ public class PiezasController {
     EntityManager em ;
 
     @RequestMapping("/piezas")
-    public String pieza(Model model) {
+    public String pieza (
+        Model model,
+        @RequestParam(required = false, defaultValue = "false") Boolean successfulChange
+    ) {
         model.addAttribute("selectedMenu", "piezas");
+        model.addAttribute("successfulChange", successfulChange);
         return "piezas";
     }
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -108,7 +109,7 @@ public class PiezaController {
 
     @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'AGREGAR')")
     @RequestMapping(value = "/piezaNueva", method = RequestMethod.POST)
-    public String piezaNuevaPost(
+    public ModelAndView piezaNuevaPost(
             @ModelAttribute Pieza pieza,
             @RequestParam("file") MultipartFile[]  file,
             @RequestParam("tipo0") TipoArchivo tipo0,
@@ -148,13 +149,7 @@ public class PiezaController {
 
         savePiezaDeeply(pieza);
 
-        /* Preparar html */
-
-        model.addAttribute("piezaId", pieza.getId());
-        model.addAttribute("pieza", pieza);
-        model.addAttribute("selectedMenu", "piezas");
-
-        return "pieza_edicion";
+        return new ModelAndView("redirect:/piezas?successfulChange=true");
 
     }
 

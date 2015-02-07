@@ -9,13 +9,17 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -28,7 +32,7 @@ import java.util.*;
  * Time: 11:29
  */
 @Controller
-public class HomeController {
+public class HomeController implements ErrorController {
     @Autowired
     UserRepository userRepository;
 
@@ -74,6 +78,26 @@ public class HomeController {
     public String noEncontrado(Model model) {
         model.addAttribute("selectedMenu", "dashboard");
         return "404";
+    }
+
+    private static final String PATH = "/error";
+
+    @RequestMapping(PATH)
+    @ExceptionHandler(value = Exception.class)
+    public ModelAndView handleError(HttpServletRequest request, Exception e)
+    {
+       ModelAndView mav = new ModelAndView("/500headless");
+       mav.addObject("exception", e);
+       mav.addObject("url", request.getRequestURL());
+       mav.addObject("type", e.getClass().toGenericString());
+       mav.addObject("error", e.getMessage());
+       mav.addObject("selectedMenu", "dashboard");
+       return mav;
+    }
+
+    @Override
+    public String getErrorPath() {
+        return PATH;
     }
 
     /**
