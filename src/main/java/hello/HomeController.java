@@ -80,6 +80,12 @@ public class HomeController implements ErrorController {
         return "404";
     }
 
+    @RequestMapping("/manual")
+    public String manual(Model model) {
+        model.addAttribute("selectedMenu", "manual");
+        return "manual";
+    }
+
     private static final String PATH = "/error";
 
     @RequestMapping(PATH)
@@ -120,7 +126,8 @@ public class HomeController implements ErrorController {
 
     private HashMap<String, User> getUsuarios() {
         HashMap<String, User> usuarios = new HashMap<String, User>();
-        for(User user : userRepository.findActiveUsers()) {
+        //Obtiene todos los usuarios para evitar un error en dashboard cuando un ususario es desactivado.
+        for(User user : userRepository.findAll()) {
             usuarios.put(user.getUsername(), user);
         }
         return usuarios;

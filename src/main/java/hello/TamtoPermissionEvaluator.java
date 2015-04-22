@@ -75,7 +75,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      *  EDITAR -> ITEM -> PIEZA ESPECIAL -> ROLE_PLANEACIÓN
      *  EDITAR -> ITEM -> PIEZA ESPECIAL -> ROLE_PRODUCCIÓN
      *
-     *  EDITAR -> PROGRAMA -> PC, PL, PE -> ROLE_PRODUCCIÓN
+     *  EDITAR -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACIÓN
      *
      *  VER -> DIBUJO -> PC, PL, PE -> * -> ROLE_PLANEACIÓN, ROLE_PRODUCCIÓN
      *  VER -> DIBUJO -> PC, PL, PE -> PDF -> ROLE_VENTAS

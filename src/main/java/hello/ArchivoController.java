@@ -1,5 +1,6 @@
 package hello;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -92,5 +97,39 @@ public class ArchivoController {
         archivoRepository.delete(archivo);
 
         return new ModelAndView("redirect:/piezaEdicion/"+archivo.getPieza_fk());
+    }
+
+    @PreAuthorize("hasPermission(#piezaArchivoId, 'archivo', 'VER')")
+    @RequestMapping("/archivo/view/{piezaArchivoId}.pdf")
+    public String view(@PathVariable("piezaArchivoId")
+            Long piezaArchivoId, HttpServletResponse response) {
+
+        Archivo a = archivoRepository.findOne(piezaArchivoId);
+        try {
+            response.setHeader("Content-Disposition", "inline; filename=\"" +a.getFileName()+ "\"");
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setContentLength((int) a.getBytes().length());
+            OutputStream out = response.getOutputStream();
+            IOUtils.copy(a.getBytes().getBinaryStream(), out);
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    @RequestMapping("/archivo/pdfViewer/{piezaArchivoId}")
+    public String pdfViewer(@PathVariable("piezaArchivoId")
+            Long piezaArchivoId, HttpServletResponse response) {
+
+
+        return "pdf_viewer";
     }
 }

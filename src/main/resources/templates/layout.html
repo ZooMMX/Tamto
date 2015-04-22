@@ -262,10 +262,14 @@
                             <span class="title">Sistema</span>
                         </a>
                     </li>-->
-                    <li class="last ">
-                        <a href="index.html">
+                    <li class="last " th:class="${selectedMenu.contains('manual') ? 'active open' : ''}">
+                        <a href="/manual">
                         <i class="icon-docs"></i>
                         <span class="title">Manual</span>
+                        <th:block th:if="${selectedMenu.contains('manual')}">
+                            <span class="selected"></span>
+                            <span class="arrow open"></span>
+                        </th:block>
                         </a>
                     </li>
                 </ul>

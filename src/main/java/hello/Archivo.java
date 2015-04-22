@@ -194,7 +194,7 @@ public class Archivo {
 
             } else if (type.equals("ITEM")) {
                             sb.append("<span class=\"label label-sm label-success\">");
-                            sb.append("Item de configuración");
+                            sb.append("Item");
 
             } else {
                 sb.append("<span class=\"label label-sm label-error\">");
