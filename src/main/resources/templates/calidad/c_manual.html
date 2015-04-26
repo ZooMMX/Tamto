@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"  layout:decorator="calidad_layout">
+    <head>
+        <title>Manual de calidad</title>
+    </head>
+    <body>
+    <div class="row" layout:fragment="tab_content">
+        <div class="col-md-12 page-500">
+            <object style="width: 100%; height: 600px;" th:data="@{/media/manual.pdf}" type="application/pdf">
+                <embed th:src="@{/media/manual.pdf}" type="application/pdf" />
+            </object>
+        </div>
+    </div>
+
+    </body>
+</html>

@@ -1,0 +1,44 @@
+<form id="formi" th:action="@{/calidad/encabezado}" class="horizontal-form"  method="POST">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title"><i class="icon-note"></i> Encabezado del sistema de calidad</h4>
+    </div>
+    <!-- Begin content -->
+    <!-- BEGIN FORM-->
+
+    <div class="modal-body">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Cuerpo</label>
+                            <div class="input-icon right">
+                                <i class="fa"></i>
+                                <textarea name="encabezado" th:text="${encabezado}" placeholder="" class="form-control wysihtml5">
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+            </div>
+            <!--/row-->
+        </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn blue">Guardar</button>
+        <button type="button" class="btn default" data-dismiss="modal">Cerrar</button>
+    </div>
+</form>
+    <!-- END FORM-->
+<!-- END content -->
+
+
+<script>
+        jQuery(document).ready(function() {
+            $('.wysihtml5').wysihtml5({
+                "stylesheets": ["/plugins/bootstrap-wysihtml5/wysiwyg-color.css"]
+            });
+        });
+</script>
