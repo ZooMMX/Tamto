@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <title>Nuevo documento interno</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <th:block layout:fragment="titulo">
+        Título <small>subtítulo</small>
+    </th:block>
+    <div layout:fragment="content">
+            <!-- Begin content -->
+            <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-gift font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">Documento interno</span>
+                    <span class="caption-helper"> Lista maestra</span>
+                </div>
+                <!-- Acciones -->
+                <div class="actions">
+                    <a href="javascript:history.back();" class="btn btn-circle btn-primary">
+                        <i class="fa fa-arrow-left"></i>
+                        <span class="hidden-480"> Regresar </span>
+                    </a>
+                    <a th:href="'/calidad/documento/editar/'+${documento.id}" class="btn btn-circle btn-default">
+                        <i class="fa fa-pencil-square-o"></i>
+                        <span class="hidden-480"> Editar </span>
+                    </a>
+                    <div class="btn-group">
+                        <a class="btn btn-circle btn-default btn-sm" href="javascript:;" data-toggle="dropdown">
+                        <i class="fa fa-download"></i> Descargar <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a th:href="'/calidad/documento/'+${revision}+'/'+${documento.id}+'/descargar/fuente'">
+                                <i class="fa fa-paragraph"></i> Documento fuente </a>
+                            </li>
+                            <li>
+                                <a th:href="'/calidad/documento/'+${revision}+'/'+${documento.id}+'/descargar/pdf'">
+                                <i class="fa fa-file-pdf-o"></i> PDF </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a th:href="'/calidad/documento/'+${documento.id}+'/auditoria'" class="btn btn-circle btn-default" data-target="#ajax" data-toggle="modal">
+                        <i class="fa fa-search"></i>
+                        <span class="hidden-480"> Auditoría </span>
+                    </a>
+                    <a class="btn btn-icon-only btn-default btn-sm btn-circle fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                </div>
+                <!-- Fin acciones -->
+            </div>
+            <div class="plano portlet-body">
+                <!-- Form Body -->
+                <div class="row">
+                    <div class="row-same-height row-full-height">
+                        <div class="col-md-9 col-full-height" style="padding-right: 0px;">
+                            <div class="fluidMedia">
+                                <iframe name="viewer" id="viewer" th:src = "${'/plugins/PDFJS/web/viewer.html?file=/calidad/documento/'+rev+'/'+documento.id+'.pdf'}" width='566' height='400' style="text-align:center;" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen">
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-full-height columna-datos" th:object="${documento}">
+                            <div>
+                                <row>
+                                    <div class="col-md-4 bloque-izq">
+                                        <div class="celda">
+                                            <div class="titulo">
+                                                ID
+                                            </div>
+                                            <div class="cuerpo" th:text="*{id}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 bloque-izq">
+                                        <div class="celda">
+                                            <div class="titulo">
+                                                Nivel
+                                            </div>
+                                            <div class="cuerpo" th:text="*{nivel}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 bloque-der">
+                                        <div class="celda">
+                                            <div class="titulo">
+                                                Versión
+                                            </div>
+                                            <div class="cuerpo" th:text="*{version}"/>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12 bloque-completo">
+                                        <div class="celda">
+                                            <h2>Documento</h2>
+                                            <h4>
+                                                <span th:text="*{titulo}"></span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12 bloque-completo">
+                                        <div class="celda">
+                                            <div class="titulo">Tipo</div>
+                                            <div class="cuerpo" th:text="*{tipo}"/>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12 bloque-completo">
+                                        <div class="celda">
+                                            <div class="titulo">Código</div>
+                                            <div class="cuerpo" th:text="*{codigo}"/>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12 bloque-completo">
+                                        <div class="celda">
+                                            <div class="titulo">Departamento</div>
+                                            <div class="cuerpo" th:text="*{departamento}"/>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                   <div class="col-md-12 bloque-completo">
+                                       <div class="celda">
+                                           <div class="titulo">
+                                               Fecha de elaboración
+                                           </div>
+                                           <div class="cuerpo" th:text="*{fechaElaboracionString}"/>
+                                       </div>
+                                   </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-6 bloque-izq">
+                                       <div class="celda">
+                                           <div class="titulo">
+                                               Última aprobación
+                                           </div>
+                                           <div class="cuerpo" th:text="*{ultimaAprobacionString}"/>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-6 bloque-der">
+                                       <div class="celda">
+                                           <div class="titulo">
+                                               Próxima revision
+                                           </div>
+                                           <div class="cuerpo" th:text="*{proximaRevisionString}"/>
+                                       </div>
+                                   </div>
+                               </row>
+                                <row>
+                                    <div class="col-md-12">
+                                        <div class="celda">
+                                            <h2>Versiones</h2>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12 bloque-completo" style="padding: 0px;">
+                                        <div class="list-group">
+                                            <a th:href="'/calidad/documento/'+${version[0]}+'/'+*{id}" th:each="version, i : ${versiones}" class="list-group-item">Versión&nbsp;<span th:text="${version[2]}"></span><span class="badge badge-info" th:text="${T(hello.Util).timestamp2String(version[1])}">17 May 2015</span></a>
+                                        </div>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div class="col-md-12">
+                                        <div class="celda">
+                                            <h2>Notas</h2>
+                                            <span th:text="*{notas}"></span>
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+            <div class="page-loading page-loading-boxed">
+                <img src="/img/loading-spinner-grey.gif" alt="" class="loading"/>
+                <span>
+                &nbsp;&nbsp;Cargando... </span>
+            </div>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+    </div>
+    <!-- END content -->
+    <th:block layout:fragment="scripts">
+
+        <!-- BEGIN PAGE LEVEL STYLES -->
+        <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+        <link href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/documento.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
+        <!-- END PAGE LEVEL STYLES -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/plugins/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+        <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
+        <script src="/scripts/form-inputmasks.js"></script>
+        <script src="/scripts/form-validation.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-validation/js/additional-methods.min.js"></script>
+        <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
+        <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+        <!-- END PAGE LEVEL PLUGINS-->
+
+        <script>
+                jQuery(document).ready(function() {
+                    //FormValidation.init();
+                    FormInputMasks.init();
+                });
+        </script>
+    </th:block>
+</body>
+</html>

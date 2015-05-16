@@ -1,5 +1,7 @@
 package hello;
 
+import hello.calidad.DocumentoInterno;
+import hello.calidad.ListaMaestraRepository;
 import org.hibernate.envers.*;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityManager;
@@ -32,7 +35,7 @@ import java.util.*;
  * Time: 11:29
  */
 @Controller
-public class HomeController implements ErrorController {
+public class HomeController {
     @Autowired
     UserRepository userRepository;
 
@@ -43,10 +46,16 @@ public class HomeController implements ErrorController {
     ArchivoRepository archivoRepository;
 
     @Autowired
+    ListaMaestraRepository listaMaestraRepository;
+
+    @Autowired
     EntityManager em;
 
     @RequestMapping("/")
     public String dashboard(Model model) {
+
+        List<DocumentoInterno> calidadProximasRevisiones = listaMaestraRepository.getDocumentosProximaRevision();
+        List<DocumentoInterno> calidadRevisionesVencidas = listaMaestraRepository.getDocumentosRevisionVencida();
 
         List usuarios = (List) userRepository.findActiveUsers();
         Long piezaSize = piezaRepository.count();
@@ -64,46 +73,24 @@ public class HomeController implements ErrorController {
         model.addAttribute("noArchivos", archivoSize);
         model.addAttribute("graphData", graphData);
         model.addAttribute("revisiones", revisiones);
+        model.addAttribute("calidadProximasRevisiones", calidadProximasRevisiones);
+        model.addAttribute("calidadRevisionesVencidas", calidadRevisionesVencidas);
 
         return "home";
     }
 
-    @RequestMapping("/403")
-    public String prohibido(Model model) {
-        model.addAttribute("selectedMenu", "dashboard");
-        return "403";
-    }
-
-    @RequestMapping("/404")
-    public String noEncontrado(Model model) {
-        model.addAttribute("selectedMenu", "dashboard");
-        return "404";
+    @RequestMapping("/info")
+    public @ResponseBody
+    Object info(Model model) {
+        Query q = em.createNativeQuery("show variables like '%max_allowed_packet%';");
+        Object result = q.getSingleResult();
+        return result;
     }
 
     @RequestMapping("/manual")
     public String manual(Model model) {
         model.addAttribute("selectedMenu", "manual");
         return "manual";
-    }
-
-    private static final String PATH = "/error";
-
-    @RequestMapping(PATH)
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView handleError(HttpServletRequest request, Exception e)
-    {
-       ModelAndView mav = new ModelAndView("/500headless");
-       mav.addObject("exception", e);
-       mav.addObject("url", request.getRequestURL());
-       mav.addObject("type", e.getClass().toGenericString());
-       mav.addObject("error", e.getMessage());
-       mav.addObject("selectedMenu", "dashboard");
-       return mav;
-    }
-
-    @Override
-    public String getErrorPath() {
-        return PATH;
     }
 
     /**

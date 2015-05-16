@@ -22,6 +22,7 @@
 <link href="plugins/bootstrap-switch/css/bootstrap-switch.min.css" th:href="@{/plugins/bootstrap-switch/css/bootstrap-switch.min.css}" rel="stylesheet" type="text/css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN THEME STYLES -->
+<link href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
 <link href="css/components.css" th:href="@{/css/components.css}" id="style_components" rel="stylesheet" type="text/css"/>
 <link href="css/plugins.css" th:href="@{/css/plugins.css}" rel="stylesheet" type="text/css"/>
 <link href="css/layout.css" th:href="@{/css/layout.css}" rel="stylesheet" type="text/css"/>
@@ -182,6 +183,10 @@
 						<i class="fa fa-angle-down"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a th:href="'/user'">
+                                <i class="icon-user"></i><span> Mi perfil </span></a>
+                            </li>
 							<!--<li>
 								<a href="extra_profile.html">
 								<i class="icon-user"></i> Mi Perfil </a>
@@ -193,8 +198,9 @@
 								<i class="icon-lock"></i> Bloquear pantalla </a>
 							</li>-->
 							<li>
-								<a href="/login?logout">
-								<i class="icon-key"></i> Cerrar sesión </a>
+                                <form id="logoutForm" target="_self" action="/logout"></form>
+								<a href="javascript:;" onclick="logoutForm.submit();">
+								<i class="icon-key"></i><span> Cerrar sesión </span></a>
 							</li>
 						</ul>
 					</li>
@@ -265,6 +271,20 @@
                             <span class="arrow open"></span>
                         </th:block>
                         </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="/">Manual de calidad</a>
+                            </li>
+                            <li>
+                                <a href="/">Mapeo de procesos</a>
+                            </li>
+                            <li>
+                                <a href="/">Auditorías</a>
+                            </li>
+                            <li>
+                                <a href="/">Indicadores</a>
+                            </li>
+                        </ul>
                     </li>
                     <!--<li sec:authorize-url="/">
                         <a href="index.html">
@@ -317,6 +337,7 @@
                 <!--<h3 class="page-title">
                     <th:block layout:fragment="titulo"></th:block>
 				</h3>-->
+                <!--
 				<div class="page-bar">
 					<ul class="page-breadcrumb">
 						<li>
@@ -326,7 +347,7 @@
 						</li>
 						<th:block layout:fragment="breadcrumb"></th:block>
 					</ul>
-				</div>
+				</div>      -->
 				<!-- END PAGE HEADER-->
 				<!-- BEGIN PAGE CONTENT-->
 				<div class="row">

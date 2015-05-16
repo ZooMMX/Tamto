@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <title>Nuevo documento interno</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <th:block layout:fragment="titulo">
+        Título <small>subtítulo</small>
+    </th:block>
+    <div layout:fragment="content">
+        <!-- Begin content -->
+        <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-gift font-green-sharp"></i>
+                <span th:if="${!modoEdicion}" class="caption-subject font-green-sharp bold uppercase">Alta de nuevo documento interno</span>
+                <span th:if="${modoEdicion}" class="caption-subject font-green-sharp bold uppercase">Edición de documento interno</span>
+                <span class="caption-helper"> Lista maestra</span>
+            </div>
+            <!-- Acciones -->
+            <!--
+            <div class="actions">
+                <a href="#" class="btn btn-default btn-circle">
+                <i class="fa fa-plus"></i>
+                <span class="hidden-480">
+                Nueva pieza</span>
+                </a>
+            </div>
+            -->
+            <!-- Fin acciones -->
+        </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <form id="formi" th:action="@{/calidad/documento}" th:object="${documento}" class="horizontal-form"  method="POST" enctype="multipart/form-data">
+                    <input type="hidden" th:field="*{id}"/>
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Nivel</label>
+                                    <select th:field="*{nivel}" class="form-control">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Tipo</label>
+                                    <select th:field="*{tipo}" class="form-control">
+                                      <option th:each="tipoDoc, i : ${T(hello.calidad.TipoDocumento).values()}" th:value="${tipoDoc}" th:text="${tipoDoc}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Versión</label>
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input id="version" th:field="*{version}" type="number" class="form-control"/>
+                                        <input th:unless="${modoEdicion}" type="hidden" id="currentVersion" value="0"/>
+                                        <input th:if="${modoEdicion}" type="hidden" id="currentVersion" th:value="*{version}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Departamento</label>
+                                    <select th:field="*{departamento}" class="form-control">
+                                      <option th:each="dep, i : ${departamentos}" th:value="${dep}" th:text="${dep}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Código</label>
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input type="text" id="codigo" th:field="*{codigo}" class="form-control" placeholder="Código"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Título</label>
+                                    <div class="input-icon right">
+                                        <i class="fa"></i>
+                                        <input type="text" id="titulo" th:field="*{titulo}" class="form-control" placeholder="Título del documento"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Fecha de elaboración</label>
+                                <div class="input-icon right">
+                                    <i class="fa"></i>
+                                    <input type="text" id="fechaElaboracion" class="form-control date-picker" placeholder="dd/mm/aaaa" th:field="*{fechaElaboracion}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Última aprobación</label>
+                                <div class="input-icon right">
+                                    <i class="fa"></i>
+                                    <input type="text" id="ultimaAprobacion" class="form-control date-picker" placeholder="dd/mm/aaaa" th:field="*{ultimaAprobacion}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Próxima revisión</label>
+                                <div class="input-icon right">
+                                    <i class="fa"></i>
+                                    <input type="text" id="proximaRevision" class="form-control date-picker" placeholder="dd/mm/aaaa" th:field="*{proximaRevision}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">ROLCS</label>
+                                <select th:field="*{rolcs}" class="form-control">
+                                  <option th:each="rolcs, i : ${T(hello.calidad.ROLCS).values()}" th:value="${rolcs}" th:text="${rolcs}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Departamento</label>
+                                <select th:field="*{departamento}" class="form-control">
+                                  <option th:each="dep, i : ${T(hello.calidad.Departamento).values()}" th:value="${dep}" th:text="${dep}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>   -->
+                    <h3 class="form-section">Archivos</h3>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <label th:if="${modoEdicion}" class="control-label">Documento (archivo PDF). Deja vacío para no modificar.</label>
+                                <label th:unless="${modoEdicion}" class="control-label">Documento (archivo PDF)</label>
+                                <div class="input-icon right">
+                                    <i class="fa"></i>
+                                    <input th:if="${modoEdicion}" name="archivo" type="file" class="ignore form-control"/>
+                                    <input th:unless="${modoEdicion}" id="archivo" name="archivo" type="file" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <label th:if="${modoEdicion}" class="control-label">Documento fuente (word, excel, etc.). Deja vacío para no modificar.</label>
+                                <label th:unless="${modoEdicion}" class="control-label">Documento fuente (word, excel, etc.)</label>
+                                <div class="input-icon right">
+                                    <i class="fa"></i>
+                                    <input th:if="${modoEdicion}" name="documento_editable" type="file" class="ignore form-control"/>
+                                    <input th:unless="${modoEdicion}" id="documento_editable" name="documento_editable" type="file" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                    <h3 class="form-section">Notas</h3>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <textarea id="notas" th:field="*{notas}" class="form-control" rows="6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                    <div class="form-actions right">
+                        <a class="btn default" href="/calidad/listaMaestra">Cancelar</a>
+                        <button type="submit" class="btn blue"><i class="fa fa-check"></i>Guardar cambios</button>
+                    </div>
+                    <!--/row-->
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+    <!-- END content -->
+    <th:block layout:fragment="scripts">
+
+        <!-- BEGIN PAGE LEVEL STYLES -->
+        <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+        <link href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
+        <!-- END PAGE LEVEL STYLES -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="/plugins/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+        <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
+        <script src="/scripts/form-inputmasks.js"></script>
+        <script src="/scripts/form-validation-lista-maestra.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-validation/js/additional-methods.min.js"></script>
+        <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
+        <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+
+        <!-- END PAGE LEVEL PLUGINS-->
+
+        <script>
+                jQuery(document).ready(function() {
+                    FormValidation.init();
+                    FormInputMasks.init();
+                });
+        </script>
+    </th:block>
+</body>
+</html>

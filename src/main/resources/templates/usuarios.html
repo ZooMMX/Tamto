@@ -26,14 +26,15 @@
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat dashboard-stat-light purple-soft">
                     <div class="visual">
-                        <i class="fa fa-group"></i>
+                        <i class="icon-user-unfollow" th:if="${inactivos}"></i>
+                        <i class="fa fa-group" th:unless="${inactivos}"></i>
                     </div>
                     <div class="details">
                         <div class="number" th:text="${noUsuarios}">
 
                         </div>
                         <div class="desc">
-                             Usuarios
+                             Usuarios <span th:if="${inactivos}"> inactivos</span>
                         </div>
                     </div>
                 </div>
@@ -43,13 +44,18 @@
         <div class="portlet box purple">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="icon-users"></i>Usuarios
+                    <i class="icon-users"></i>Usuarios <span th:if="${inactivos}"> inactivos</span>
                 </div>
                 <div class="actions">
                     <a href="/usuarioNuevo" class="btn btn-default btn-circle">
-                    <i class="fa fa-plus"></i>
-                    <span class="hidden-480">
-                    Agregar usuario </span>
+                        <i class="fa fa-plus"></i>
+                        <span class="hidden-480">
+                        Agregar usuario </span>
+                    </a>
+                    <a href="/usuarios?inactivos=true" class="btn btn-default btn-circle" th:unless="${inactivos}">
+                        <i class="icon-user-unfollow"></i>
+                        <span class="hidden-480">
+                        Ver usuarios inactivos</span>
                     </a>
                     <div class="btn-group">
                         <a class="btn btn-default btn-circle" href="#" data-toggle="dropdown">

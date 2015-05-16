@@ -1,0 +1,102 @@
+
+
+/* GUI estilo plano o design sheet */
+@media screen and (min-width: 1024px) {
+    .plano {
+        border: 1px solid #000000;
+        padding: 0px !important;
+    }
+
+    .plano .columna-datos {
+        border-left: 1px solid #000000; padding-left: 0px;
+    }
+
+    .plano .bloque-izq {
+        border-right: 1px dotted #000000;
+        border-bottom: 1px dotted #000000;
+    }
+    .plano .bloque-der {
+        border-bottom: 1px dotted #000000;
+    }
+    .plano .bloque-completo {
+        border-bottom: 1px dotted #000000;
+    }
+}
+@media screen and (max-width: 1023px) {
+    .plano {
+        border: 1px solid #000000;
+        padding: 0px !important;
+    }
+
+    .plano .columna-datos {}
+
+    .plano .bloque-izq {
+        border-bottom: 1px dotted #000000;
+    }
+    .plano .bloque-der {
+        border-bottom: 1px dotted #000000;
+    }
+    .plano .bloque-completo {
+        border-bottom: 1px dotted #000000;
+    }
+}
+
+/* Celdas del plano */
+.celda {
+    padding: 10px;
+    text-align: center;
+}
+
+.celda .titulo {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: #777;
+}
+.celda .cuerpo {
+    margin-top: 20px;
+}
+
+
+
+/* columns of same height styles */
+
+@media screen and (min-width: 1024px) {
+    .row-full-height {
+      height: 100%;
+    }
+    .col-full-height {
+      height: 100%;
+      vertical-align: middle;
+    }
+    .row-same-height {
+      display: table;
+      width: 100%;
+      /* fix overflow */
+      table-layout: fixed;
+    }
+}
+
+.col-xs-height {
+  display: table-cell;
+  float: none !important;
+}
+
+@media (min-width: 768px) {
+  .col-sm-height {
+    display: table-cell;
+    float: none !important;
+  }
+}
+@media (min-width: 992px) {
+  .col-md-height {
+    display: table-cell;
+    float: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  .col-lg-height {
+    display: table-cell;
+    float: none !important;
+  }
+}

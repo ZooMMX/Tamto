@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -66,14 +68,17 @@ public class PiezasController {
             @RequestParam(required = false) String customActionType,
             @RequestParam(required = false) String customActionName,
             @RequestParam(value = "id[]", required = false) Long[] id,
+            HttpServletRequest request,
             Model model) {
                 HashMap resp = new HashMap<String, Object>();
-                Integer pageNo = start / length;
 
                 /* Ejecución de acciones */
                 if(customActionType != null && customActionType.equals("group_action"))
-                    // ** ¿Borrar? **
-                    if(customActionName != null && customActionName.equals("softdelete") && id != null) ocultarPiezas(id);
+                    // ** ¿Borrar? ** sólo si es administrador
+                    if(customActionName != null && customActionName.equals("softdelete")
+                            && id != null
+                            && request.isUserInRole("ROLE_ADMIN"))
+                        ocultarPiezas(id);
                 /* Terminan acciones */
 
                 /* Comienza filtros mediante criteria builder de JPA */
@@ -163,6 +168,5 @@ public class PiezasController {
             p.setEnabled(false);
             piezaRepository.save(p);
         }
-        System.out.println(id);
     }
 }

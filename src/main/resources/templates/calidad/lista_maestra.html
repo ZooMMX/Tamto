@@ -1,0 +1,253 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"  layout:decorator="calidad_layout">
+    <head>
+        <title>Calidad : Lista maestra</title>
+    </head>
+    <body>
+        <div layout:fragment="calidad_content">
+            <!-- Dialogs -->
+            <div class="alert alert-success alert-dismissable" th:if="${param.successMsg}!=null">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Confirmación</strong> <span th:text="${param.successMsg[0]}"></span>
+            </div>
+            <div class="alert alert-danger alert-dismissable" th:if="${param.errorMsg}!=null">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Alerta</strong> <span th:text="${param.errorMsg[0]}"></span>
+            </div>
+            <!-- Dialogs -->
+            <!-- Begin: life time stats -->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-gift font-green-sharp"></i>
+                        <span class="caption-subject font-green-sharp bold uppercase">Lista maestra</span>
+                        <span class="caption-helper">documentación interna del sistema de calidad</span>
+                    </div>
+                    <div class="actions">
+                        <a href="/calidad/documento/nuevo" class="btn btn-circle btn-primary">
+                        <i class="fa fa-plus"></i>
+                        <span class="hidden-480">
+                        Agregar documento </span>
+                        </a>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="#" data-toggle="dropdown">
+                            <i class="fa fa-share"></i>
+                            <span class="hidden-480">
+                            Herramientas </span>
+                            <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="#" id="xlsLink" download="lista_maestra.xls" onClick ="$('#datatable_ajax').tableExport({type:'excel',escape:'false'});">
+                                    Exportar a Excel </a>
+                                </li>
+                                <li>
+                                    <a href="#" id="csvLink" download="lista_maestra.csv" onclick="$('#datatable_ajax').tableExport({type:'csv',escape:'false'});">
+                                    Exportar a CSV </a>
+                                </li>
+                                <li>
+                                    <a href="#" id="xmlLink" download="lista_maestra.xml" onclick="$('#datatable_ajax').tableExport({type:'xml',escape:'false'});">
+                                    Exportar a XML </a>
+                                </li>
+                                <!--<li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#" id="pdfLink" download="piezas.pdf" onclick="$('#datatable_ajax').tableExport({type:'pdf',escape:'false'});">
+                                    Imprimir </a>
+                                </li>-->
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                                <i class="fa fa-columns"></i> Columnas <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul id="sample_4_column_toggler" class="dropdown-menu hold-on-click dropdown-menu-default pull-right">
+                                <li>
+                                    <a class="my-col-toggler" data-column="1"><i class="fa fa-columns"></i> Tipo</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="2"><i class="fa fa-columns"></i> Nivel</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="3"><i class="fa fa-columns"></i> Código</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="4"><i class="fa fa-columns"></i> Título</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="5"><i class="fa fa-columns"></i> Fecha elaboración</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="6"><i class="fa fa-columns"></i> Última aprobación</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="7"><i class="fa fa-columns"></i> Próxima revisión</a>
+                                </li>
+                                <li>
+                                    <a class="my-col-toggler" data-column="8"><i class="fa fa-columns"></i> Departamento</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-container">
+                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <span>
+                            </span>
+                            <select class="table-group-action-input form-control input-inline input-small input-sm">
+                                <option value="">Acción grupal...</option>
+                                <option value="softdelete">Archivar/Ocultar</option>
+                            </select>
+                            <button class="btn btn-sm yellow table-group-action-submit"><i class="fa fa-check"></i> Aplicar</button>
+                        </div>
+                        <table class="table table-striped table-bordered table-hover" id="datatable_ajax">
+                        <thead>
+                        <tr role="row" class="heading">
+                            <th width="2%">
+                                <input type="checkbox" class="group-checkable"/>
+                            </th>
+                            <th width="5%">
+                                 Nivel
+                            </th>
+                            <th width="5%">
+                                 Tipo
+                            </th>
+                            <th width="8%">
+                                 Código
+                            </th>
+                            <th width="21%">
+                                 Título
+                            </th>
+                            <th width="6%">
+                                 Fecha Elaboración
+                            </th>
+                            <th width="6%">
+                                 Última Aprobación
+                            </th>
+                            <th width="6%">
+                                 Próxima Revisión
+                            </th>
+                            <th width="8%">
+                                 Departamento
+                            </th>
+                            <th width="5%">
+                                 Acciones
+                            </th>
+                        </tr>
+                        <tr role="row" class="filter">
+                            <td>
+                            </td>
+                            <td>
+                                <select name="filter_nivel" class="form-control form-filter input-sm">
+                                    <option value="">Todos</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="filter_tipo" class="form-control form-filter input-sm">
+                                    <option value="">Todos</option>
+                                    <option th:each="tipoDoc, i : ${T(hello.calidad.TipoDocumento).values()}" th:value="${tipoDoc}" th:text="${tipoDoc}"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-filter input-sm" name="filter_codigo"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-filter input-sm" name="filter_titulo" placeholder=""/>
+                            </td>
+                            <td>
+                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy" style="padding: 1px;">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_fecha_elaboracion_from" placeholder="Del"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                                <div class="input-group date date-picker" data-date-format="dd/mm/yyyy" style="padding: 1px;">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_fecha_elaboracion_to" placeholder="Al"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_ultima_aprobacion_from" placeholder="Del"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                                <div class="input-group date date-picker" data-date-format="dd/mm/yyyy">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_ultima_aprobacion_to" placeholder="Al"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_proxima_revision_from" placeholder="Del"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                                <div class="input-group date date-picker" data-date-format="dd/mm/yyyy">
+                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_proxima_revision_to" placeholder="Al"/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <select name="departamento_filter" class="form-control form-filter input-sm">
+                                    <option value="">Todos</option>
+                                    <option th:each="dep, i : ${T(hello.calidad.Departamento).values()}" th:value="${dep}" th:text="${dep}"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="margin-bottom-5">
+                                    <button class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> Buscar</button>
+                                </div>
+                                <button class="btn btn-sm red filter-cancel"><i class="fa fa-times"></i> Reset</button>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- End: life time stats -->
+        </div>
+        <!-- Page level scripts -->
+        <th:block layout:fragment="calidad_scripts">
+            <!-- Page level CSS -->
+            <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+            <!-- BEGIN PAGE LEVEL PLUGINS -->
+            <script type="text/javascript" src="/plugins/select2/select2.min.js" th:src="@{/plugins/select2/select2.min.js}"></script>
+            <script type="text/javascript" src="/plugins/datatables/media/js/jquery.dataTables.min.js" th:src="@{/plugins/datatables/media/js/jquery.dataTables.min.js}"></script>
+            <script type="text/javascript" src="/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js" th:src="@{/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js}"></script>
+            <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+            <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" th:src="@{/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js}"></script>
+            <script type="text/javascript" src="/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+            <!-- END PAGE LEVEL PLUGINS -->
+            <!-- BEGIN PAGE LEVEL SCRIPTS -->
+            <script src="/scripts/datatable.js" th:src="@{/scripts/datatable.js}"></script>
+            <script src="/scripts/table-ajax-lista-maestra.js" th:src="@{/scripts/table-ajax-lista-maestra.js}"></script>
+            <script type="text/javascript" src="/plugins/htmltable_export/tableExport.js"></script>
+            <script type="text/javascript" src="/plugins/htmltable_export/jquery.base64.js"></script>
+            <!-- END PAGE LEVEL SCRIPTS -->
+            <script>
+                    jQuery(document).ready(function() {
+                       TableAjax.init();
+                    });
+            </script>
+        </th:block>
+        <!-- End page level scripts -->
+    </body>
+</html>

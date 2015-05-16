@@ -2,7 +2,7 @@ var FormInputMasks = function () {
 
     var handleInputMasks = function () {
 
-        $("#workOrderDate").inputmask("d/m/y", {
+        $(".date-picker").inputmask("d/m/y", {
             "placeholder": "dd/mm/aaaa",
             onUnMask: function(maskedValue, unmaskedValue) {
                     return maskedValue;

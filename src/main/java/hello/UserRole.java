@@ -15,6 +15,8 @@ import javax.persistence.*;
  *      "ROLE_PLANEACION"
  *      "ROLE_PRODUCCION"
  *      "ROLE_ADMIN"
+ *      -- Segunda fase --
+ *      ""
  */
 @Audited(withModifiedFlag = true)
 @Entity

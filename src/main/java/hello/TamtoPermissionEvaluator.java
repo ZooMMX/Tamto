@@ -1,5 +1,9 @@
 package hello;
 
+import hello.calidad.Departamento;
+import hello.calidad.DocumentoInterno;
+import hello.calidad.ListaMaestraRepository;
+import hello.calidad.ROLCS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     PiezaRepository piezaRepository;
 
+    @Autowired
+    ListaMaestraRepository listaMaestraRepository;
+
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
@@ -51,7 +58,58 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
             return _permisosArchivos(roles, (Long)targetId, (String) permission);
         } else if(targetType.equalsIgnoreCase("PIEZA")) {
             return _permisosPiezas(roles, (Long) targetId, (String) permission);
+        } else if(targetType.equalsIgnoreCase("LISTAMAESTRA")) {
+            return _permisosListaMaestra(roles, (Long) targetId, (String) permission);
         }
+
+        return false;
+    }
+
+    private boolean _permisosListaMaestra(HashSet<Roles> roles, Long targetId, String permission) {
+        DocumentoInterno documento = listaMaestraRepository.findOne(targetId);
+        return permisosListaMaestra(roles, documento, permission);
+    }
+
+    /**
+     * Determina los permisos de la lista maestra
+     * Permisos pesimistas.
+     *
+     * 	                        Ver	    Modificar	    Descargar
+     * Ventas	                Todo	Sólo sus docs.	Sólo sus docs.
+     * Planeación	            Todo	Sólo sus docs.	Sólo sus docs.
+     * Logística	            Todo	Sólo sus docs.	Sólo sus docs.
+     * RH	                    Todo	Sólo sus docs.	Sólo sus docs.
+     * Calidad	                Todo	Sólo sus docs.	Sólo sus docs.
+     * Dirección	            Todo	Sólo sus docs.	Sólo sus docs.
+     * Representante dirección	Todo	Sólo sus docs.	Sólo sus docs.
+     * Admin                	Nada    Nada            Nada
+     * Produccion               Nada    Nada            Nada
+
+     * @param roles
+     * @param documento
+     * @param permission
+     * @return Boolean
+     */
+    private Boolean permisosListaMaestra(HashSet<Roles> roles, DocumentoInterno documento, String permission) {
+
+        //Verifico que tengan algún rol del módulo de calidad (cualquiera menos admin y produccion), experaso en el Enum hello.calidad.ROLCS
+        Boolean contains = false;
+        for(ROLCS r : ROLCS.values()) {
+            contains = roles.contains("ROLE_"+r);
+            if(contains) break;
+        }
+        if(!contains) return false;
+        // ------ FIN Verificación de cualquier rol de calidad ------
+
+        //Ahora verifico el resto de las reglas
+        switch(permission) {
+            case "VER":
+                return true;
+            case "EDITAR":
+            case "DESCARGAR":
+                return roles.contains("ROLE_"+documento.getRolcs()); // TRUE si el usuario tiene al menos el mismo rol del documento
+        }
+        // ----------- FIN REGLAS PRINCIPALES -------------
 
         return false;
     }

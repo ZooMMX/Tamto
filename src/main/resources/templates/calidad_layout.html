@@ -15,34 +15,32 @@
     </th:block>
     <div layout:fragment="content">
         <div class="row">
-            <!--<div class="col-md-2"></div>-->
-            <div class="col-md-12" style="text-align: center;" id="encabezado">
+            <div class="col-md-12" style="padding-bottom: 30px;" id="encabezado">
                 <div th:utext="${encabezado}"></div>
                 <a href="/calidad/encabezado" style="position: absolute; right: 15px; bottom: 15px; display: none;" data-target="#ajax" data-toggle="modal">
                     <i class="icon-note"></i> Editar encabezado
                 </a>
             </div>
-            <!--<div class="col-md-2"></div>-->
         </div>
 
-        <div class="portlet light">
-            <div class="portlet-body">
-                <div class="tabbable-line">
+        <!-- Begin tab layout -->
+        <!--
+            <div class="tabbable-custom nav-justified">
                 <ul class="nav nav-tabs nav-justified">
                     <li class="active">
-                        <a href="#tab_1_1" data-toggle="tab" aria-expanded="false">
+                        <a href="#tab_1_1" data-toggle="tab">
                         Manual de calidad </a>
                     </li>
                     <li>
-                        <a href="#tab_1_2" data-toggle="tab" aria-expanded="false">
+                        <a href="#tab_1_2" data-toggle="tab">
                         Mapeo de procesos </a>
                     </li>
                     <li>
-                        <a href="#tab_1_3" data-toggle="tab" aria-expanded="false">
+                        <a href="#tab_1_3" data-toggle="tab">
                         Auditorias </a>
                     </li>
                     <li>
-                        <a href="#tab_1_4" data-toggle="tab" aria-expanded="false">
+                        <a href="#tab_1_4" data-toggle="tab">
                         Indicadores </a>
                     </li>
                 </ul>
@@ -69,12 +67,28 @@
                     </div>
                 </div>
             </div>
+            -->
+        <!-- End tab layout -->
+        <!-- Begin button group layout -->
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-info bg-blue-chambray"><i class="fa fa-book"></i>&nbsp;Manual de calidad</a>
+            <a class="btn btn-info bg-blue-ebonyclay"><i class="fa fa-gears"></i>&nbsp;Mapeo de procesos</a>
+            <a class="btn btn-info bg-blue-chambray"><i class="fa fa-search"></i>&nbsp;Auditorías</a>
+            <a class="btn btn-info bg-blue-ebonyclay"><i class="fa fa-tachometer"></i>&nbsp;Indicadores</a>
+        </div>
+        <!-- End button group layout -->
+        <!-- Begin content -->
+        <div class="row">
+            <div class="col-md-12" layout:fragment="calidad_content">
+                 <!--Page content goes here-->
             </div>
         </div>
+        <!-- End content -->
+
         <!-- Modal -->
         <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
             <div class="page-loading page-loading-boxed">
-                <img src="img/loading-spinner-grey.gif" alt="" class="loading"/>
+                <img th:src="@{/img/loading-spinner-grey.gif}" src="/img/loading-spinner-grey.gif" alt="" class="loading"/>
                 <span>
                 &nbsp;&nbsp;Cargando... </span>
             </div>
@@ -85,30 +99,34 @@
         </div>
         <!-- End Modal -->
     </div>
-    <!-- Page level scripts -->
-    <th:block layout:fragment="scripts">
-        <!-- Page level styles -->
-        <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css"/>
-        <!-- End page level styles -->
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <script src="/plugins/flot/jquery.flot.min.js"></script>
-        <script src="/plugins/flot/jquery.flot.resize.min.js"></script>
-        <script src="/plugins/flot/jquery.flot.pie.min.js"></script>
-        <script type="text/javascript" src="/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
-        <script type="text/javascript" src="/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
 
-        <!-- END PAGE LEVEL PLUGINS -->
-        <script src="scripts/dashboard.js"></script>
-        <script th:utext="'jQuery(document).ready(function() { var data = ' + ${graphData} + '; Dashboard.init(data); });'" ></script>
-        <script>
-            jQuery(document).ready(function() {
-                $(document).on('mouseenter', '#encabezado', function () {
-                    $(this).find(":link").show();
-                }).on('mouseleave', '#encabezado', function () {
-                    $(this).find(":link").hide();
+    <th:block layout:fragment="scripts">
+        <!-- BEGIN EDITOR - SÓLO ADMINISTRADORES Y PERSONAL DEL ÁREA DE CALIDAD -->
+        <th:block sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')">
+            <!-- Begin calidad layout level styles and scripts -->
+            <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-summernote/summernote.css"/>
+            <!-- PLUGINS -->
+            <script src="/plugins/bootstrap-summernote/summernote.min.js" type="text/javascript"></script>
+            <!-- END PLUGINS -->
+            <script>
+                jQuery(document).ready(function() {
+
+                    $(document).on('mouseenter', '#encabezado', function () {
+                        $(this).find(":link").show();
+                    }).on('mouseleave', '#encabezado', function () {
+                        $(this).find(":link").hide();
+                    });
                 });
-            });
-        </script>
+            </script>
+            <!-- END calidad layout level styles and scripts -->
+        </th:block>
+        <!-- END EDITOR -->
+        <!-- Begin page level styles and scripts -->
+        <th:block layout:fragment="calidad_scripts">
+        </th:block>
+        <!-- End page level styles and scripts -->
     </th:block>
+
+
 </body>
 </html>

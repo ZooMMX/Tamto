@@ -30,13 +30,20 @@ public class UsuariosController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/usuarios")
-    public String usuarios(Model model) {
+    public String usuarios(
+            @RequestParam(required = false, defaultValue = "false", value = "inactivos") Boolean mostrarInactivos,
+            Model model) {
 
-        List usuarios = (List) userRepository.findActiveUsers();
+        List usuarios;
+        if(!mostrarInactivos)
+            usuarios = (List) userRepository.findActiveUsers();
+        else
+            usuarios = (List) userRepository.findInactiveUsers();
 
         model.addAttribute("selectedMenu", "usuarios");
         model.addAttribute("users", usuarios);
         model.addAttribute("noUsuarios", usuarios.size());
+        model.addAttribute("inactivos", mostrarInactivos);
         return "usuarios";
     }
 

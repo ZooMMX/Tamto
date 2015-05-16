@@ -74,6 +74,12 @@
            <artifactId>prettytime</artifactId>
            <version>3.2.5.Final</version>
         </dependency>
+        <!-- Apache bean utils -->
+        <dependency>
+        	<groupId>commons-beanutils</groupId>
+        	<artifactId>commons-beanutils</artifactId>
+        	<version>1.8.3</version>
+        </dependency>
     </dependencies>
 
     <build>

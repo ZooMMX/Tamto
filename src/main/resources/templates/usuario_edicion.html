@@ -68,8 +68,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Roles</label>
-                                    <div class="input-icon right">
-                                        <i class="fa"></i>
+                                    <div class="input-icon">
+                                        <i class="fa" style="right: 10px;"></i>
                                         <select id="roles" class="form-control select2 select2-offscreen" name="roles" multiple="multiple">
                                             <option th:each="type : ${roleTypes}" th:value="${type}" th:text="${type}" th:selected="${userRoles.contains(type.toString())}">X</option>
                                         </select>
@@ -119,7 +119,7 @@
     <th:block layout:fragment="scripts">
 
         <!-- BEGIN PAGE LEVEL STYLES -->
-        <link href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+        <!--<link href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>-->
         <!-- END PAGE LEVEL STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script src="/plugins/fancybox/source/jquery.fancybox.pack.js"></script>

@@ -64,7 +64,7 @@
                 </div>
                 <div class="portlet-body">
                     <div class="table-container">
-                        <div class="table-actions-wrapper">
+                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_ADMIN')">
                             <span>
                             </span>
                             <select class="table-group-action-input form-control input-inline input-small input-sm">
