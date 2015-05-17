@@ -66,7 +66,10 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     }
 
     private boolean _permisosListaMaestra(HashSet<Roles> roles, Long targetId, String permission) {
-        DocumentoInterno documento = listaMaestraRepository.findOne(targetId);
+        DocumentoInterno documento = null;
+        if(targetId != null)
+            documento = listaMaestraRepository.findOne(targetId);
+
         return permisosListaMaestra(roles, documento, permission);
     }
 
@@ -74,7 +77,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      * Determina los permisos de la lista maestra
      * Permisos pesimistas.
      *
-     * 	                        Ver	    Modificar	    Descargar
+     * 	                        Ver	    Editar  	    Descargar
      * Ventas	                Todo	Sólo sus docs.	Sólo sus docs.
      * Planeación	            Todo	Sólo sus docs.	Sólo sus docs.
      * Logística	            Todo	Sólo sus docs.	Sólo sus docs.
@@ -94,8 +97,11 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
 
         //Verifico que tengan algún rol del módulo de calidad (cualquiera menos admin y produccion), experaso en el Enum hello.calidad.ROLCS
         Boolean contains = false;
-        for(ROLCS r : ROLCS.values()) {
-            contains = roles.contains("ROLE_"+r);
+        for(ROLCS rolc : ROLCS.values()) {
+            //Convierto de ROLCS a ROLE; NOTA: ROLCS significa algo así como rol del sistema de calidad (yo no lo puse si no tamto)
+            Roles requiredRole = Roles.valueOf("ROLE_" + rolc.toString());
+            //**Usuarios del sistema de calidad.** Si la autoridad del usuario incluye este "ROLCS" entonces contains = true; Lo que significa que es un usuario con permiso de acceso al sistema de calidad
+            contains = roles.contains(requiredRole);
             if(contains) break;
         }
         if(!contains) return false;
@@ -105,9 +111,13 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
         switch(permission) {
             case "VER":
                 return true;
+            case "AGREGAR":
+                return true;
             case "EDITAR":
+                if(documento == null) return true; //TODO Nuevos documentos son permitidos sin considerar roles, aunque debería considerarse el ROLCS. Esto en el POST de agregar/editar
             case "DESCARGAR":
-                return roles.contains("ROLE_"+documento.getRolcs()); // TRUE si el usuario tiene al menos el mismo rol del documento
+                Roles requiredRole = Roles.valueOf("ROLE_"+documento.getRolcs());
+                return roles.contains(requiredRole); // TRUE si el usuario tiene al menos el mismo rol del documento
         }
         // ----------- FIN REGLAS PRINCIPALES -------------
 

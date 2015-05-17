@@ -37,6 +37,7 @@ public class ErrController implements org.springframework.boot.autoconfigure.web
                 }
             }
             model.addAttribute("throwable", throwable);
+            model.addAttribute("selectedMenu", "");
             return "500headless";
         }
     }
@@ -49,12 +50,14 @@ public class ErrController implements org.springframework.boot.autoconfigure.web
     //Sólo se llega desde la URL
     @RequestMapping("/403")
     public String forbidden(HttpServletRequest request, Model model) {
+        model.addAttribute("selectedMenu", "");
         return "403";
     }
 
     //Sólo se llega desde la URL
     @RequestMapping("/404")
     public String notFound(HttpServletRequest request, Model model) {
+        model.addAttribute("selectedMenu", "");
         return "404";
     }
 }

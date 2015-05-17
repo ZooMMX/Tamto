@@ -60,6 +60,7 @@ public class ListaMaestraController {
     @Autowired
     EntityManager em;
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping({"/calidad/listaMaestra", "/calidad"})
     private String listaMaestra(Model model) {
 
@@ -93,6 +94,7 @@ public class ListaMaestraController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping("/calidad/listaMaestraJSON")
     @ResponseBody public HashMap<String, Object> getJSON(
             @RequestParam Integer length,
@@ -222,6 +224,7 @@ public class ListaMaestraController {
         }
     }
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'AGREGAR')")
     @RequestMapping("/calidad/documento/nuevo")
     public String nuevoDoc(Model model) {
 
@@ -258,6 +261,7 @@ public class ListaMaestraController {
         return "calidad/documento_nuevo_editar";
     }
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'EDITAR')")
     @RequestMapping(value = "/calidad/documento", method = RequestMethod.POST)
     public String nuevoDocPOST(
             Model model,
@@ -335,6 +339,7 @@ public class ListaMaestraController {
         return "redirect:/calidad/listaMaestra";
     }
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping("/calidad/documento/{rev}/{id}")
     public String verDoc(@PathVariable Integer rev, @PathVariable Long id, Model model) {
 
@@ -356,6 +361,7 @@ public class ListaMaestraController {
         return "calidad/documento";
     }
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping("/calidad/documento/{rev}/{id}.pdf")
     public String verDocPDF(@PathVariable("id") Long id,
                             @PathVariable("rev") Integer rev,
@@ -395,6 +401,7 @@ public class ListaMaestraController {
      * @param response
      * @return
      */
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'DESCARGAR')")
     @RequestMapping("/calidad/documento/{rev}/{id}/descargar/pdf")
     public String downloadPDF(
             @PathVariable("rev") Integer rev,
@@ -435,6 +442,7 @@ public class ListaMaestraController {
      * @param response
      * @return
      */
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'DESCARGAR')")
     @RequestMapping("/calidad/documento/{rev}/{id}/descargar/fuente")
     public String downloadSource(
             @PathVariable("rev") Integer rev,
@@ -468,6 +476,7 @@ public class ListaMaestraController {
         return null;
     }
 
+    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping("/calidad/documento/{id}/auditoria")
     public String verAuditoria(@PathVariable("id") Long id, Model model) {
 
