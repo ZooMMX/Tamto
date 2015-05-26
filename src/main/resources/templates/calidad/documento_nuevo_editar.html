@@ -61,7 +61,7 @@
                                     <label class="control-label">Versión</label>
                                     <div class="input-icon right">
                                         <i class="fa"></i>
-                                        <input id="version" th:field="*{version}" type="number" class="form-control"/>
+                                        <input id="version-field" th:field="*{version}" type="text" class="version-field form-control"/>
                                         <input th:unless="${modoEdicion}" type="hidden" id="currentVersion" value="0"/>
                                         <input th:if="${modoEdicion}" type="hidden" id="currentVersion" th:value="*{version}"/>
                                     </div>
@@ -82,7 +82,7 @@
                                     <label class="control-label">Código</label>
                                     <div class="input-icon right">
                                         <i class="fa"></i>
-                                        <input type="text" id="codigo" th:field="*{codigo}" class="form-control" placeholder="Código"/>
+                                        <input type="text" id="codigo-field" th:field="*{codigo}" class="codigo-field form-control" placeholder="Código"/>
                                     </div>
                                 </div>
                             </div>
@@ -220,6 +220,22 @@
                 jQuery(document).ready(function() {
                     FormValidation.init();
                     FormInputMasks.init();
+                    //-----
+
+					$("#codigo-field").inputmask({
+                        mask: "a-aa[a]-**[*]-**[*][-**[*]][/99]",
+                        crearIncomplete: false,
+                        onUnMask: function(maskedValue, unmaskedValue) {
+                                            return maskedValue;
+                                       }
+                    });
+                    $("#version-field").inputmask({
+                        mask: "(a)|(99)",
+                        crearIncomplete: false,
+                        onUnMask: function(maskedValue, unmaskedValue) {
+                                            return maskedValue;
+                                       }
+                    });
                 });
         </script>
     </th:block>

@@ -59,7 +59,7 @@ public class DocumentoInterno {
     private Date ultimaAprobacion;
 
     @Column
-    private BigDecimal version;
+    private String version;
 
     @DateTimeFormat(pattern="dd/MM/yyyy")
     @Column(name = "proxima_revision")
@@ -210,11 +210,11 @@ public class DocumentoInterno {
         this.ultimaAprobacion = ultimaAprobacion;
     }
 
-    public BigDecimal getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(BigDecimal version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

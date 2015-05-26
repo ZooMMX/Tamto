@@ -6,12 +6,16 @@
     </head>
     <body>
     <div class="row" layout:fragment="calidad_content">
-        <div class="col-md-12 page-500">
-            <object style="width: 100%; height: 600px;" th:data="@{/media/manual.pdf}" type="application/pdf">
-                <embed th:src="@{/media/manual.pdf}" type="application/pdf" />
-            </object>
+        <div class="fluidMedia" th:if="${id!=null}">
+            <iframe name="viewer" id="viewer" th:src="'/plugins/PDFJS/web/viewer.html?file=/calidad/documento/0/'+${id}+'.pdf'" width='566' height='400' style="text-align:center;" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen">
+            </iframe>
+        </div>
+        <div th:if="${id==null}">
+            <h2>No se ha registrado el manual de gestión de calidad</h2>
         </div>
     </div>
-
+    <th:block layout:fragment="scripts">
+        <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/>
+    </th:block>
     </body>
 </html>

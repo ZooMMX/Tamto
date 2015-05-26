@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"  layout:decorator="calidad_layout">
+    <head>
+        <title>Mapeo de procesos</title>
+    </head>
+    <body>
+    <div layout:fragment="calidad_content">
+        <div class="portlet light">
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-12" id="contenido">
+                        <a href="/calidad/mapeoProcesos/editor" data-target="#ajax" data-toggle="modal" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')">
+                            <i class="icon-note"></i> Editar contenido
+                        </a>
+                        <div th:utext="${contenido}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

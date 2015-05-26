@@ -22,13 +22,13 @@ var FormValidation = function () {
                         codigo: {
                             minlength: 3,
                             maxlength: 20,
-                            required: true
+                            required: true,
+                            validateInputmask: $('#codigo-field')
                         },
                         version: {
                             min: $('#currentVersion').val(),
-                            maxlength: 20,
                             required: true,
-                            number: true
+                            validateInputmask: $('#version-field')
                         },
                         fechaElaboracion: {
                             dateITA: true,
@@ -55,7 +55,8 @@ var FormValidation = function () {
                         titulo: {
                             required: "Por favor escribe un título",
                             minlength: jQuery.validator.format("Escribe al menos {0} caractéres"),
-                            maxlength: jQuery.validator.format("Escribe menos de {0} caractéres")
+                            maxlength: jQuery.validator.format("Escribe menos de {0} caractéres"),
+                            validateInputmask: "El código no es válido"
                         },
                         codigo: {
                             required: "Por favor escribe un código",
@@ -63,9 +64,8 @@ var FormValidation = function () {
                         },
                         version: {
                             min: jQuery.validator.format("Versión debe ser mayor o igual a la actual ({0})"),
-                            maxlength: jQuery.validator.format("Escribe menos de {0} caractéres"),
                             required: "Campo requerido",
-                            number: "Sólo se permiten números"
+                            validateInputmask: "Una versión válida puede ser una letra o dos dígitos"
                         },
                         fechaElaboracion: {
                             required: "Es necesario que escribas una fecha",
@@ -132,6 +132,11 @@ var FormValidation = function () {
     return {
         //main function to initiate the module
         init: function () {
+            jQuery.validator.addMethod("validateInputmask", function(value, element, params)
+            {
+                return params.inputmask("isComplete");
+            }, jQuery.validator.format("No tiene el formato válido"));
+
             handleValidation1();
         }
 

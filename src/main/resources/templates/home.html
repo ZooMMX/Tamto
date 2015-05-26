@@ -158,7 +158,7 @@
                             <ul class="feeds">
                                 <li th:each="rev : ${calidadRevisionesVencidas}">
                                     <!-- Link de la actividad -->
-                                    <a th:href="'/calidad/documento/'+${rev.getId()}">
+                                    <a th:href="'/calidad/documento/0/'+${rev.getId()}">
                                     <div class="col1">
                                         <div class="cont">
                                             <div class="cont-col1">
@@ -203,7 +203,7 @@
                             <ul class="feeds">
                                 <li th:each="rev : ${calidadProximasRevisiones}">
                                     <!-- Link de la actividad -->
-                                    <a th:href="'/calidad/documento/'+${rev.getId()}">
+                                    <a th:href="'/calidad/documento/0/'+${rev.getId()}">
                                     <div class="col1">
                                         <div class="cont">
                                             <div class="cont-col1">
