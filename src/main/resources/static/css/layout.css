@@ -93,6 +93,11 @@ Page Header
   margin-left: 35px;
   z-index: 1001;
 }
+.page-header.navbar .page-logo .logo-phesus {
+  margin-top: 3px;
+  margin-left: 10px;
+  z-index: 1001;
+}
 .page-header.navbar .page-logo .logo-mini {
   display: none;
   margin-left: 5px;

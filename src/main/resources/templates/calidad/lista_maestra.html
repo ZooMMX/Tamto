@@ -63,10 +63,10 @@
                             </a>
                             <ul id="sample_4_column_toggler" class="dropdown-menu hold-on-click dropdown-menu-default pull-right">
                                 <li>
-                                    <a class="my-col-toggler" data-column="1"><i class="fa fa-columns"></i> Tipo</a>
+                                    <a class="my-col-toggler" data-column="1"><i class="fa fa-columns"></i> Nivel</a>
                                 </li>
                                 <li>
-                                    <a class="my-col-toggler" data-column="2"><i class="fa fa-columns"></i> Nivel</a>
+                                    <a class="my-col-toggler" data-column="2"><i class="fa fa-columns"></i> Tipo</a>
                                 </li>
                                 <li>
                                     <a class="my-col-toggler" data-column="3"><i class="fa fa-columns"></i> Código</a>
@@ -75,16 +75,10 @@
                                     <a class="my-col-toggler" data-column="4"><i class="fa fa-columns"></i> Título</a>
                                 </li>
                                 <li>
-                                    <a class="my-col-toggler" data-column="5"><i class="fa fa-columns"></i> Fecha elaboración</a>
+                                    <a class="my-col-toggler" data-column="5"><i class="fa fa-columns"></i> Próxima revisión</a>
                                 </li>
                                 <li>
-                                    <a class="my-col-toggler" data-column="6"><i class="fa fa-columns"></i> Última aprobación</a>
-                                </li>
-                                <li>
-                                    <a class="my-col-toggler" data-column="7"><i class="fa fa-columns"></i> Próxima revisión</a>
-                                </li>
-                                <li>
-                                    <a class="my-col-toggler" data-column="8"><i class="fa fa-columns"></i> Departamento</a>
+                                    <a class="my-col-toggler" data-column="6"><i class="fa fa-columns"></i> Departamento</a>
                                 </li>
                             </ul>
                         </div>
@@ -113,17 +107,11 @@
                             <th width="5%">
                                  Tipo
                             </th>
-                            <th width="8%">
+                            <th width="12%">
                                  Código
                             </th>
-                            <th width="21%">
+                            <th width="25%">
                                  Título
-                            </th>
-                            <th width="6%">
-                                 Fecha Elaboración
-                            </th>
-                            <th width="6%">
-                                 Última Aprobación
                             </th>
                             <th width="6%">
                                  Próxima Revisión
@@ -131,7 +119,7 @@
                             <th width="8%">
                                  Departamento
                             </th>
-                            <th width="5%">
+                            <th width="9%">
                                  Acciones
                             </th>
                         </tr>
@@ -161,34 +149,6 @@
                                 <input type="text" class="form-control form-filter input-sm" name="filter_titulo" placeholder=""/>
                             </td>
                             <td>
-                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy" style="padding: 1px;">
-                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_fecha_elaboracion_from" placeholder="Del"/>
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                                <div class="input-group date date-picker" data-date-format="dd/mm/yyyy" style="padding: 1px;">
-                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_fecha_elaboracion_to" placeholder="Al"/>
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_ultima_aprobacion_from" placeholder="Del"/>
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                                <div class="input-group date date-picker" data-date-format="dd/mm/yyyy">
-                                    <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_ultima_aprobacion_to" placeholder="Al"/>
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
                                 <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
                                     <input type="text" class="form-control form-filter input-sm" readonly="readonly" name="filter_proxima_revision_from" placeholder="Del"/>
                                     <span class="input-group-btn">
@@ -212,7 +172,7 @@
                                 <div class="margin-bottom-5">
                                     <button class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
-                                <button class="btn btn-sm red filter-cancel"><i class="fa fa-times"></i> Reset</button>
+                                <button class="btn btn-sm red filter-cancel"><i class="fa fa-times"></i> Limpiar</button>
                             </td>
                         </tr>
                         </thead>

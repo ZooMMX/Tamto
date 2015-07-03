@@ -1,0 +1,48 @@
+<form id="formi" th:action="@{/calidad/organigrama}" class="horizontal-form"  method="POST" onsubmit="return postForm()">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title"><i class="icon-note"></i> Editar organigrama</h4>
+    </div>
+    <!-- Begin content -->
+    <!-- BEGIN FORM-->
+
+    <div class="modal-body">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <!--<label class="control-label">Cuerpo</label>-->
+                            <div class="input-icon right">
+                                <i class="fa"></i>
+                                <textarea id="editor" name="contenido" th:text="${contenido}" placeholder="" class="form-control">
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+            </div>
+            <!--/row-->
+        </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn blue">Guardar</button>
+        <button type="button" class="btn default" data-dismiss="modal">Cerrar</button>
+    </div>
+</form>
+    <!-- END FORM-->
+<!-- END content -->
+
+
+<script>
+        jQuery(document).ready(function() {
+            $('#editor').summernote({
+                height: "150"
+            });
+
+            var postForm = function() {
+            	var content = $('textarea[name="contenido"]').html($('#editor').code());
+            }
+        });
+</script>

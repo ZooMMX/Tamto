@@ -50,14 +50,6 @@ public class DocumentoInterno {
     @Size(min=0, max=200)
     private String titulo;
 
-    @DateTimeFormat(pattern="dd/MM/yyyy")
-    @Column(name = "fecha_elaboracion")
-    private Date fechaElaboracion;
-
-    @DateTimeFormat(pattern="dd/MM/yyyy")
-    @Column(name = "ultima_aprobacion")
-    private Date ultimaAprobacion;
-
     @Column
     private String version;
 
@@ -190,26 +182,6 @@ public class DocumentoInterno {
         this.titulo = titulo;
     }
 
-    public Date getFechaElaboracion() {
-        return fechaElaboracion;
-    }
-
-    public String getFechaElaboracionString() { return getDateString(getFechaElaboracion()); }
-
-    public void setFechaElaboracion(Date fechaElaboracion) {
-        this.fechaElaboracion = fechaElaboracion;
-    }
-
-    public Date getUltimaAprobacion() {
-        return ultimaAprobacion;
-    }
-
-    public String getUltimaAprobacionString() { return getDateString(getUltimaAprobacion()); }
-
-    public void setUltimaAprobacion(Date ultimaAprobacion) {
-        this.ultimaAprobacion = ultimaAprobacion;
-    }
-
     public String getVersion() {
         return version;
     }
@@ -256,6 +228,8 @@ public class DocumentoInterno {
         return created;
     }
 
+    public String getCreatedString() { return getDateString(getCreated()); }
+
     public void setCreated(Date created) {
         this.created = created;
     }
@@ -263,6 +237,8 @@ public class DocumentoInterno {
     public Date getUpdated() {
         return updated;
     }
+
+    public String getUpdatedString() { return getDateString(getUpdated()); }
 
     public void setUpdated(Date updated) {
         this.updated = updated;

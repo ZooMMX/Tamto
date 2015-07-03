@@ -145,7 +145,7 @@ public class PiezasController {
                 /* ** Paginación y ejecución de consulta ** */
                 TypedQuery<Pieza> piezasTypedQuery = em.createQuery( piezaQuery );
                 piezasTypedQuery.setFirstResult(start);
-                piezasTypedQuery.setMaxResults(length);
+                if(length > 0) piezasTypedQuery.setMaxResults(length); //Infinito si length es menor o igual a cero
                 List<Pieza> piezas = piezasTypedQuery.getResultList(); //Ejecución de la consulta maestra
                 CriteriaQuery countQuery = piezaQuery;
                 countQuery.select( qb.count( p.get(Pieza_.id) ) );

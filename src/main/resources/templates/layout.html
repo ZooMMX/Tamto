@@ -49,8 +49,8 @@
 	<div class="page-header-inner">
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
-			<a href="/"><img src="/img/logo_neg_80.png" alt="logo" class="logo-default"/>
-            <!--<font color="white"><h2 class="logo-default">TAMTO</h2></font>-->
+            <a href="/"><img src="/img/logo_neg_80.png" alt="logo" class="logo-default"/>
+				<!--<font color="white"><h2 class="logo-default">TAMTO</h2></font>-->
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -73,6 +73,10 @@
 						<a href="/usuarioNuevo">
                         <i class="icon-user"></i> Nuevo usuario </a>
 					</li>
+                    <li sec:authorize="hasRole('ROLE_CALIDAD')">
+                        <a href="/calidad/documento/nuevo">
+                        <i class="icon-doc"></i> Agregar documento de calidad </a>
+                    </li>
 					<li>
 						<a href="/piezaNueva">
 						<i class="icon-tag"></i> Nueva pieza </a>
@@ -278,6 +282,9 @@
                             <li>
                                 <a href="/calidad/mapeoProcesos">Mapeo de procesos</a>
                             </li>
+                            <li>
+                                <a href="/calidad/organigrama">Organigrama</a>
+                            </li>
 							<!--
                             <li>
                                 <a href="/">Auditorías</a>
@@ -369,7 +376,7 @@
 	<!-- BEGIN FOOTER -->
 	<div class="page-footer">
 		<div class="page-footer-inner">
-			 2015 &copy; Archivo Tamto by Bromio &amp; Phesus.
+			 2015 &copy; Gestión Interna by Bromio &amp; Phesus.
 		</div>
 		<div class="scroll-to-top">
 			<i class="icon-arrow-up"></i>

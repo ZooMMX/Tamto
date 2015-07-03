@@ -100,6 +100,8 @@
                         </div>
                     </div>
                     <div class="row">
+                        <!-- Eliminado por solicitud del cliente -->
+                        <!--
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">Fecha de elaboración</label>
@@ -118,9 +120,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        -->
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label">Próxima revisión</label>
+                                <label class="control-label">Fecha próxima revisión</label>
                                 <div class="input-icon right">
                                     <i class="fa"></i>
                                     <input type="text" id="proximaRevision" class="form-control date-picker" placeholder="dd/mm/aaaa" th:field="*{proximaRevision}"/>
@@ -221,14 +224,15 @@
                     FormValidation.init();
                     FormInputMasks.init();
                     //-----
-
+                    /* Desactivado a petición del cliente */
+                    /*
 					$("#codigo-field").inputmask({
                         mask: "a-aa[a]-**[*]-**[*][-**[*]][/99]",
                         crearIncomplete: false,
                         onUnMask: function(maskedValue, unmaskedValue) {
                                             return maskedValue;
                                        }
-                    });
+                    }); */
                     $("#version-field").inputmask({
                         mask: "(a)|(99)",
                         crearIncomplete: false,

@@ -199,7 +199,7 @@ public class ListaMaestraController {
         /* ** Paginación y ejecución de consulta ** */
         TypedQuery<DocumentoInterno> docTypedQuery = em.createQuery( documentoQuery );
         docTypedQuery.setFirstResult(start);
-        docTypedQuery.setMaxResults(length);
+        if(length > 0) docTypedQuery.setMaxResults(length); //Infinito si length es menor o igual a cero
         List<DocumentoInterno> docs = docTypedQuery.getResultList(); //Ejecución de la consulta maestra
         CriteriaQuery countQuery = documentoQuery;
         countQuery.select( qb.count( p.get(DocumentoInterno_.id) ) );
@@ -526,7 +526,7 @@ public class ListaMaestraController {
             Date fechaElaboracion = (Date) r[6];
             Date ultimaAprobacion = (Date) r[7];
             Date proximaRevision = (Date) r[8];
-            BigDecimal version = (BigDecimal) r[9];
+            String version = (String) r[9];
             String departamento = (String) r[10];
             // No obtengo el documento por ser un blob
             // No obtengo las notas por ser muy largas para mostrar a detalle

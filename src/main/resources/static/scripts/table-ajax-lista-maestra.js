@@ -46,8 +46,6 @@ var TableAjax = function () {
                     { "data": "tipo" },
                     { "data": "codigo"},
                     { "data": "titulo"},
-                    { "data": "fechaElaboracionString"},
-                    { "data": "ultimaAprobacionString"},
                     { "data": "proximaRevisionString"},
                     { "data": "departamento"},
                     { "data": "htmlAction" }
