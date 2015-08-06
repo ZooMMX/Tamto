@@ -170,7 +170,7 @@
                     <span>
                     &nbsp;&nbsp;Cargando... </span>
                 </div>
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-full modal-lg" style="width: 90%;">
                     <div class="modal-content">
                     </div>
                 </div>
@@ -181,6 +181,9 @@
     <th:block layout:fragment="scripts">
     <!-- Page level CSS -->
     <link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/documento.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script type="text/javascript" src="plugins/select2/select2.min.js" th:href="@{/plugins/select2/select2.min.js}"></script>
     <script type="text/javascript" src="plugins/datatables/media/js/jquery.dataTables.min.js" th:href="@{/plugins/datatables/media/js/jquery.dataTables.min.js}"></script>

@@ -556,57 +556,57 @@ public class ListaMaestraController {
             descripcionRev.append("modificó ");
 
             Boolean coma = false;
-            if(nivelMod) {
+            if(nivelMod != null && nivelMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("el nivel a \""+ nivel +"\"");
                 coma = true;
             }
-            if(tipoMod) {
+            if(tipoMod != null && tipoMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("tipo de documento por \""+tipo+"\"");
                 coma = true;
             }
-            if(codigoMod) {
+            if(codigoMod != null && codigoMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("el código a \""+codigo+"\"");
                 coma = true;
             }
-            if(rolcsMod) {
+            if(rolcsMod != null && rolcsMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("el ROLCS por \""+rolcs+"\"");
                 coma = true;
             }
-            if(tituloMod) {
+            if(tituloMod != null && tituloMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("título a \""+titulo+"\"");
                 coma = true;
             }
-            if(fechaElaboracionMod) {
+            if(fechaElaboracionMod != null && fechaElaboracionMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("fecha de elaboración a \""+fechaElaboracion+"\"");
                 coma = true;
             }
-            if(ultimaAprobacionMod) {
+            if(ultimaAprobacionMod != null && ultimaAprobacionMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("fecha de última aprobación por \""+ultimaAprobacion+"\"");
                 coma = true;
             }
-            if(proximaRevisionMod) {
+            if(proximaRevisionMod != null && proximaRevisionMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("fecha de próxima revisión por \""+proximaRevision+"\"");
                 coma = true;
             }
-            if(versionMod) {
+            if(versionMod != null && versionMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("la versión a \""+version+"\"");
                 coma = true;
             }
-            if(departamentoMod) {
+            if(departamentoMod != null && departamentoMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("departamento a \""+departamento+"\"");
                 coma = true;
             }
-            if(documentoMod) {
+            if(documentoMod != null && documentoMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("el archivo PDF del documento");
                 coma = true;
@@ -616,17 +616,17 @@ public class ListaMaestraController {
                 descripcionRev.append("documento fuente");
                 coma = true;
             }
-            if(notasMod) {
+            if(notasMod != null && notasMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("modificó las notas");
                 coma = true;
             }
-            if(enabledMod) {
+            if(enabledMod != null && enabledMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append(enabledMod ? "Recuperó el documento previamente archivado" : "Archivó el documento");
                 coma = true;
             }
-            if(fileNameMod) {
+            if(fileNameMod != null && fileNameMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("el nombre del archivo PDF a \""+fileName+"\"");
                 coma = true;

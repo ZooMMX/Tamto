@@ -1,5 +1,7 @@
 package hello;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +46,14 @@ public class PiezaController {
 
     @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'VER')")
     @RequestMapping("/pieza/{piezaId}")
-    public String pieza(@PathVariable Long piezaId, Model model) {
+    public String pieza(@PathVariable Long piezaId, Model model) throws IOException {
         Pieza p = piezaRepository.findOne(piezaId);
         model.addAttribute("descripcion", p.getDescripcion());
         model.addAttribute("universalCode", p.getUniversalCode());
         model.addAttribute("cliente", p.getCliente());
         model.addAttribute("descripcion", p.getDescripcion());
         model.addAttribute("nombreSap", p.getNombreSap());
+        model.addAttribute("controlDeCambios", p.getControlDeCambios());
         model.addAttribute("notas", p.getNotas());
         model.addAttribute("tipo", p.getTipoPieza());
         model.addAttribute("workOrderDate", p.getWorkOrderDateString());
@@ -92,6 +95,7 @@ public class PiezaController {
         p.setWorkOrderNo( pieza.getWorkOrderNo() );
         p.setUniversalCode( pieza.getUniversalCode() );
         p.setNotas(pieza.getNotas());
+        p.setControlDeCambios(pieza.getControlDeCambios());
 
         piezaRepository.save(p);
 

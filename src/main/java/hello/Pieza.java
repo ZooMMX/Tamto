@@ -33,8 +33,12 @@ public class Pieza {
     private TipoPieza tipoPieza;        //Tipo de pieza
     @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY, mappedBy = "pieza")
     List<Archivo> archivos;
+    @Lob
     @Column
     private String notas;
+    @Lob
+    @Column
+    private String controlDeCambios;
     @Column(nullable = false)
     private boolean enabled = true;
 
@@ -169,5 +173,13 @@ public class Pieza {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getControlDeCambios() {
+        return controlDeCambios;
+    }
+
+    public void setControlDeCambios(String controlDeCambios) {
+        this.controlDeCambios = controlDeCambios;
     }
 }
