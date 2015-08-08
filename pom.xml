@@ -6,6 +6,13 @@
     <groupId>org.springframework</groupId>
     <artifactId>gs-securing-web</artifactId>
     <version>0.1.0</version>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
 	<properties>
 		<hibernate-version>4.2.7.Final</hibernate-version>
 		<mysql-version>5.1.27</mysql-version>
@@ -79,6 +86,17 @@
         	<groupId>commons-beanutils</groupId>
         	<artifactId>commons-beanutils</artifactId>
         	<version>1.8.3</version>
+        </dependency>
+        <!-- CloudConvert client -->
+        <dependency>
+            <groupId>com.github.aioobe</groupId>
+            <artifactId>cloudconvert</artifactId>
+            <version>1dad6951d5</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
     </dependencies>
 
