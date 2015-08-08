@@ -173,7 +173,7 @@ public class ListaMaestraController {
             Predicate condicion = qb.like(p.get(DocumentoInterno_.titulo), '%'+filter_titulo+'%');
             condiciones = qb.and(condiciones, condicion);
         }
-
+		/*
         // ** Filtro de fecha de elaboración **
         if(filter_fecha_elaboracion_from != null && filter_fecha_elaboracion_to != null) {
             // Utilizo la función "date" de MySQL para filtrar únicamente por fecha, sin considerar hora.
@@ -189,6 +189,7 @@ public class ListaMaestraController {
             Predicate condicionTo   = qb.lessThanOrEqualTo(    qb.function("date", Date.class, p.get(DocumentoInterno_.ultimaAprobacion) ), filter_ultima_aprobacion_to);
             condiciones = qb.and(condiciones, condicionFrom, condicionTo);
         }
+		*/
         // ** Filtro de fecha de próxima revisión **
         if(filter_proxima_revision_from != null && filter_proxima_revision_to != null) {
             // Utilizo la función "date" de MySQL para filtrar únicamente por fecha, sin considerar hora.
@@ -635,16 +636,6 @@ public class ListaMaestraController {
             if(tituloMod != null && tituloMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("título a \""+titulo+"\"");
-                coma = true;
-            }
-            if(fechaElaboracionMod != null && fechaElaboracionMod) {
-                if(coma) { descripcionRev.append(", "); }
-                descripcionRev.append("fecha de elaboración a \""+fechaElaboracion+"\"");
-                coma = true;
-            }
-            if(ultimaAprobacionMod != null && ultimaAprobacionMod) {
-                if(coma) { descripcionRev.append(", "); }
-                descripcionRev.append("fecha de última aprobación por \""+ultimaAprobacion+"\"");
                 coma = true;
             }
             if(proximaRevisionMod != null && proximaRevisionMod) {
