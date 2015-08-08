@@ -2,7 +2,11 @@ package hello.calidad;
 
 import hello.*;
 import hello.util.NullAwareBeanUtilsBean;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.aioobe.cloudconvert.CloudConvertService;
+import org.aioobe.cloudconvert.ConvertProcess;
+import org.aioobe.cloudconvert.ProcessStatus;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
@@ -31,16 +36,20 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.ForbiddenException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
 import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -281,36 +290,16 @@ public class ListaMaestraController {
             documento = docCompleto;
         }
 
-        //File traetment (PDF)
-        if(archivo.length > 0 && archivo[0] != null) {
-            try {
-                MultipartFile f = archivo[0];
 
-                //Si el archivo está vacío, se lo salta
-                if(f.isEmpty()) throw new Exception("Archivo PDF vacío");
-
-                Blob blob = new javax.sql.rowset.serial.SerialBlob(f.getBytes());
-                documento.setFileName(f.getOriginalFilename());
-                documento.setFileSize(f.getSize());
-                documento.setFileType(f.getContentType());
-                documento.setDocumento(blob);
-
-            } catch (Exception e) {
-                //Lanzar mensaje de error, pero después continuar para guardar los datos del documento
-                if(isNew) {
-                    redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", la información del documento se intentará guardar aunque sin archivo adjunto");
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        //File traetment (Editable file)
+        //File treatment (Editable file)
+        MultipartFile documentoFuente = null;
         if(documentoEditable.length > 0 && documentoEditable[0] != null) {
             try {
                 MultipartFile f2 = documentoEditable[0];
 
                 //Si el archivo está vacío, se lo salta
                 if(f2.isEmpty()) throw new Exception("Documento fuente vacío");
+                documentoFuente = f2;
 
                 Blob blob = new javax.sql.rowset.serial.SerialBlob(f2.getBytes());
                 documento.setEditableFileName(f2.getOriginalFilename());
@@ -327,6 +316,38 @@ public class ListaMaestraController {
             }
         }
 
+        //File treatment (PDF preview file)
+        if(documentoFuente != null) {
+            byte[] pdf;
+            try {
+                //Se convierte el documento original en un PDF
+                pdf = toPDF(documentoFuente);
+                //Defino el nombre del PDF como el nombre original pero con extensión PDF
+                String nombreDestino = FilenameUtils.getBaseName(documentoFuente.getOriginalFilename())+".pdf";
+                //Establezco todos los metadatos y el archivo en si mismo
+                Blob blob = new javax.sql.rowset.serial.SerialBlob(pdf);
+                documento.setFileName(nombreDestino);
+                documento.setFileSize((long) pdf.length);
+                documento.setFileType("application/pdf");
+                documento.setDocumento(blob);
+            } catch (URISyntaxException e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+                e.printStackTrace();
+            } catch (IOException e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+                e.printStackTrace();
+            } catch (ParseException e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+                e.printStackTrace();
+            } catch (Exception e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+                e.printStackTrace();
+            }
+        }
+
         //Determine ROLCS based on Departamento (ROLCS is totally equal to Departamento)
         documento.setRolcs(ROLCS.valueOf(documento.getDepartamento().toString()));
 
@@ -337,6 +358,43 @@ public class ListaMaestraController {
         redirectAttrs.addAttribute("successMsg", "Atributos del documento registrados correctamente");
 
         return "redirect:/calidad/listaMaestra";
+    }
+
+    private byte[] toPDF(MultipartFile origen) throws URISyntaxException, IOException, ParseException, InterruptedException, Exception {
+        String tipoOrigen  = FilenameUtils.getExtension(origen.getOriginalFilename());
+        String tipoDestino = "pdf";
+
+        // Create service object
+        CloudConvertService service = new CloudConvertService("9fTb6FvyfjORsM1fsh-0SPbKdXu-cpHopiWqRpFFkIzx9iFb2_Nzr85sCBPCU7PjgZXHFv_bRM1J3gZFbZawfw");
+
+        // Create conversion process
+        ConvertProcess process = service.startProcess(tipoOrigen, tipoDestino);
+
+        // Perform conversion
+        process.startConversion( origen.getInputStream(), origen.getOriginalFilename() );
+
+        // Wait for result
+        ProcessStatus status;
+        waitLoop: while (true) {
+            status = process.getStatus();
+
+            switch (status.step) {
+            case FINISHED: break waitLoop;
+            case ERROR: throw new RuntimeException(status.message);
+            }
+
+            // Be gentle
+            Thread.sleep(200);
+        }
+
+        // Download result
+        InputStream is = service.download(status.output.url);
+        byte[] bytes = IOUtils.toByteArray(is);
+
+        // Clean up
+        process.delete();
+
+        return bytes;
     }
 
     @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
