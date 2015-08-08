@@ -113,10 +113,6 @@ public class ListaMaestraController {
             @RequestParam(required = false) TipoDocumento filter_tipo,
             @RequestParam(required = false) String filter_codigo,
             @RequestParam(required = false) String filter_titulo,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_fecha_elaboracion_from,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_fecha_elaboracion_to,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_ultima_aprobacion_from,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_ultima_aprobacion_to,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_proxima_revision_from,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date filter_proxima_revision_to,
             @RequestParam(required = false) Departamento filter_departamento,
@@ -565,8 +561,8 @@ public class ListaMaestraController {
         String autor = (String) firstRev[0];
 
         // ******** Datos sobre actualizaciones a la entidad *******
-        //  (Índices del array)--------->      [0]     [1]    [2]   [3]     [4]    [5]     [6]               [7]      [8]           [9]          [10]       [11]       [12]      [13]        [14]       [15]        [16]                   [17]                   [18]                  [19]         [20]              [21]           [22]       [23]         [24]           [25]        [26]       [27]
-        Query q = em.createNativeQuery("SELECT doc.id, nivel, tipo, codigo, rolcs, titulo, proxima_revision, version, departamento, doc.enabled, file_name, nivel_mod, tipo_mod, codigo_mod, rolcs_mod, titulo_mod, fecha_elaboracion_mod, ultima_aprobacion_mod, proxima_revision_mod, version_mod, departamento_mod, documento_mod, notas_mod, enabled_mod, file_name_mod, u.fullname, timestamp, documento_editable_mod FROM documento_interno_aud doc JOIN revision r ON doc.rev = r.id JOIN user u ON r.username = u.username where doc.id = "+documentoId+" ORDER BY timestamp ASC LIMIT 100 OFFSET 1");
+        //  (Índices del array)--------->      [0]     [1]    [2]   [3]     [4]    [5]     [6]               [7]      [8]           [9]          [10]       [11]       [12]      [13]        [14]       [15]        [16]                  [17]         [18]              [19]           [20]       [21]         [22]           [23]        [24]       [25]
+        Query q = em.createNativeQuery("SELECT doc.id, nivel, tipo, codigo, rolcs, titulo, proxima_revision, version, departamento, doc.enabled, file_name, nivel_mod, tipo_mod, codigo_mod, rolcs_mod, titulo_mod, proxima_revision_mod, version_mod, departamento_mod, documento_mod, notas_mod, enabled_mod, file_name_mod, u.fullname, timestamp, documento_editable_mod FROM documento_interno_aud doc JOIN revision r ON doc.rev = r.id JOIN user u ON r.username = u.username where doc.id = "+documentoId+" ORDER BY timestamp ASC LIMIT 100 OFFSET 1");
         List rl = q.getResultList();
         //Hago SELECT en orden inverso para poder utilizar OFFSET y quitar el registro de creación de la entidad
         //Con Collections.reverse pongo la lista en el sentido que requiero de más actual a más viejo
@@ -594,19 +590,17 @@ public class ListaMaestraController {
             Boolean codigoMod = (Boolean) r[13];
             Boolean rolcsMod = (Boolean) r[14];
             Boolean tituloMod = (Boolean) r[15];
-            Boolean fechaElaboracionMod = (Boolean) r[16];
-            Boolean ultimaAprobacionMod = (Boolean) r[17];
-            Boolean proximaRevisionMod = (Boolean) r[18];
-            Boolean versionMod = (Boolean) r[19];
-            Boolean departamentoMod = (Boolean) r[20];
-            Boolean documentoMod = (Boolean) r[21];
-            Boolean notasMod = (Boolean) r[22];
-            Boolean enabledMod = r[23] == null ? false : (Boolean) r[23]; //Falso por default
-            Boolean fileNameMod = (Boolean) r[24];
+            Boolean proximaRevisionMod = (Boolean) r[16];
+            Boolean versionMod = (Boolean) r[17];
+            Boolean departamentoMod = (Boolean) r[18];
+            Boolean documentoMod = (Boolean) r[19];
+            Boolean notasMod = (Boolean) r[20];
+            Boolean enabledMod = r[21] == null ? false : (Boolean) r[21]; //Falso por default
+            Boolean fileNameMod = (Boolean) r[22];
 
-            String usuario = (String) r[25];
-            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[26]).longValue()));
-            Boolean documentoEditableMod = (Boolean) r[27];
+            String usuario = (String) r[23];
+            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[24]).longValue()));
+            Boolean documentoEditableMod = (Boolean) r[25];
 
             // Ejemplo de la descripción de la revisión: "Juan modificó el código universal a 1009, cliente a Tamto, descripción a 'Nueva Descripción' hace 3 días"
             StringBuilder descripcionRev = new StringBuilder();
