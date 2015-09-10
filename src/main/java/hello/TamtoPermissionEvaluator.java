@@ -77,32 +77,35 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      * Determina los permisos de la lista maestra
      * Permisos pesimistas.
      *
-     * 	                        Ver	    Editar  	    Descargar
-     * Ventas	                Todo	Sólo sus docs.	Sólo sus docs.
-     * Planeación	            Todo	Sólo sus docs.	Sólo sus docs.
-     * Logística	            Todo	Sólo sus docs.	Sólo sus docs.
-     * RH	                    Todo	Sólo sus docs.	Sólo sus docs.
-     * Calidad	                Todo	Sólo sus docs.	Sólo sus docs.
-     * Dirección	            Todo	Sólo sus docs.	Sólo sus docs.
-     * Representante dirección	Todo	Sólo sus docs.	Sólo sus docs.
-     * Admin                	Nada    Nada            Nada
-     * Produccion               Nada    Nada            Nada
+     * 	                        Ver	    Editar  	    Descargar       Aprobar     Ocultar     Eliminar
+     * Ventas	                Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Planeación	            Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Logística	            Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * RH	                    Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Calidad	                Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Dirección	            Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Admin. Dirección         Todo    ?               ?               Todo        Todo        Todo lo no-aprobado
+     * Representante dirección	Todo	Sólo sus docs.	Sólo sus docs.  Nada        Nada        Nada
+     * Admin                	Nada    Nada            Nada            Nada        Nada        Nada
+     * Produccion               Nada    Nada            Nada            Nada        Nada        Nada
 
      * @param roles
      * @param documento
      * @param permission
      * @return Boolean
      */
-    private Boolean permisosListaMaestra(HashSet<Roles> roles, DocumentoInterno documento, String permission) {
+    public Boolean permisosListaMaestra(HashSet<Roles> roles, DocumentoInterno documento, String permission) {
 
-        //Verifico que tengan algún rol del módulo de calidad (cualquiera menos admin y produccion), experaso en el Enum hello.calidad.ROLCS
+        //Verifico que tengan algún rol del módulo de calidad (cualquiera menos admin y produccion), expresado en el Enum hello.calidad.ROLCS o el rol ADMIN_CALIDAD
         Boolean contains = false;
+        //El rol ROLE_ADMIN_CALIDAD no es un ROLCS, pero tiene acceso al módulo
+        if(roles.contains(Roles.ROLE_ADMIN_CALIDAD)) contains = true;
         for(ROLCS rolc : ROLCS.values()) {
-            //Convierto de ROLCS a ROLE; NOTA: ROLCS significa algo así como rol del sistema de calidad (yo no lo puse si no tamto)
+            if(contains) break;
+            //Convierto de ROLCS a ROLE; NOTA: ROLCS significa algo así como rol del sistema de calidad (yo no lo puse sino tamto)
             Roles requiredRole = Roles.valueOf("ROLE_" + rolc.toString());
             //**Usuarios del sistema de calidad.** Si la autoridad del usuario incluye este "ROLCS" entonces contains = true; Lo que significa que es un usuario con permiso de acceso al sistema de calidad
             contains = roles.contains(requiredRole);
-            if(contains) break;
         }
         if(!contains) return false;
         // ------ FIN Verificación de cualquier rol de calidad ------
@@ -118,6 +121,11 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
             case "DESCARGAR":
                 Roles requiredRole = Roles.valueOf("ROLE_"+documento.getRolcs());
                 return roles.contains(requiredRole); // TRUE si el usuario tiene al menos el mismo rol del documento
+            case "APROBAR":
+                return roles.contains(Roles.ROLE_ADMIN_CALIDAD);
+            case "ELIMINAR":
+                //Únicamente disponible para al Aprobar o rechazar, un documento aprobado no puede ser eliminado
+                return roles.contains(Roles.ROLE_ADMIN_CALIDAD);
         }
         // ----------- FIN REGLAS PRINCIPALES -------------
 

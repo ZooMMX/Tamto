@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE htmlHelper>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -30,7 +30,7 @@ $.fn.dataTable.TableTools.buttons.copy_to_div = $.extend(
 		"sButtonText": "Copy to element",
 		"target":      "",
 		"fnClick": function( button, conf ) {
-			$(conf.target).html( this.fnGetTableData(conf) );
+			$(conf.target).htmlHelper( this.fnGetTableData(conf) );
 		}
 	}
 );

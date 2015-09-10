@@ -15,6 +15,82 @@
                 <strong>Alerta</strong> <span th:text="${param.errorMsg[0]}"></span>
             </div>
             <!-- Dialogs -->
+            <!-- BEGIN INLINE NOTIFICATIONS PORTLET-->
+            <div class="portlet box blue" style="margin-top: 25px;" sec:authorize="hasRole('ROLE_ADMIN_CALIDAD')">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-check-square-o"></i>Documentos pendientes de aprobación
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="remove">
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="padding-top: 15px; padding-bottom: 0px;">
+                    <th:block th:if="${docsSinAprobar.size() == 0}">
+                        No hay documentos pendientes de aprobación.
+                        <br/><br/>
+                    </th:block>
+                    <div class="row" th:each="doc,iterationStatus  : ${docsSinAprobar}">
+                        <div class="col-md-12">
+                        <div class="alert alert-block alert-info fade in" style="margin-bottom: 15px;">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <a class="btn dark" th:href="${'/calidad/documento/0/'+doc.id}"><h4 style="margin-bottom: 0px;" th:text="${doc.titulo}">Nombre del documento</h4></a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a class="btn purple" th:href="${'/calidad/documento/0/'+doc.id}">
+                                    Ver </a>
+                                    <a class="btn green" th:href="${'/calidad/documento/0/'+doc.id+'/aprobar'}">
+                                    Aprobar </a>
+                                    <a class="btn dark borrar-link" th:href="${'/calidad/documento/0/'+doc.id+'/eliminar'}">
+                                    Eliminar </a>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- BEGIN INLINE NOTIFICATIONS PORTLET-->
+            <!--
+            <div class="portlet box red-flamingo" style="margin-top: 25px;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-check-square-o"></i>Mis documentos pendientes de aprobación
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="remove">
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="padding-top: 15px; padding-bottom: 0px;">
+                    <th:block th:if="${docsSinAprobar.size() == 0}">
+                        No hay documentos pendientes de aprobación.
+                        <br/><br/>
+                    </th:block>
+                    <div class="row" th:each="doc,iterationStatus  : ${docsSinAprobar}">
+                        <div class="col-md-12">
+                        <div class="alert alert-block alert-info fade in" style="margin-bottom: 15px;">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <a class="btn dark" th:href="${'/calidad/documento/0/'+doc.id}"><h4 style="margin-bottom: 0px;" th:text="${doc.titulo}">Nombre del documento</h4></a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a class="btn purple" th:href="${'/calidad/documento/0/'+doc.id}">
+                                    Ver </a>
+                                    <a class="btn green" th:href="${'/calidad/documento/0/'+doc.id+'/aprobar'}">
+                                    Aprobar </a>
+                                    <a class="btn dark borrar-link" th:href="${'/calidad/documento/0/'+doc.id+'/eliminar'}">
+                                    Eliminar </a>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
             <!-- Begin: life time stats -->
             <div class="portlet light">
                 <div class="portlet-title">
@@ -86,7 +162,7 @@
                 </div>
                 <div class="portlet-body">
                     <div class="table-container">
-                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_CALIDAD_ADMIN')">
                             <span>
                             </span>
                             <select class="table-group-action-input form-control input-inline input-small input-sm">
@@ -163,7 +239,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select name="departamento_filter" class="form-control form-filter input-sm">
+                                <select name="filter_departamento" class="form-control form-filter input-sm">
                                     <option value="">Todos</option>
                                     <option th:each="dep, i : ${T(hello.calidad.Departamento).values()}" th:value="${dep}" th:text="${dep}"></option>
                                 </select>
@@ -195,6 +271,7 @@
             <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
             <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" th:src="@{/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js}"></script>
             <script type="text/javascript" src="/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+            <script type="text/javascript" src="/plugins/bootbox/bootbox.min.js"></script>
             <!-- END PAGE LEVEL PLUGINS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
             <script src="/scripts/datatable.js" th:src="@{/scripts/datatable.js}"></script>
@@ -205,6 +282,13 @@
             <script>
                     jQuery(document).ready(function() {
                        TableAjax.init();
+                       $('.borrar-link').on('click', function () {
+                              bootbox.confirm("¿Está seguro? Este documento se perderá irreversiblemente.", function(result) {
+                                  //Si el usuario responde afirmativamente, envía al href del link de borrado
+                                  if(result) window.location = $('.borrar-link').attr('href');
+                              });
+                              return false;
+                       });
                     });
             </script>
         </th:block>

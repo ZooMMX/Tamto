@@ -41,14 +41,14 @@ var TableAjax = function () {
                     "type": "GET"
                 },
                 "aoColumns": [
-                    { "data": "htmlCheckbox" },
+                    { "data": "htmlHelper.htmlCheckbox" },
                     { "data": "nivel"},
                     { "data": "tipo" },
                     { "data": "codigo"},
                     { "data": "titulo"},
                     { "data": "proximaRevisionString"},
                     { "data": "departamento"},
-                    { "data": "htmlAction" }
+                    { "data": "htmlHelper.htmlAction" }
                 ],
                 "aDataSort":[]
             }

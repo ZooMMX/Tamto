@@ -32,7 +32,7 @@ public class CalidadController {
     } */
 
     //El encabezado es inyectado por CalidadLayoutAdvice
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping("/calidad/encabezado")
     public String verDialogoEncabezado(Model model) {
         model.addAttribute("selectedMenu", "calidad");
@@ -40,7 +40,7 @@ public class CalidadController {
         return "calidad/encabezado_calidad_edicion";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping(value = "/calidad/encabezado", method = RequestMethod.POST)
     public String updateDialogoEncabezado(Model model, @RequestParam(value = "encabezado") String encabezadoTxt) {
 

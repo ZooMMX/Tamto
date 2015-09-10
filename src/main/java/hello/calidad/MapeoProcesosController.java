@@ -32,7 +32,7 @@ public class MapeoProcesosController {
     } */
 
     //El encabezado es inyectado por CalidadLayoutAdvice
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping("/calidad/mapeoProcesos/editor")
     public String verDialogoEditor(Model model) {
         Propiedad contenido = getContenido();
@@ -43,7 +43,7 @@ public class MapeoProcesosController {
         return "calidad/mapeo_procesos_editor";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping(value = "/calidad/mapeoProcesos", method = RequestMethod.POST)
     public String updateDialogoEncabezado(Model model, @RequestParam(value = "contenido") String contenidoTxt) {
 

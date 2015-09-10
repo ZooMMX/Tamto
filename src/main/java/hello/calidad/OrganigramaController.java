@@ -24,7 +24,7 @@ public class OrganigramaController {
 
 
     //El encabezado es inyectado por CalidadLayoutAdvice
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping("/calidad/organigrama/editor")
     public String verDialogoEditor(Model model) {
         Propiedad contenido = getContenido();
@@ -35,7 +35,7 @@ public class OrganigramaController {
         return "calidad/organigrama_editor";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CALIDAD')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_CALIDAD')")
     @RequestMapping(value = "/calidad/organigrama", method = RequestMethod.POST)
     public String updateDialogoOrganigrama(Model model, @RequestParam(value = "contenido") String contenidoTxt) {
 

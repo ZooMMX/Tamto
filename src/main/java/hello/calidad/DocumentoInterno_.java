@@ -30,5 +30,5 @@ public class DocumentoInterno_ {
     public static volatile SingularAttribute<DocumentoInterno, Date> updated;
     public static volatile SingularAttribute<DocumentoInterno, String> fileType;
     public static volatile SingularAttribute<DocumentoInterno, Boolean> enabled;
-
+    public static volatile SingularAttribute<DocumentoInterno, Boolean> aprobado;
 }

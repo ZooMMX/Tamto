@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYPE htmlHelper>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"  layout:decorator="layout">
     <head>
-        <title>Manual</title>
+        <title>Ayuda y soporte</title>
     </head>
     <body>
     <th:block layout:fragment="titulo">
@@ -10,14 +10,59 @@
     </th:block>
     <th:block layout:fragment="breadcrumb">
         <li>
-            <a href="/manual">Manual</a>
+            <a href="/manual">Ayuda y soporte</a>
         </li>
     </th:block>
     <div class="row" layout:fragment="content">
         <div class="col-md-12 page-500">
-            <object style="width: 100%; height: 600px;" th:data="@{/media/manual.pdf}" type="application/pdf">
-                <embed th:src="@{/media/manual.pdf}" type="application/pdf" />
-            </object>
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-support"></i>Ayuda y soporte
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse">
+                        </a>
+                        <a href="#portlet-config" data-toggle="modal" class="config">
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="tabbable-custom ">
+                        <ul class="nav nav-tabs ">
+                            <li class="active">
+                                <a href="#tab_5_1" data-toggle="tab">
+                                Changelog </a>
+                            </li>
+                            <li>
+                                <a href="#tab_5_2" data-toggle="tab">
+                                Permisos </a>
+                            </li>
+                            <li>
+                                <a href="#tab_5_3" data-toggle="tab">
+                                Manual </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_5_1">
+                                <object style="width: 100%; height: 600px;" th:data="@{/media/Changelog.pdf}" type="application/pdf">
+                                    <embed th:src="@{/media/Changelog.pdf}" type="application/pdf" />
+                                </object>
+                            </div>
+                            <div class="tab-pane" id="tab_5_2">
+                                <object style="width: 100%; height: 600px;" th:data="@{/media/Permisos.pdf}" type="application/pdf">
+                                    <embed th:src="@{/media/Permisos.pdf}" type="application/pdf" />
+                                </object>
+                            </div>
+                            <div class="tab-pane" id="tab_5_3">
+                                <object style="width: 100%; height: 600px;" th:data="@{/media/manual.pdf}" type="application/pdf">
+                                    <embed th:src="@{/media/manual.pdf}" type="application/pdf" />
+                                </object>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <th:block layout:fragment="scripts">

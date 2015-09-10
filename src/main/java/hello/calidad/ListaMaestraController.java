@@ -7,24 +7,18 @@ import org.aioobe.cloudconvert.ConvertProcess;
 import org.aioobe.cloudconvert.ProcessStatus;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.hibernate.Hibernate;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
-import org.ocpsoft.prettytime.PrettyTime;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
@@ -36,13 +30,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.ForbiddenException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -69,9 +60,16 @@ public class ListaMaestraController {
     @Autowired
     EntityManager em;
 
+    @Autowired
+    TamtoPermissionEvaluator tamtoPermissionEvaluator;
+
     @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
     @RequestMapping({"/calidad/listaMaestra", "/calidad"})
-    private String listaMaestra(Model model) {
+    public String listaMaestra(Model model) {
+
+        List<DocumentoInterno> docsSinAprobar = listaMaestraRepository.findDocsSinAprobar();
+
+        model.addAttribute("docsSinAprobar", docsSinAprobar);
 
         return "calidad/lista_maestra";
     }
@@ -89,10 +87,6 @@ public class ListaMaestraController {
      * @param filter_tipo
      * @param filter_codigo
      * @param filter_titulo
-     * @param filter_fecha_elaboracion_from
-     * @param filter_fecha_elaboracion_to
-     * @param filter_ultima_aprobacion_from
-     * @param filter_ultima_aprobacion_to
      * @param filter_proxima_revision_from
      * @param filter_proxima_revision_to
      * @param filter_departamento
@@ -129,7 +123,7 @@ public class ListaMaestraController {
             // ** ¿Borrar? ** sólo si es administrador
             if(customActionName != null && customActionName.equals("softdelete")
                     && id != null
-                    && request.isUserInRole("ROLE_ADMIN"))
+                    && request.isUserInRole("ROLE_ADMIN_CALIDAD"))
                 ocultarDocumentos(id);
         /* --- Terminan acciones --- */
 
@@ -140,9 +134,15 @@ public class ListaMaestraController {
         //Establezco una condición notNull únicamente para inicializar las condiciones
         Predicate condiciones = qb.isNotNull(p.get(DocumentoInterno_.id));
 
-        // ** Filtro de documentos activas **
+        // ** Filtro de documentos activos **
         if(true) {
             Predicate condicion = qb.equal(p.get(DocumentoInterno_.enabled), true);
+            condiciones = qb.and(condiciones, condicion);
+        }
+
+        // ** Filtro de documentos aprobados **
+        if(true) {
+            Predicate condicion = qb.equal(p.get(DocumentoInterno_.aprobado), true);
             condiciones = qb.and(condiciones, condicion);
         }
 
@@ -214,11 +214,28 @@ public class ListaMaestraController {
         // Puesta a punto de la vista
         HashMap resp = new HashMap<String, Object>();
 
+        //Agrega atributos HTML a la entidad
+        enhanceDocsForView(docs, request);
+
+        //Prepara la respuesta
         resp.put("data", docs);
         resp.put("draw", draw);
         resp.put("recordsTotal", listaMaestraRepository.countEnabled());
         resp.put("recordsFiltered", docsFiltrados);
         return resp;
+    }
+
+    private List<DocumentoInternoHtmlHelper> enhanceDocsForView(List<DocumentoInterno> docs, HttpServletRequest request) {
+        List<DocumentoInternoHtmlHelper> lista = new ArrayList();
+
+        for (DocumentoInterno di : docs) {
+            DocumentoInternoHtmlHelper htmlHelper = new DocumentoInternoHtmlHelper();
+            di.setHtmlHelper(htmlHelper);
+            htmlHelper.setPermissionEvaluator(tamtoPermissionEvaluator);
+            htmlHelper.setHttpServletRequest(request);
+        }
+
+        return lista;
     }
 
     @Transactional

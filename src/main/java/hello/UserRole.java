@@ -1,5 +1,6 @@
 package hello;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -48,6 +49,7 @@ public class UserRole{
 		this.userRoleId = userRoleId;
 	}
 
+    @JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "username", nullable = false)
 	public User getUser() {

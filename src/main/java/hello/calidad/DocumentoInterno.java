@@ -2,6 +2,7 @@ package hello.calidad;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.User;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -101,27 +101,16 @@ public class DocumentoInterno {
     @Column(nullable = false)
     private boolean enabled = true;
 
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        updated = new Date();
-        if (created==null) {
-            created = new Date();
-        }
-    }
+    //Los documentos deben pasar por un proceso de aprobación, comienzan no aprobados
+    @Column(nullable = false)
+    private boolean aprobado = false;
 
-    @Deprecated
-    public String getHtmlAction() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(new String("<a href=\"/calidad/documento/0/"+ getId() +"\" class=\"btn btn-xs blue\"><i class=\"fa fa-search\"></i> Ver</a>"));
-        builder.append(new String("<a href=\"/calidad/documento/editar/"+ getId() + "\" class=\"btn btn-xs default\"><i class=\"icon-pencil\"></i> Editar</a>"));
-        return builder.toString();
-    }
+    @ManyToOne
+    private User aprobo;
 
-    public String getHtmlCheckbox() {
-        String ret = new String("<input type=\"checkbox\" name=\"id[]\" value=\"" + getId() + "\">");
-        return ret;
-    }
+    //Clase encargada de renderizar trozos de html relacionados con esta entidad
+    @Transient
+    DocumentoInternoHtmlHelper htmlHelper;
 
     @JsonIgnore
     private String getDateString(Date date) {
@@ -132,6 +121,15 @@ public class DocumentoInterno {
         else
             return sdf.format(date);
 
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        updated = new Date();
+        if (created==null) {
+            created = new Date();
+        }
     }
 
     public Long getId() {
@@ -306,5 +304,31 @@ public class DocumentoInterno {
 
     public void setEditableFileType(String editableFileType) {
         this.editableFileType = editableFileType;
+    }
+
+    public boolean isAprobado() {
+        return aprobado;
+    }
+
+    public void setAprobado(boolean aprobado) {
+        this.aprobado = aprobado;
+    }
+
+    public User getAprobo() {
+        return aprobo;
+    }
+
+    public void setAprobo(User aprobo) {
+        this.aprobo = aprobo;
+    }
+
+    public DocumentoInternoHtmlHelper getHtmlHelper() {
+
+        return htmlHelper;
+    }
+
+    public void setHtmlHelper(DocumentoInternoHtmlHelper htmlHelper) {
+        htmlHelper.setParent(this);
+        this.htmlHelper = htmlHelper;
     }
 }
