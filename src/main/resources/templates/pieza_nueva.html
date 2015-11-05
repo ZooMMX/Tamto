@@ -124,19 +124,11 @@
                         <!--/row-->
                         <h3 class="form-section">Archivos/Activos digitales</h3>
                         <div class="row">
-                            <div class="col-md-12 ">
+                            <div class="col-md-9 ">
                                 <div class="form-group">
                                     <!-- START File upload input decorated ( four times )-->
                                     <div class="fileinput fileinput-new" data-provides="fileinput" th:each="i, iStat : ${#numbers.sequence(0, 3)}">
-                                        <div class="col-md-4 btn-group" data-toggle="buttons">
-                                            <label class="btn blue active">
-                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="ITEM" checked="checked"/> Item </label>
-                                            <label class="btn blue">
-                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="PROGRAMA"/> Programa </label>
-                                            <label class="btn blue">
-                                            <input th:name="${'tipo'+i}" type="radio" class="toggle" value="DIBUJO"/> Dibujo </label>
-                                        </div>
-                                        <div class="col-md-8 input-group">
+                                        <div class="col-md-12 input-group">
                                             <div class="form-control uneditable-input" data-trigger="fileinput">
                                                 <i class="fa fa-file fileinput-exists"></i>&nbsp; <span class="fileinput-filename">
                                                 </span>
@@ -155,6 +147,13 @@
                                     <!-- END File upload input decorated -->
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <p class="text-muted">Tipos de archivo</p>
+                                <p><span class="text-muted label label-sm label-warning">Dibujo</span> dwg, png, pdf, tif, tiff</p>
+                                <p><span class="text-muted label label-sm label-info">Programa</span> txt, nc</p>
+                                <p><span class="text-muted label label-sm label-success">Item</span> doc, docx, xls, xlsx</p>
+                            </div>
+                            &nbsp;
                         </div>
                         <!--/row-->
                         <h3 class="form-section">Notas</h3>
@@ -201,6 +200,14 @@
                 jQuery(document).ready(function() {
                     FormValidation.init();
                     FormInputMasks.init();
+
+                    $("#formi").submit(function() {
+                        Metronic.startPageLoading(
+                                {
+                                    message: "Ten paciencia, cargando y convirtiendo..."
+                                });
+                        return true;
+                    });
                 });
         </script>
     </th:block>

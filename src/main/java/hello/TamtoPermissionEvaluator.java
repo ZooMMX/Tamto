@@ -34,10 +34,26 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     ListaMaestraRepository listaMaestraRepository;
 
     @Override
+    //Utilizado en métodos que no requieren validar permisos en base a una entidad
+    //Comportamiento optimista
     public boolean hasPermission(Authentication authentication,
-            Object targetDomainObject, Object permission) {
+            Object targetTypeObj, Object permissionObj) {
         log.info("hasPermission(Authentication, Object, Object) called");
+
+        String targetType = (String) targetTypeObj;
+        String permission = (String) permissionObj;
+
+        //Guardo los roles del usuario actual en un simple HashSet
+        HashSet<Roles> roles = new HashSet<>();
+        for (GrantedAuthority ga : authentication.getAuthorities()) {
+            roles.add(Roles.valueOf(ga.getAuthority()));
+        }
+
+        if (targetType.equalsIgnoreCase("LISTAMAESTRA")) {
+            return _permisosListaMaestra(roles, null, permission);
+        }
         return true;
+
     }
 
     @Override
@@ -153,10 +169,14 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      *
      *  EDITAR -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACIÓN
      *
-     *  VER -> DIBUJO -> PC, PL, PE -> * -> ROLE_PLANEACIÓN, ROLE_PRODUCCIÓN
-     *  VER -> DIBUJO -> PC, PL, PE -> PDF -> ROLE_VENTAS
-     *  VER -> ITEM -> PC, PL, PE -> ROLE_*
-     *  VER -> PROGRAMA -> PC, PL, PE -> ROLE_*
+     *  VER -> DIBUJO -> PC, PL, PE -> * -> ROLE_PLANEACIÓN, ROLE_PRODUCCIÓN, ROLE_VENTAS, ROLE_CALIDAD
+     *  VER -> ITEM -> PC, PL, PE -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS, ROLE_CALIDAD
+     *  VER -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACION, ROLE_PRODUCCION
+     *
+     *  DESCARGAR -> DIBUJO -> PC, PL, PE -> * -> ROLE_PLANEACIÓN, ROLE_PRODUCCIÓN
+     *  DESCARGAR -> DIBUJO -> PC, PL, PE -> PDF -> ROLE_VENTAS
+     *  DESCARGAR -> ITEM -> PC, PL, PE -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS
+     *  DESCARGAR -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACION, ROLE_PRODUCCION
      *
      * @param roles
      * @param a
@@ -177,6 +197,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                         switch (p.getTipoPieza()) {
                             case PC:
                                 if(roles.contains(Roles.ROLE_VENTAS) && a.getFileType().contains("application/pdf")) return true;
+                                if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                             case PL:
                                 if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                             case PE:
@@ -215,9 +236,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PC:
                             case PL:
                             case PE:
-                                if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
-                                    return true;
-                                else if(roles.contains(Roles.ROLE_VENTAS) && a.getFileType().contains("application/pdf"))
+                                if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION) || roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_CALIDAD))
                                     return true;
 
                         }
@@ -228,7 +247,8 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PC:
                             case PL:
                             case PE:
-                                return true;
+                                if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION) || roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_CALIDAD))
+                                    return true;
                         }
                         break;
                     case PROGRAMA:
@@ -242,6 +262,43 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                         break;
                 }
                 break;
+            case "DESCARGAR":
+            //Hay que saber que tipo de archivo es ¿Programa, Dibujo o Item?
+            switch(a.getTamtoType()) {
+                case DIBUJO:
+                    /* PERMISOS PARA UN DIBUJO */
+                    switch (p.getTipoPieza()) {
+                        case PC:
+                        case PL:
+                        case PE:
+                            if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
+                                return true;
+                            else if(roles.contains(Roles.ROLE_VENTAS) && a.getFileType().contains("application/pdf"))
+                                return true;
+
+                    }
+                    break;
+                case ITEM:
+                    /* PERMISOS PARA UN ITEM DE CONFIGURACIÓN */
+                    switch(p.getTipoPieza()) {
+                        case PC:
+                        case PL:
+                        case PE:
+                            if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION) || roles.contains(Roles.ROLE_VENTAS))
+                                return true;
+                    }
+                    break;
+                case PROGRAMA:
+                    /* PERMISOS PARA UN PROGRAMA CNC */
+                    switch(p.getTipoPieza()) {
+                        case PC:
+                        case PL:
+                        case PE:
+                            if(roles.contains(Roles.ROLE_PRODUCCION) || roles.contains(Roles.ROLE_PLANEACION)) return true; break;
+                    }
+                    break;
+            }
+            break;
         }
 
         //Comportamiento pesimista
@@ -256,29 +313,50 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      * @return
      */
     private boolean _permisosPiezas(HashSet<Roles> roles, Long id, String permiso) {
+        /*
         if(id==null && permiso.equalsIgnoreCase("AGREGAR")) return true;
 
         Pieza p = piezaRepository.findOne(id);
         return permisosPiezas(roles, p, permiso);
+        */
+        if(id == null&& permiso.equalsIgnoreCase("AGREGAR"))
+            return permisosPiezas(roles, null, permiso);
+        else {
+            Pieza p = piezaRepository.findOne(id);
+            return permisosPiezas(roles, p, permiso);
+        }
     }
 
     /**
      * Método para consultar los permisos de una Pieza dado el objeto Pieza.
-     * Optimista a menos que:
-     * VER,EDITAR -> ROLE_* -> ENABLED -> FALSE (Piezas inactivas)
+     * Comportamiento pesimista
+     * VER            -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS, ROLE_ADMIN, ROLE_CALIDAD -> ENABLED -> TRUE (Piezas activas)
+     * AGREGAR -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS -> ENABLED -> TRUE (Piezas activas)
+     * EDITAR -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS
+     *                -> [ ENABLED -> TRUE (Piezas activas) ] ---Deshabilitado: "AND [ roles.contains(ROLE de la pieza) ]"---
      * @param roles
      * @param p
      * @param permiso
      * @return
      */
-    private boolean permisosPiezas(HashSet<Roles> roles, Pieza p, String permiso) {
+    public boolean permisosPiezas(HashSet<Roles> roles, Pieza p, String permiso) {
         switch(permiso) {
-            case "AGREGAR": break;
+            case "AGREGAR":
+                if(roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
+                    return true;
             case "VER":
+                if(roles.contains(Roles.ROLE_ADMIN) || roles.contains(Roles.ROLE_VENTAS)
+                || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION)
+                || roles.contains(Roles.ROLE_CALIDAD))
+                    if(p.isEnabled()) return true;
+                break;
             case "EDITAR":
-                if(!p.isEnabled()) return false;
+                if(roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
+                    //Protección por departamento, sólo el mismo depa puede editar -- Deshabilitado por impráctico --
+                    //if( p.isEnabled() && roles.contains(p.getRole()) ) return true;
+                    if( p.isEnabled() ) return true;
                 break;
         }
-        return true;
+        return false;
     }
 }

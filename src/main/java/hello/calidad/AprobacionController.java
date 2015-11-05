@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -31,7 +33,8 @@ public class AprobacionController {
     public String aprobar(
             @PathVariable Long id,
             Model model,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs) throws InvocationTargetException, IllegalAccessException {
 
         DocumentoInterno di = listaMaestraRepository.findOne(id);
         User user = userRepository.findByUsername( request.getRemoteUser() );
@@ -41,7 +44,10 @@ public class AprobacionController {
 
         listaMaestraRepository.save( di );
 
-        return "redirect:/calidad";
+        //Redirect success message
+        redirectAttrs.addAttribute("successMsg", "Documento aprobado");
+
+        return "redirect:/calidad/listaMaestra";
     }
 
     @PreAuthorize("hasPermission(#id, 'listamaestra', 'ELIMINAR')")
@@ -49,12 +55,16 @@ public class AprobacionController {
     public String eliminar(
             @PathVariable Long id,
             Model model,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs) throws InvocationTargetException, IllegalAccessException {
 
         DocumentoInterno di = listaMaestraRepository.findOne(id);
 
         listaMaestraRepository.delete(di);
 
-        return "redirect:/calidad";
+        //Redirect success message
+        redirectAttrs.addAttribute("successMsg", "Documento eliminado");
+
+        return "redirect:/calidad/listaMaestra";
     }
 }

@@ -73,7 +73,7 @@
 						<a href="/usuarioNuevo">
                         <i class="icon-user"></i> Nuevo usuario </a>
 					</li>
-                    <li sec:authorize="hasRole('ROLE_CALIDAD')">
+                    <li sec:authorize="hasPermission('listamaestra', 'AGREGAR')">
                         <a href="/calidad/documento/nuevo">
                         <i class="icon-doc"></i> Agregar documento de calidad </a>
                     </li>
@@ -406,7 +406,7 @@
 <script src="scripts/layout.js" th:src="@{/scripts/layout.js}" type="text/javascript"></script>
 <script src="scripts/demo.js" th:src="@{/scripts/demo.js}" type="text/javascript"></script>
 <script>
-      jQuery(document).ready(function() {    
+      jQuery(document).ready(function() {
          Metronic.init(); // init metronic core components
          Layout.init(); // init current layout
       });

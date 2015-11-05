@@ -2,7 +2,6 @@ package hello;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.envers.Audited;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Blob;
@@ -18,7 +17,7 @@ import java.util.Date;
  */
 @Audited(withModifiedFlag = true)
 @Entity
-@JsonIgnoreProperties({"bytes", "pieza"})
+@JsonIgnoreProperties({"bytes", "pieza", "bytesPdf"})
 public class Archivo {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -45,6 +44,21 @@ public class Archivo {
 
     @Lob
     private Blob bytes;
+
+    // ******* Set de atributos de archivo para vista previa PDF *********
+    @Column
+    String fileNamePdf;
+
+    @Column
+    String fileSizePdf;
+
+    @Column
+    String fileTypePdf;
+
+    @Lob
+    private Blob bytesPdf;
+
+    // ******* ********************************************************** *********
 
     @ManyToOne
     @JoinColumn(name="pieza_fk", insertable=false, updatable=false)
@@ -148,6 +162,22 @@ public class Archivo {
         this.bytes = bytes;
     }
 
+    public String getFileNamePdf() { return fileNamePdf; }
+
+    public void setFileNamePdf(String fileNamePdf) { this.fileNamePdf = fileNamePdf; }
+
+    public String getFileSizePdf() { return fileSizePdf; }
+
+    public void setFileSizePdf(String fileSizePdf) { this.fileSizePdf = fileSizePdf; }
+
+    public String getFileTypePdf() { return fileTypePdf; }
+
+    public void setFileTypePdf(String fileTypePdf) { this.fileTypePdf = fileTypePdf; }
+
+    public Blob getBytesPdf() { return bytesPdf; }
+
+    public void setBytesPdf(Blob bytesPdf) { this.bytesPdf = bytesPdf; }
+
     public String getFileActionsHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<a href=\"/piezaDownload/"+getId()+"\" class=\"btn btn-xs green\"><i class=\"icon-cloud-download\"></i> Descargar</a>");
@@ -197,7 +227,7 @@ public class Archivo {
                             sb.append("Item");
 
             } else {
-                sb.append("<span class=\"label label-sm label-error\">");
+                sb.append("<span class=\"label label-sm label-danger\">");
                 sb.append(type);
             }
 

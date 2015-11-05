@@ -175,25 +175,19 @@
                                     <div class="note note-info">
                                         <h4>Agregar archivo</h4>
                                         <p>
-                                        <div class="col-md-6">
-                                            <p><label class="control-label">1. Selecciona tipo de archivo</label></p>
-                                            <div class="btn-group" data-toggle="buttons">
-                                                <label class="btn blue active">
-                                                <input name="tipo" type="radio" class="toggle" value="ITEM" checked="checked"/> Item </label>
-                                                <label class="btn blue">
-                                                <input name="tipo" type="radio" class="toggle" value="PROGRAMA"/> Programa </label>
-                                                <label class="btn blue">
-                                                <input name="tipo" type="radio" class="toggle" value="DIBUJO"/> Dibujo </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><label class="control-label">2. Selecciona el archivo</label></p>
+                                        <div class="col-md-9">
+                                            <p><label class="control-label">Selecciona el archivo</label></p>
                                             <span class="btn btn-success fileinput-button">
                                                 <i class="glyphicon glyphicon-plus"></i>
-                                                <span>Selecciona archivos...</span>
+                                                <span>Selecciona uno o más archivos...</span>
                                                 <!-- The file input field used as target for the file upload widget -->
                                                 <input id="fileupload" type="file" name="file" data-url="@{/piezaUpload/__${piezaId}__}" multiple="multiple"/>
                                             </span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p><span class="label label-sm label-warning">Dibujo</span> dwg, png, pdf, tif, tiff</p>
+                                            <p><span class="label label-sm label-info">Programa</span> txt, nc</p>
+                                            <p><span class="label label-sm label-success">Item</span> doc, docx, xls, xlsx</p>
                                         </div>
                                         &nbsp;
                                         </p>

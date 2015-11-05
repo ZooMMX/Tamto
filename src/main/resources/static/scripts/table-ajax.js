@@ -41,7 +41,7 @@ var TableAjax = function () {
                     "type": "GET"
                 },
                 "columns": [
-                    { "data": "htmlCheckbox" },
+                    { "data": "htmlHelper.htmlCheckbox" },
                     { "data": "universalCode" },
                     { "data": "descripcion"},
                     { "data": "tipoPieza"},
@@ -49,7 +49,7 @@ var TableAjax = function () {
                     { "data": "workOrderNo"},
                     { "data": "workOrderDateString"},
                     { "data": "cliente"},
-                    { "data": "htmlAction"}
+                    { "data": "htmlHelper.htmlAction"}
                 ],
                 "aDataSort":[]
             }

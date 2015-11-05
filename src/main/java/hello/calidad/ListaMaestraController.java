@@ -1,6 +1,7 @@
 package hello.calidad;
 
 import hello.*;
+import hello.util.CloudConvertConnector;
 import hello.util.NullAwareBeanUtilsBean;
 import org.aioobe.cloudconvert.CloudConvertService;
 import org.aioobe.cloudconvert.ConvertProcess;
@@ -30,6 +31,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,7 +65,7 @@ public class ListaMaestraController {
     @Autowired
     TamtoPermissionEvaluator tamtoPermissionEvaluator;
 
-    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
+    @PreAuthorize("hasPermission('listamaestra', 'VER')")
     @RequestMapping({"/calidad/listaMaestra", "/calidad"})
     public String listaMaestra(Model model) {
 
@@ -97,7 +99,8 @@ public class ListaMaestraController {
      * @param model
      * @return
      */
-    @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")
+
+    @PreAuthorize("hasPermission('listamaestra', 'VER')")
     @RequestMapping("/calidad/listaMaestraJSON")
     @ResponseBody public HashMap<String, Object> getJSON(
             @RequestParam Integer length,
@@ -344,20 +347,8 @@ public class ListaMaestraController {
                 documento.setFileSize((long) pdf.length);
                 documento.setFileType("application/pdf");
                 documento.setDocumento(blob);
-            } catch (URISyntaxException e) {
-                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
-                e.printStackTrace();
-            } catch (IOException e) {
-                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
-                e.printStackTrace();
-            } catch (ParseException e) {
-                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
-                e.printStackTrace();
-            } catch (Exception e) {
-                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista del archivo");
+            } catch (URISyntaxException | InterruptedException | ParseException | SQLException | IOException e) {
+                redirectAttrs.addAttribute("errorMsg", e.getMessage() + ", ocurrió un error generando vista previa del archivo");
                 e.printStackTrace();
             }
         }
@@ -374,41 +365,9 @@ public class ListaMaestraController {
         return "redirect:/calidad/listaMaestra";
     }
 
-    private byte[] toPDF(MultipartFile origen) throws URISyntaxException, IOException, ParseException, InterruptedException, Exception {
-        String tipoOrigen  = FilenameUtils.getExtension(origen.getOriginalFilename());
-        String tipoDestino = "pdf";
-
-        // Create service object
-        CloudConvertService service = new CloudConvertService("9fTb6FvyfjORsM1fsh-0SPbKdXu-cpHopiWqRpFFkIzx9iFb2_Nzr85sCBPCU7PjgZXHFv_bRM1J3gZFbZawfw");
-
-        // Create conversion process
-        ConvertProcess process = service.startProcess(tipoOrigen, tipoDestino);
-
-        // Perform conversion
-        process.startConversion( origen.getInputStream(), origen.getOriginalFilename() );
-
-        // Wait for result
-        ProcessStatus status;
-        waitLoop: while (true) {
-            status = process.getStatus();
-
-            switch (status.step) {
-            case FINISHED: break waitLoop;
-            case ERROR: throw new RuntimeException(status.message);
-            }
-
-            // Be gentle
-            Thread.sleep(200);
-        }
-
-        // Download result
-        InputStream is = service.download(status.output.url);
-        byte[] bytes = IOUtils.toByteArray(is);
-
-        // Clean up
-        process.delete();
-
-        return bytes;
+    private byte[] toPDF(MultipartFile origen) throws URISyntaxException, IOException, ParseException, InterruptedException {
+        CloudConvertConnector connector = new CloudConvertConnector();
+        return connector.toPDF(origen);
     }
 
     @PreAuthorize("hasPermission(#id, 'listamaestra', 'VER')")

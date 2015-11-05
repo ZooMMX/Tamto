@@ -22,6 +22,7 @@ import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,9 @@ public class PiezasController {
 
     @Autowired
     EntityManager em ;
+
+    @Autowired
+    TamtoPermissionEvaluator tamtoPermissionEvaluator;
 
     @RequestMapping("/piezas")
     public String pieza (
@@ -151,6 +155,9 @@ public class PiezasController {
                 countQuery.select( qb.count( p.get(Pieza_.id) ) );
                 Long piezasFiltradas = (Long) em.createQuery( countQuery ).getSingleResult();   //Ejecución de la consulta conteo de elementos filtrados
 
+                //Agrega atributos HTML a la entidad
+                enhancePiezasForView(piezas, request);
+
                 /* Renderizar resultado */
                 //model.addAttribute("name", p.toString());
                 model.addAttribute("name", "¿nombre?");
@@ -160,6 +167,19 @@ public class PiezasController {
                 resp.put("recordsFiltered", piezasFiltradas);
                 return resp;
         }
+
+    private List<PiezaHtmlHelper> enhancePiezasForView(List<Pieza> docs, HttpServletRequest request) {
+        List<PiezaHtmlHelper> lista = new ArrayList();
+
+        for (Pieza di : docs) {
+           PiezaHtmlHelper htmlHelper = new PiezaHtmlHelper();
+           di.setHtmlHelper(htmlHelper);
+           htmlHelper.setPermissionEvaluator(tamtoPermissionEvaluator);
+           htmlHelper.setHttpServletRequest(request);
+        }
+
+        return lista;
+    }
 
     @Transactional
     private void ocultarPiezas(Long[] id) {

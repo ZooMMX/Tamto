@@ -1,5 +1,7 @@
 package hello;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.calidad.DocumentoInternoHtmlHelper;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Audited(withModifiedFlag = true)
 @Entity
+@JsonIgnoreProperties({"controlDeCambios"})
 public class Pieza {
 
     @Id
@@ -41,6 +44,14 @@ public class Pieza {
     private String controlDeCambios;
     @Column(nullable = false)
     private boolean enabled = true;
+
+    //Clase encargada de renderizar trozos de html relacionados con esta entidad
+    @Transient
+    PiezaHtmlHelper htmlHelper;
+
+    @Column(length = 32)
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     protected Pieza() {}
 
@@ -154,19 +165,6 @@ public class Pieza {
         archivos.add(a);
     }
 
-    @Deprecated
-    public String getHtmlAction() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(new String("<a href=\"pieza/"+ getId() +"\" data-target=\"#ajax\" data-toggle=\"modal\" class=\"btn btn-xs blue\"><i class=\"fa fa-search\"></i> Ver</a>"));
-        builder.append(new String("<a href=\"piezaEdicion/"+ getId() + "\" class=\"btn btn-xs default\"><i class=\"icon-pencil\"></i> Editar</a>"));
-        return builder.toString();
-    }
-
-    public String getHtmlCheckbox() {
-       String ret = new String("<input type=\"checkbox\" name=\"id[]\" value=\"" + getId() + "\">");
-        return ret;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -182,4 +180,24 @@ public class Pieza {
     public void setControlDeCambios(String controlDeCambios) {
         this.controlDeCambios = controlDeCambios;
     }
+
+
+    public PiezaHtmlHelper getHtmlHelper() {
+
+        return htmlHelper;
+    }
+
+    public void setHtmlHelper(PiezaHtmlHelper htmlHelper) {
+        htmlHelper.setParent(this);
+        this.htmlHelper = htmlHelper;
+    }
+
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
 }

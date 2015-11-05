@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
@@ -105,13 +104,21 @@ public class ArchivoController {
             Long piezaArchivoId, HttpServletResponse response) {
 
         Archivo a = archivoRepository.findOne(piezaArchivoId);
+        //Determina si existe la versión PDF, si no, reenvía al PDF dónde explica el error
+        if(a.getBytesPdf() == null) return "redirect:/media/errpreview.pdf";
+
         try {
-            response.setHeader("Content-Disposition", "inline; filename=\"" +a.getFileName()+ "\"");
+            //Determina los atributos del archivo a mostrar
+            String filename = a.getFileNamePdf();
+            long length = a.getBytesPdf().length();
+            Blob bytes = a.getBytesPdf();
+            //Prepara el response
+            response.setHeader("Content-Disposition", "inline; filename=\"" +filename+ "\"");
             response.setContentType("application/pdf");
             response.setHeader("Content-Transfer-Encoding", "binary");
-            response.setContentLength((int) a.getBytes().length());
+            response.setContentLength((int) length);
             OutputStream out = response.getOutputStream();
-            IOUtils.copy(a.getBytes().getBinaryStream(), out);
+            IOUtils.copy(bytes.getBinaryStream(), out);
             out.flush();
             out.close();
 

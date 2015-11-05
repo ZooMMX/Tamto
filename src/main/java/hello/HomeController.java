@@ -122,7 +122,7 @@ public class HomeController {
 
     private List<Rev> createRevisions() {
         AuditReader reader = AuditReaderFactory.get(em);
-        Class[] clases = new Class[] {Pieza.class, User.class, Archivo.class};
+        Class[] clases = new Class[] {Pieza.class, User.class, Archivo.class, DocumentoInterno.class};
         TreeMap<Long, Rev> map = new TreeMap<>(Comparator.<Long>reverseOrder());
         HashMap<String, User> usuarios = getUsuarios();
 
@@ -229,6 +229,16 @@ public class HomeController {
                         return "<div class=\"label label-sm label-default\"><i class=\"fa fa-user\"></i></div>";
                 }
             }
+            else if(getEntityClass() == DocumentoInterno.class) {
+                switch(getChangeType()) {
+                    case ADD:
+                        return "<div class=\"label label-sm label-success\"><i class=\"icon-check\"></i></div>";
+                    case DEL:
+                        return "<div class=\"label label-sm label-danger\"><i class=\"icon-check\"></i></div>";
+                    case MOD:
+                        return "<div class=\"label label-sm label-default\"><i class=\"icon-check\"></i></div>";
+                }
+            }
             return "";
         }
 
@@ -261,6 +271,16 @@ public class HomeController {
                         return "Usuario eliminado";
                     case MOD:
                         return "Usuario modificado";
+                }
+            }
+            else if(getEntityClass() == DocumentoInterno.class) {
+                switch(getChangeType()) {
+                    case ADD:
+                        return "Documento de calidad agregado";
+                    case DEL:
+                        return "Documento de calidad eliminado";
+                    case MOD:
+                        return "Documento de calidad modificado";
                 }
             }
             return "Sin descripción";

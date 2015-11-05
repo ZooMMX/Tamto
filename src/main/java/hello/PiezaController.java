@@ -2,6 +2,8 @@ package hello;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hello.util.CloudConvertConnector;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.*;
 
@@ -116,13 +121,17 @@ public class PiezaController {
     public ModelAndView piezaNuevaPost(
             @ModelAttribute Pieza pieza,
             @RequestParam("file") MultipartFile[]  file,
-            @RequestParam("tipo0") TipoArchivo tipo0,
-            @RequestParam("tipo1") TipoArchivo tipo1,
-            @RequestParam("tipo2") TipoArchivo tipo2,
-            @RequestParam("tipo3") TipoArchivo tipo3,
+            HttpServletRequest request,
             Model model) {
 
-        TipoArchivo[] tipos = new TipoArchivo[] { tipo0,tipo1,tipo2,tipo3 };
+        /* Defino el rol de la Pieza, que es el mismo rol del autor */
+        if(request.isUserInRole( Roles.ROLE_VENTAS.toString() ))
+            pieza.setRole(Roles.ROLE_VENTAS);
+        else if(request.isUserInRole( Roles.ROLE_PRODUCCION.toString() ))
+            pieza.setRole(Roles.ROLE_PRODUCCION);
+        else if(request.isUserInRole( Roles.ROLE_PLANEACION.toString() ))
+            pieza.setRole(Roles.ROLE_PLANEACION);
+
         /* Preparar archivos para su carga */
         StringBuilder msg = new StringBuilder();
         int i = 0;
@@ -137,8 +146,11 @@ public class PiezaController {
                 archivo.setFileName(f.getOriginalFilename());
                 archivo.setFileSize(String.valueOf(f.getSize()));
                 archivo.setFileType(f.getContentType());
-                archivo.setTamtoType( tipos[i] );
+                archivo.setTamtoType(TipoArchivo.fromFilename(f.getOriginalFilename()));
                 archivo.setBytes(blob);
+
+                //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
+                addPdfPreview(archivo, f);
 
                 pieza.addArchivo(archivo);
 
@@ -154,6 +166,37 @@ public class PiezaController {
         savePiezaDeeply(pieza);
 
         return new ModelAndView("redirect:/piezas?successfulChange=true");
+
+    }
+
+    private void addPdfPreview(Archivo archivo, MultipartFile origen) throws Exception {
+
+        //Si el archivo original ya es PDF, sólo lo clona
+        if(archivo.getFileType().equals("application/pdf")) {
+            archivo.setFileNamePdf(archivo.getFileName());
+            archivo.setFileTypePdf(archivo.getFileType());
+            archivo.setFileSizePdf(archivo.getFileSize());
+            archivo.setBytesPdf(archivo.getBytes());
+            return ;
+        }
+
+        try {
+            //Se convierte el documento original en un PDF
+            CloudConvertConnector connector = new CloudConvertConnector();
+            byte[] pdfBytes = connector.toPDF(origen);
+            Blob blob = new javax.sql.rowset.serial.SerialBlob(pdfBytes);
+            //Defino el nombre del PDF como el nombre original pero con extensión PDF
+            String nombreDestino = FilenameUtils.getBaseName(archivo.getFileName())+".pdf";
+            //Establezco todos los metadatos y el archivo en si mismo
+            archivo.setFileNamePdf(nombreDestino);
+            archivo.setFileSizePdf(String.valueOf(pdfBytes.length));
+            archivo.setFileTypePdf("application/pdf");
+            archivo.setBytesPdf(blob);
+        } catch (URISyntaxException | InterruptedException | ParseException | SQLException | IOException e) {
+            e.printStackTrace();
+            throw new Exception( e.getMessage() + ", ocurrió un error generando vista previa del archivo");
+
+        }
 
     }
 
@@ -215,7 +258,6 @@ public class PiezaController {
      * @param piezaId
      * @param pieza
      * @param files
-     * @param tipo
      * @param model
      * @return
      */
@@ -226,7 +268,6 @@ public class PiezaController {
             @PathVariable Long piezaId,
             @ModelAttribute Pieza pieza,
             @RequestParam("file") MultipartFile[] files,
-            @RequestParam("tipo") TipoArchivo tipo,
             Model model) {
 
         /* Guardar archivos */
@@ -244,9 +285,12 @@ public class PiezaController {
                             archivo.setFileName(files[i].getOriginalFilename());
                             archivo.setFileSize(String.valueOf(files[i].getSize()));
                             archivo.setFileType(files[i].getContentType());
-                            archivo.setTamtoType(tipo);
+                            archivo.setTamtoType(TipoArchivo.fromFilename(files[i].getOriginalFilename()));
                             archivo.setBytes(blob);
                             archivo.setPieza_fk(piezaId);
+
+                            //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
+                            addPdfPreview(archivo, files[i]);
 
                             archivoRepository.save(archivo);
 
