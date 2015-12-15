@@ -31,6 +31,12 @@ var FormEditarFileUpload = function () {
                                     progress + '%'
                                 );
                     },
+                    always: function(e, data) {
+                        Metronic.stopPageLoading();
+                    },
+                    start: function(e) {
+                        Metronic.startPageLoading({ message: "Ten paciencia, cargando y convirtiendo..." });
+                    }
 
                     //dropZone: $('#dropzone')
                 });

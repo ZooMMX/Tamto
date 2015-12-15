@@ -1,5 +1,6 @@
 package hello;
 
+import hello.util.CloudConvertConnector;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +48,7 @@ public class ArchivoController {
         @RequestParam("file") MultipartFile file,
         Model model)
     {
+        CloudConvertConnector connector = new CloudConvertConnector();
         Archivo archivo = archivoRepository.findOne(archivoId);
 
         /* Guardar archivos */
@@ -64,6 +66,7 @@ public class ArchivoController {
                         archivo.setFileSize(String.valueOf(file.getSize()));
                         archivo.setFileType(file.getContentType());
                         archivo.setBytes(blob);
+                        connector.addPdfPreview(archivo);
 
                         archivoRepository.save(archivo);
 

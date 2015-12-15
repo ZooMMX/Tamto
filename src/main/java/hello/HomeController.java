@@ -2,6 +2,7 @@ package hello;
 
 import hello.calidad.DocumentoInterno;
 import hello.calidad.ListaMaestraRepository;
+import hello.util.CloudConvertConnector;
 import org.hibernate.envers.*;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
@@ -85,6 +86,41 @@ public class HomeController {
         Query q = em.createNativeQuery("show variables like '%max_allowed_packet%';");
         Object result = q.getSingleResult();
         return result;
+    }
+
+    @RequestMapping("/updateFilePreviews")
+    public @ResponseBody
+    Object updateFilePreviews(Model model) {
+        List<Archivo> procesados = new ArrayList<Archivo>();
+        List<Archivo> fallidos = new ArrayList<Archivo>();
+        Map<String, List<Archivo>> map = new HashMap<>();
+        map.put("Procesados", procesados);
+        map.put("Fallidos", fallidos);
+
+        List<Long> ids = (List<Long>) archivoRepository.findAllIds();
+        CloudConvertConnector connector = new CloudConvertConnector();
+        // Para cada Archivo en la base de datos
+        for(Long id : ids) {
+            //Consulto el archivo, uno por uno para no llenar la memoria
+            Archivo a = archivoRepository.findOne(id);
+            System.out.println("Procesando: " + a.getFileName());
+            try {
+                //Intento la conversión
+                connector.addPdfPreview(a);
+                //Intento actualizarlo
+                archivoRepository.save(a);
+
+                //Lo registro como exitoso
+                procesados.add(a);
+            } catch (Exception e) {
+                e.printStackTrace();
+                //Lo registro como fallido
+                fallidos.add(a);
+            }
+        }
+
+
+        return map;
     }
 
     @RequestMapping("/manual")

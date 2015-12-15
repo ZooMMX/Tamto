@@ -150,7 +150,8 @@ public class PiezaController {
                 archivo.setBytes(blob);
 
                 //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
-                addPdfPreview(archivo, f);
+                CloudConvertConnector connector = new CloudConvertConnector();
+                connector.addPdfPreview(archivo);
 
                 pieza.addArchivo(archivo);
 
@@ -169,36 +170,6 @@ public class PiezaController {
 
     }
 
-    private void addPdfPreview(Archivo archivo, MultipartFile origen) throws Exception {
-
-        //Si el archivo original ya es PDF, sólo lo clona
-        if(archivo.getFileType().equals("application/pdf")) {
-            archivo.setFileNamePdf(archivo.getFileName());
-            archivo.setFileTypePdf(archivo.getFileType());
-            archivo.setFileSizePdf(archivo.getFileSize());
-            archivo.setBytesPdf(archivo.getBytes());
-            return ;
-        }
-
-        try {
-            //Se convierte el documento original en un PDF
-            CloudConvertConnector connector = new CloudConvertConnector();
-            byte[] pdfBytes = connector.toPDF(origen);
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(pdfBytes);
-            //Defino el nombre del PDF como el nombre original pero con extensión PDF
-            String nombreDestino = FilenameUtils.getBaseName(archivo.getFileName())+".pdf";
-            //Establezco todos los metadatos y el archivo en si mismo
-            archivo.setFileNamePdf(nombreDestino);
-            archivo.setFileSizePdf(String.valueOf(pdfBytes.length));
-            archivo.setFileTypePdf("application/pdf");
-            archivo.setBytesPdf(blob);
-        } catch (URISyntaxException | InterruptedException | ParseException | SQLException | IOException e) {
-            e.printStackTrace();
-            throw new Exception( e.getMessage() + ", ocurrió un error generando vista previa del archivo");
-
-        }
-
-    }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'AGREGAR')")
     @RequestMapping(value = "/piezaNueva", method = RequestMethod.GET)
@@ -290,7 +261,8 @@ public class PiezaController {
                             archivo.setPieza_fk(piezaId);
 
                             //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
-                            addPdfPreview(archivo, files[i]);
+                            CloudConvertConnector connector = new CloudConvertConnector();
+                            connector.addPdfPreview(archivo);
 
                             archivoRepository.save(archivo);
 
