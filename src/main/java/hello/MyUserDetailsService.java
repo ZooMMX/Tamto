@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Time: 13:43
  */
 
-@Service("userDetailsService")
+@Service//("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired

@@ -1,5 +1,6 @@
 package hello;
 
+import hello.exporter.PiezasExcelView;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -42,6 +45,9 @@ public class PiezasController {
     EntityManager em ;
 
     @Autowired
+    View piezasExcelView;
+
+    @Autowired
     TamtoPermissionEvaluator tamtoPermissionEvaluator;
 
     @RequestMapping("/piezas")
@@ -52,6 +58,13 @@ public class PiezasController {
         model.addAttribute("selectedMenu", "piezas");
         model.addAttribute("successfulChange", successfulChange);
         return "piezas";
+    }
+
+    @RequestMapping(value = "/piezas/export")
+        public ModelAndView getExport(Model model) {
+        List<Pieza> piezaList = (List<Pieza>) piezaRepository.findAll();
+        model.addAttribute("piezas", piezaList);
+        return new ModelAndView(piezasExcelView, model.asMap());
     }
 
     @RequestMapping(value = "/piezasJSON")
