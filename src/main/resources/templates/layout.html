@@ -180,7 +180,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<!-- Imagen de perfil: <img alt="" class="img-circle" src="/img/avatar3_small.jpg"/> -->
 						<span class="username username-hide-on-mobile" th:inline="text">
-                            <div th:text="${#authentication.getPrincipal().getDisplayName()}">
+                            <div th:text="${#authentication.getPrincipal() instanceof T(hello.MediUser)} ? ${#authentication.getPrincipal().getDisplayName()} : ''">
                                 Hermes
                             </div>
                         </span>

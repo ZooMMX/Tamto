@@ -28,9 +28,14 @@
                     </div>
                     <div class="actions">
                         <a href="/piezaNueva" class="btn btn-default btn-circle">
-                        <i class="fa fa-plus"></i>
-                        <span class="hidden-480">
-                        Agregar pieza </span>
+                            <i class="fa fa-plus"></i>
+                            <span class="hidden-480">
+                            Agregar pieza </span>
+                        </a>
+                        <a href="/external_services" class="btn btn-default btn-circle">
+                            <i class="fa fa-plus-circle"></i>
+                            <span class="hidden-480">
+                            Carga masiva </span>
                         </a>
                         <div class="btn-group">
                             <a class="btn btn-default btn-circle" href="#" data-toggle="dropdown">
@@ -41,16 +46,12 @@
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 <li>
-                                    <a href="#" id="xlsLink" download="piezas.xls" onClick ="$('#datatable_ajax').tableExport({type:'excel',escape:'false'});">
-                                    Exportar a Excel </a>
+                                    <a href="/external_services">
+                                    Importar desde excel </a>
                                 </li>
                                 <li>
-                                    <a href="#" id="csvLink" download="piezas.csv" onclick="$('#datatable_ajax').tableExport({type:'csv',escape:'false'});">
-                                    Exportar a CSV </a>
-                                </li>
-                                <li>
-                                    <a href="#" id="xmlLink" download="piezas.xml" onclick="$('#datatable_ajax').tableExport({type:'xml',escape:'false'});">
-                                    Exportar a XML </a>
+                                    <a href="/external_services/export">
+                                        Exportar a excel </a>
                                 </li>
                                 <!--<li class="divider">
                                 </li>

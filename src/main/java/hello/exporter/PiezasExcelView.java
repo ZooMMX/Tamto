@@ -1,9 +1,12 @@
 package hello.exporter;
 
 import hello.Pieza;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
@@ -47,6 +50,12 @@ public class PiezasExcelView extends AbstractExcelView {
     }
 
     public void setExcelRows(HSSFSheet excelSheet, List<Pieza> piezas){
+
+        CellStyle cellStyle = excelSheet.getWorkbook().createCellStyle();
+        CreationHelper createHelper = excelSheet.getWorkbook().getCreationHelper();
+        cellStyle.setDataFormat(
+                createHelper.createDataFormat().getFormat("dd/mm/yy"));
+
         int record = 1;
         for (Pieza pieza : piezas) {
             HSSFRow excelRow = excelSheet.createRow(record++);
@@ -56,7 +65,9 @@ public class PiezasExcelView extends AbstractExcelView {
             excelRow.createCell(3).setCellValue( pieza.getUniversalCode() );
             excelRow.createCell(4).setCellValue( pieza.getCliente() );
             excelRow.createCell(5).setCellValue( pieza.getTipoPieza().toString() );
-            excelRow.createCell(6).setCellValue( pieza.getWorkOrderDateString() );
+            HSSFCell celdaWODate = excelRow.createCell(6);
+            celdaWODate.setCellStyle( cellStyle );
+            celdaWODate.setCellValue( pieza.getWorkOrderDate() );
             excelRow.createCell(7).setCellValue( pieza.getWorkOrderNo() );
             excelRow.createCell(8).setCellValue( pieza.isEnabled() );
             excelRow.createCell(9).setCellValue( pieza.getNotas() );

@@ -40,7 +40,7 @@ public class Importer implements ImportService {
     public void importPiezas(Workbook workbook, Consumer<Pieza> processElementsWithFunction) throws IOException {
 
         for (Row row : workbook.getSheetAt(0)) {
-            if (row.getRowNum() > 1) {
+            if (row.getRowNum() > 0) {
                 Pieza p = new Pieza("", "");
 
                 p.setId(            (long) row.getCell(0).getNumericCellValue());

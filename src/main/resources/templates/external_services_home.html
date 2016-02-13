@@ -1,0 +1,97 @@
+<!DOCTYPE htmlHelper>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"  layout:decorator="layout">
+    <head>
+        <title>Ayuda y soporte</title>
+    </head>
+    <body>
+    <th:block layout:fragment="titulo">
+        Título <small>subtítulo</small>
+    </th:block>
+    <th:block layout:fragment="breadcrumb">
+        <li>
+            <a href="/manual">Carga masiva de piezas</a>
+        </li>
+    </th:block>
+
+    <div layout:fragment="content">
+        <div class="note note-warning">
+            <h4 class="block">Instrucciones</h4>
+            <p> Esta herramienta permite exportar e importar los atributos de todas las piezas del sistema a y desde un archivo de <code>EXCEL</code>, es útil para los siguientes escenarios:
+                <ol>
+                    <li>Modificar atributos de muchas piezas simultáneamente</li>
+                    <li>Agregar muchas piezas rápidamente</li>
+                </ol>
+            </p>
+            <p> Al utilizar esta herramienta toma en cuenta que:
+                <ol>
+                    <li>No es posible eliminar piezas, si se eliminan piezas en la hoja de cálculo, al importarse simplemente se ignorarán</li>
+                    <li>Modificar archivos ligados a las piezas</li>
+                    <li><span class="label label-danger">Es importante que no modifiques la columna ID</span></li>
+                </ol>
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="portlet box blue-dark col-md-8">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="glyphicon glyphicon-transfer"></i>Carga masiva de piezas
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse">
+                    </a>
+                    <a href="#portlet-config" data-toggle="modal" class="config">
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body text-center">
+                <form th:action="@{/external_services/import}" method="post" enctype="multipart/form-data">
+                    <p>
+                        <a href="/external_services/export" class="btn btn-default btn-lg btn-block">
+                            <i class="glyphicon glyphicon-export"></i>
+                            Exportar piezas
+                        </a>
+                    </p>
+
+                    <p>
+                        <span class="btn btn-default fileinput-button btn-lg btn-block">
+                            <i class="glyphicon glyphicon-import"></i>
+                            <span>Importar piezas...</span>
+                            <!-- The file input field used as target for the file upload widget -->
+                            <input id="fileupload" type="file" name="file" data-url="/external_services/import"/>
+                        </span>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <th:block layout:fragment="scripts">
+        <!-- Page level styles -->
+        <link href="/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" />
+        <link href="/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" />
+        <!-- End of page level styles -->
+        <!-- BEGIN:File Upload Plugin JS files-->
+        <script src="/scripts/form-fileupload-import-piezas.js"></script>
+        <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+        <script src="/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+        <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+        <script src="/plugins/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+        <!-- The basic File Upload plugin -->
+        <script src="/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+        <!-- Dialogs -->
+        <script src="/plugins/bootbox/bootbox.min.js"></script>
+        <!-- The main application script -->
+        <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+        <!--[if (gte IE 8)&(lt IE 10)]>
+        <script src="/plugins/jquery-file-upload/js/cors/jquery.xdr-transport.js"></script>
+        <![endif]-->
+        <!-- END:File Upload Plugin JS files-->
+        <script>
+                jQuery(document).ready(function() {
+                    FormFileUpload.init();
+                });
+        </script>
+    </th:block>
+    </body>
+</html>

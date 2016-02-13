@@ -24,6 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -155,7 +157,15 @@ public class HomeController implements ErrorController {
                     throwable = new Throwable("Error "+errorCode+". "+errorMsg);
                 }
             }
-            if(throwable != null) throwable.printStackTrace();
+            if(throwable != null) {
+                throwable.printStackTrace();
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                throwable.printStackTrace(pw);
+                model.addAttribute("fullStacktrace", sw.toString().split("\n"));
+                model.addAttribute("url", request.getRequestURL());
+            }
+            model.addAttribute("selectedMenu", "dashboard");
             model.addAttribute("throwable", throwable);
             return "error";
         }
@@ -168,6 +178,7 @@ public class HomeController implements ErrorController {
 
     @RequestMapping("/403")
     public String forbidden(HttpServletRequest request, Model model) {
+        model.addAttribute("selectedMenu", "dashboard");
         return "403";
     }
 

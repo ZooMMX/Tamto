@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Created by octavioruizcastillo on 08/02/16.
  */
-@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class })
+@EnableAutoConfiguration
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages = { "hello" })
 public class IntegrationTestApplication {
 }

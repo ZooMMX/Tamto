@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout">
 <head>
-    <title th:text="#{error500.title}">Error interno!</title>
+    <title>Error interno!</title>
 </head>
 <body>
 <th:block layout:fragment="titulo">
@@ -19,23 +19,24 @@
             500
         </div>
         <div class=" details">
-            <h3 th:text="#{error500.title}">Error interno.</h3>
+            <h3>Error interno.</h3>
             <p>
             <div th:text="${type}"></div><br/>
-                    <span th:text="#{error500.span.explanation}">
+                    <span>
                         Si el problema persiste, llama a soporte técnico.
                     </span>
             <br/><br/>
             </p>
-        </div>
 
+        </div>
+        <img src="/img/error-500.png"/>
     </div>
     <!-- Stacktrace -->
     <div th:utext="'&lt;!--'" th:remove="tag"></div>
     <div th:utext="'Failed URL: ' +  ${url}" th:remove="tag">${url}</div>
     <div th:utext="'Exception: ' + ${throwable.message}" th:remove="tag">${throwable.message}</div>
     <ul th:remove="tag">
-        <li th:each="ste : ${throwable.stackTrace}" th:remove="tag"><span
+        <li th:each="ste : ${fullStacktrace}" th:remove="tag"><span
                 th:utext="${ste}" th:remove="tag">${ste}</span></li>
     </ul>
     <div th:utext="'--&gt;'" th:remove="tag"></div>

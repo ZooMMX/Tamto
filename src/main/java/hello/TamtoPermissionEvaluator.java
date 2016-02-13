@@ -344,6 +344,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
             case "AGREGAR":
                 if(roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
                     return true;
+                break;
             case "VER":
                 if(roles.contains(Roles.ROLE_ADMIN) || roles.contains(Roles.ROLE_VENTAS)
                 || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION)
