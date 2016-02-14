@@ -25,7 +25,7 @@ public class ImporterTest {
     public void setUp() throws ParseException {
         workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet();
-        Row row = sheet.createRow(1);
+        Row row = sheet.createRow(0);
         row.createCell(0).setCellValue("id");
         row.createCell(1).setCellValue("descripcion");
         row.createCell(2).setCellValue("nombre sap");
@@ -38,7 +38,7 @@ public class ImporterTest {
         row.createCell(9).setCellValue("notas");
 
 
-        row = sheet.createRow(2);
+        row = sheet.createRow(1);
         row.createCell(0).setCellValue(159l);
         row.createCell(1).setCellValue("Descripción pieza");
         row.createCell(2).setCellValue("nombre sap");
@@ -90,17 +90,17 @@ public class ImporterTest {
 
     @Test
     public void testImportPiezasOnError() {
-        ImportService importService = new Importer();
-        workbook.getSheetAt(0).getRow(2).getCell(0).setCellValue("aquí debe ir un ID tipo numérico");
-
-        //Debe generar una excepción
         try {
+            ImportService importService = new Importer();
+            //Inserta una falla en la hoja
+            workbook.getSheetAt(0).getRow(1).getCell(0).setCellValue("aquí debe ir un ID tipo numérico");
+
+            //Genera una excepción
             importService.importPiezas(workbook, pieza ->
                     System.out.println("-->"+pieza.getId())
             );
             assertTrue("Se permitió una operación inválida", false);
         } catch (Exception e) {
-            e.printStackTrace();
             assertTrue("OK", true);
         }
 

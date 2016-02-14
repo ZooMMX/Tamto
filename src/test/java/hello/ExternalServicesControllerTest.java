@@ -93,4 +93,40 @@ public class ExternalServicesControllerTest {
         )
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    //@WithMockCustomUser
+    @WithMockUser(username = "admin", roles="ADMIN")
+    public void testImportXLSX() throws Exception {
+
+        FileInputStream fis = new FileInputStream("src/test/resources/exportTestXLSX.xlsx");
+        MockMultipartFile file = new MockMultipartFile( "file", "exportTestXLSX.xlsx", "application/vnd.ms-excel", fis);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.fileUpload("/external_services/import")
+                        .file(file)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(csrf())
+        ).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles="ADMIN")
+    public void testImportFail() throws Exception {
+
+        FileInputStream fis = new FileInputStream("src/test/resources/exportFailTest.xls");
+        MockMultipartFile file = new MockMultipartFile( "file", "exportFailTest.xls", "application/vnd.ms-excel", fis);
+
+        //El archivo de pruebas exportFailTest debe contener un error en la fila 4 para que este test pase.
+        mockMvc.perform(
+                MockMvcRequestBuilders.fileUpload("/external_services/import")
+                        .file(file)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(csrf())
+
+
+        )
+                .andExpect(MockMvcResultMatchers.content().string("Error (Cannot get a numeric value from a text cell) en la fila 4, en la columna  1"));
+    }
 }

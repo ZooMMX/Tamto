@@ -8,8 +8,13 @@ var FormFileUpload = function () {
                 $('#fileupload').fileupload({
 
                     done: function (e, data) {
+                        var test = "<h2>Resultado de la importación</h2>";
+                        if(data.jqXHR.responseText == "ok") {
+                            bootbox.alert(test+"Importación completada correctamente.");
+                        } else {
+                            bootbox.alert(test+data.jqXHR.responseText);
+                        }
 
-                        bootbox.alert("Importación completada correctamente.");
                         /*
                         $("tr:has(td)").remove();
                         var i = 0;
