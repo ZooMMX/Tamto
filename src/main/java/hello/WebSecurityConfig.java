@@ -55,23 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder);
     }
-    /*
-    @Configuration
-    protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-        @Autowired
-        UserDetailsService myUserDetailsService;
 
-        @Override
-        public void init(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
-        }
-
-        public PasswordEncoder passwordEncoder(){
-            PasswordEncoder encoder = new BCryptPasswordEncoder();
-            return encoder;
-        }
-    }
-    */
     @Override
     public void configure(WebSecurity web) throws Exception {
         DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
@@ -88,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http.addFilterBefore(filter,CsrfFilter.class);
 
-        http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
+        http.headers().frameOptions().sameOrigin();
         http
             .authorizeRequests()
                 .antMatchers("/img/**", "/css/**", "/media/**", "/plugins/**", "/scripts/**").permitAll()
