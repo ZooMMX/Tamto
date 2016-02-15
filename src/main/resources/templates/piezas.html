@@ -32,7 +32,7 @@
                             <span class="hidden-480">
                             Agregar pieza </span>
                         </a>
-                        <a href="/external_services" class="btn btn-default btn-circle">
+                        <a href="/external_services" class="btn btn-default btn-circle" sec:authorize="hasAnyRole('ROLE_VENTAS', 'ROLE_PRODUCCION', 'ROLE_PLANEACION')">
                             <i class="fa fa-plus-circle"></i>
                             <span class="hidden-480">
                             Carga masiva </span>
@@ -45,7 +45,7 @@
                             <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                                <li>
+                                <li sec:authorize="hasAnyRole('ROLE_VENTAS', 'ROLE_PRODUCCION', 'ROLE_PLANEACION')">
                                     <a href="/external_services">
                                     Importar desde excel </a>
                                 </li>

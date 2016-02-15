@@ -52,7 +52,7 @@ public class ExternalServicesControllerTest {
 
     @Test
     //@WithMockCustomUser
-    @WithMockUser(roles="ADMIN")
+    @WithMockUser(roles="PLANEACION")
     public void testExternalServicesHome() throws Exception {
 
 
@@ -76,7 +76,7 @@ public class ExternalServicesControllerTest {
 
     @Test
     //@WithMockCustomUser
-    @WithMockUser(username = "admin", roles="ADMIN")
+    @WithMockUser(username = "admin", roles="PLANEACION")
     public void testImport() throws Exception {
 
         FileInputStream fis = new FileInputStream("src/test/resources/exportTest.xls");
@@ -96,7 +96,7 @@ public class ExternalServicesControllerTest {
 
     @Test
     //@WithMockCustomUser
-    @WithMockUser(username = "admin", roles="ADMIN")
+    @WithMockUser(username = "admin", roles="PLANEACION")
     public void testImportXLSX() throws Exception {
 
         FileInputStream fis = new FileInputStream("src/test/resources/exportTestXLSX.xlsx");
@@ -112,7 +112,7 @@ public class ExternalServicesControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles="ADMIN")
+    @WithMockUser(username = "admin", roles="PLANEACION")
     public void testImportFail() throws Exception {
 
         FileInputStream fis = new FileInputStream("src/test/resources/exportFailTest.xls");
@@ -127,6 +127,30 @@ public class ExternalServicesControllerTest {
 
 
         )
-                .andExpect(MockMvcResultMatchers.content().string("Error (Cannot get a numeric value from a text cell) en la fila 4, en la columna  1"));
+                .andExpect(MockMvcResultMatchers.content().string("Error en la fila 4, en la columna  1. Se rechazó toda la importación."));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles="ADMIN")
+    public void testPermiso1() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/external_services")).andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles="PRODUCCION")
+    public void testPermiso2() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/external_services")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles="PLANEACION")
+    public void testPermiso3() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/external_services")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles="VENTAS")
+    public void testPermiso4() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/external_services")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

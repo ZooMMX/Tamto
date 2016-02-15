@@ -5,6 +5,7 @@ import hello.importer.FileBean;
 import hello.importer.ImportService;
 import hello.importer.Importer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ public class ExternalServicesController {
     @Autowired
     ImportService importService;
 
+    @PreAuthorize("isAuthenticated() and hasAnyRole('VENTAS', 'PLANEACION', 'PRODUCCION')")
     @RequestMapping(value = "/external_services")
     public String externalServicesHome(
             Model model)
@@ -38,6 +40,7 @@ public class ExternalServicesController {
         return "external_services_home";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/external_services/export")
     public ModelAndView export() {
         Iterable<Pieza> piezas = repository.findAll();
@@ -48,6 +51,7 @@ public class ExternalServicesController {
         return new ModelAndView(new PiezasExcelView(), model);
     }
 
+    @PreAuthorize("isAuthenticated() and hasAnyRole('VENTAS', 'PLANEACION', 'PRODUCCION')")
     @Transactional(rollbackFor = Exception.class)
     @RequestMapping(value = "/external_services/import")
     public @ResponseBody

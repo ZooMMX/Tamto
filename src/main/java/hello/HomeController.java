@@ -165,7 +165,7 @@ public class HomeController implements ErrorController {
                 model.addAttribute("fullStacktrace", sw.toString().split("\n"));
                 model.addAttribute("url", request.getRequestURL());
             }
-            model.addAttribute("selectedMenu", "dashboard");
+                model.addAttribute("selectedMenu", "dashboard");
             model.addAttribute("throwable", throwable);
             return "error";
         }
