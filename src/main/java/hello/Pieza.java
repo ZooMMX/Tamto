@@ -2,6 +2,7 @@ package hello;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.calidad.DocumentoInternoHtmlHelper;
+import hello.productos.Producto;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -44,6 +45,10 @@ public class Pieza {
     private String controlDeCambios;
     @Column(nullable = false)
     private boolean enabled = true;
+
+    //Las piezas se agrupan en productos, una pieza puede pertenecer a ninguno, uno o varios productos.
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    List<Producto> productos;
 
     //Clase encargada de renderizar trozos de html relacionados con esta entidad
     @Transient

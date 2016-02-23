@@ -3,41 +3,41 @@
 /* GUI estilo plano o design sheet */
 @media screen and (min-width: 1024px) {
     .plano {
-        border: 1px solid #000000;
+        border: 1px solid #ddd;
         padding: 0px !important;
     }
 
     .plano .columna-datos {
-        border-left: 1px solid #000000; padding-left: 0px;
+        border-left: 1px solid #ddd; padding-left: 0px;
     }
 
     .plano .bloque-izq {
-        border-right: 1px dotted #000000;
-        border-bottom: 1px dotted #000000;
+        border-right: 1px dotted #ddd;
+        border-bottom: 1px dotted #ddd;
     }
     .plano .bloque-der {
-        border-bottom: 1px dotted #000000;
+        border-bottom: 1px dotted #ddd;
     }
     .plano .bloque-completo {
-        border-bottom: 1px dotted #000000;
+        border-bottom: 1px dotted #ddd;
     }
 }
 @media screen and (max-width: 1023px) {
     .plano {
-        border: 1px solid #000000;
+        border: 1px solid #ddd;
         padding: 0px !important;
     }
 
     .plano .columna-datos {}
 
     .plano .bloque-izq {
-        border-bottom: 1px dotted #000000;
+        border-bottom: 1px dotted #ddd;
     }
     .plano .bloque-der {
-        border-bottom: 1px dotted #000000;
+        border-bottom: 1px dotted #ddd;
     }
     .plano .bloque-completo {
-        border-bottom: 1px dotted #000000;
+        border-bottom: 1px dotted #ddd;
     }
 }
 
@@ -53,10 +53,91 @@
     left: 5px;
     color: #777;
 }
+
 .celda .cuerpo {
     margin-top: 20px;
 }
 
+/* Título plano */
+.titulo-plano {
+    text-align: center;
+    padding: 1px;
+    border-bottom: 1px solid #ddd;
+}
+.titulo-plano h2 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* Bloques del plano */
+.titulo-bloque {
+    text-align: center;
+    padding: 1px;
+    border-bottom: 1px dotted #ddd;
+    cursor: pointer;
+    cursor: hand;
+
+}
+.titulo-bloque .icono {
+    position:absolute;
+    top: 13px;
+    left: 10px;
+    display: inline-block;
+    font-size: 18px;
+}
+.titulo-bloque:after {
+    content: "\f146";
+    font-family: FontAwesome;
+    right:10px;
+    position:absolute;
+    top:10px;
+    font-size: 16px;
+ }
+ .titulo-bloque.collapsed {
+    border-bottom: 1px solid #ddd;
+ }
+
+.titulo-bloque.collapsed:after {
+    content: "\f0fe";
+ }
+
+/* Archivos en el bloque */
+.bloque-archivo {
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-top-width: 0px;
+}
+.bloque-archivo:hover {
+    border-right-width: 7px;
+    background-color: #f5f8fd;
+    border-color: #8bb4e7;
+}
+/*
+.bloque-archivo > div {
+    display: none;
+}
+.bloque-archivo > div:first-child {
+    display: block;
+}
+*/
+.bloque-archivo .ocultable {
+    display: none;
+}
+.bloque-archivo:hover .ocultable {
+    display: block;
+}
+
+.bloque-archivo .file-actions {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+.bloque-archivo .icono {
+    position: absolute;
+    left: 10px;
+    top: 14px;
+}
 
 
 /* columns of same height styles */

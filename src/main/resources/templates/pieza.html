@@ -56,75 +56,103 @@
                             <div class="col-md-3 col-full-height columna-datos" th:object="${pieza}">
                                 <div>
                                     <row>
-                                        <div class="col-md-6 bloque-izq">
-                                            <div class="celda">
-                                                <div class="titulo">
-                                                    ID
+                                        <div class="col-md-12 titulo-plano">
+                                            <h2>TAM-01</h2>
+                                        </div>
+                                    </row>
+                                    <row>
+                                        <div class="col-md-12 titulo-bloque collapsed" data-toggle="collapse" data-target="#atributos">
+                                            <i class="icono fa fa-list-alt"></i>
+                                            <h4> Atributos</h4>
+                                        </div>
+                                    </row>
+                                    <!-- Bloque de atributos -->
+                                    <div id="atributos" class="collapse">
+                                        <row>
+                                            <div class="col-md-6 bloque-izq">
+                                                <div class="celda">
+                                                    <div class="titulo">
+                                                        ID
+                                                    </div>
+                                                    <div class="cuerpo" th:text="*{id}"/>
                                                 </div>
-                                                <div class="cuerpo" th:text="*{id}"/>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 bloque-der">
-                                            <div class="celda">
-                                                <div class="titulo">
-                                                    Tipo
+                                            <div class="col-md-6 bloque-der">
+                                                <div class="celda">
+                                                    <div class="titulo">
+                                                        Tipo
+                                                    </div>
+                                                    <div class="cuerpo" th:text="*{tipoPieza}"/>
                                                 </div>
-                                                <div class="cuerpo" th:text="*{tipoPieza}"/>
                                             </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-12 bloque-completo">
-                                            <div class="celda">
-                                                <div class="titulo">Descripción</div>
-                                                <h2>
-                                                    <span th:text="*{descripcion}"></span>
-                                                </h2>
+                                        </row>
+                                        <row>
+                                            <div class="col-md-12 bloque-completo">
+                                                <div class="celda">
+                                                    <div class="titulo">Descripción</div>
+                                                    <h2>
+                                                        <span th:text="*{descripcion}"></span>
+                                                    </h2>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-12 bloque-completo">
-                                            <div class="celda">
-                                                <div class="titulo">Descripción SAP</div>
-                                                <div class="cuerpo" th:text="*{nombreSap}"/>
+                                        </row>
+                                        <row>
+                                            <div class="col-md-12 bloque-completo">
+                                                <div class="celda">
+                                                    <div class="titulo">Descripción SAP</div>
+                                                    <div class="cuerpo" th:text="*{nombreSap}"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-12 bloque-completo">
-                                            <div class="celda">
-                                                <div class="titulo">Cliente</div>
-                                                <div class="cuerpo" th:text="*{cliente}"/>
+                                        </row>
+                                        <row>
+                                            <div class="col-md-12 bloque-completo">
+                                                <div class="celda">
+                                                    <div class="titulo">Cliente</div>
+                                                    <div class="cuerpo" th:text="*{cliente}"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-12 bloque-completo">
-                                            <div class="celda">
-                                                <div class="titulo">Código universal</div>
-                                                <div class="cuerpo" th:text="*{universalCode}"/>
+                                        </row>
+                                        <row>
+                                            <div class="col-md-12 bloque-completo">
+                                                <div class="celda">
+                                                    <div class="titulo">Código universal</div>
+                                                    <div class="cuerpo" th:text="*{universalCode}"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-6 bloque-izq">
-                                           <div class="celda">
-                                               <div class="titulo">
-                                                   W.O. Date
+                                        </row>
+                                        <row>
+                                            <div class="col-md-6 bloque-izq">
+                                               <div class="celda">
+                                                   <div class="titulo">
+                                                       W.O. Date
+                                                   </div>
+                                                   <div class="cuerpo" th:text="*{#dates.format(workOrderDate, 'dd/MM/yyyy')}"/>
                                                </div>
-                                               <div class="cuerpo" th:text="*{#dates.format(workOrderDate, 'dd/MM/yyyy')}"/>
                                            </div>
-                                       </div>
-                                       <div class="col-md-6 bloque-der">
-                                           <div class="celda">
-                                               <div class="titulo">
-                                                   W.O. ID
+                                           <div class="col-md-6 bloque-der">
+                                               <div class="celda">
+                                                   <div class="titulo">
+                                                       W.O. ID
+                                                   </div>
+                                                   <div class="cuerpo" th:text="*{workOrderNo}"/>
                                                </div>
-                                               <div class="cuerpo" th:text="*{workOrderNo}"/>
                                            </div>
-                                       </div>
-                                   </row>
+                                       </row>
+                                    </div>
+                                    <!-- Notas -->
+                                    <row>
+                                        <row>
+                                            <div class="col-md-12 titulo-bloque collapsed" data-toggle="collapse" data-target="#notas">
+                                                <i class="icono fa fa-file-text-o"></i>
+                                                <h4>Notas</h4>
+                                            </div>
+                                        </row>
+                                        <div id="notas" class="col-md-12 collapse">
+                                            <div class="celda">
+                                                <span th:text="*{notas}"></span>
+                                            </div>
+                                        </div>
+                                    </row>
                                     <!-- Control de versiones -->
                                     <!--
                                     <row>
@@ -153,27 +181,27 @@
                                     <row>
                                         <div class="col-md-12" style="padding: 0px;">
                                             <div class="">
-                                                <div style="max-height: 300px; overflow: auto;">
+                                                <div style="max-height: 900px; overflow: auto;">
                                                     <div class="list-group">
-                                                        <div class="list-group-item" th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
+                                                        <div class="list-group-item bloque-archivo" th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
                                                             <!-- Icóno y contador -->
-                                                            <div style="position: absolute; left: 10px; top: 18px;">
+                                                            <div class="icono">
                                                                 <div class="fa fa-file-o" style="font-size: 20px;"></div>
                                                             </div>
-                                                            <div style="position: absolute; left: 12px; top: 19px; color: #808080; font-size: 9pt;">
+                                                            <div style="position: absolute; left: 12px; top: 15px; color: #808080; font-size: 9pt;">
                                                                 <span th:text="${iterationStatus.count}">1</span>
                                                             </div>
                                                             <!-- Descripción, tipo, fecha y botones -->
                                                             <div style="margin-left: 25px;">
                                                                 <span th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span>
-                                                                <span th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</span>
-                                                                <th:block th:if="${archivo.getUpdatedFormatted()}"><br/></th:block>
-                                                                <span th:text="${archivo.getUpdatedFormatted()}" class="text-success" style="font-size: 10px;">9 de Diciembre de 2014</span>
-                                                                <!-- Botones -->
-                                                                <div style="padding-top: 10px;">
-                                                                    <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-xs green" target="viewer"><i class="fa fa-search"></i> Ver</a>
-                                                                    <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
-                                                                </div>
+                                                                <span th:utext="${archivo.getTamtoTypeHtml()}" class="ocultable">EXCEL</span>
+                                                                <!--<th:block th:if="${archivo.getUpdatedFormatted()}"><br/></th:block>-->
+                                                                <span th:text="${archivo.getUpdatedFormatted()}" class="text-success ocultable" style="font-size: 10px;">9 de Diciembre de 2014</span>
+                                                            </div>
+                                                            <!-- Botones -->
+                                                            <div class="file-actions ocultable">
+                                                                <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-circle btn-icon-only btn-default" target="viewer"><i class="fa fa-search"></i></a>
+                                                                <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}" class="btn btn-circle btn-icon-only btn-default"><i class="fa fa-download"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -182,14 +210,6 @@
                                         </div>
                                     </row>
                                     <!--/row-->
-                                    <row>
-                                        <div class="col-md-12">
-                                            <div class="celda">
-                                                <h2>Notas</h2>
-                                                <span th:text="*{notas}"></span>
-                                            </div>
-                                        </div>
-                                    </row>
                                     <!-- Logo tamto
                                     <row>
                                         <div class="col-md-12" style="text-align: center;">
