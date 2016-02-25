@@ -18,30 +18,78 @@ import java.util.List;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @JsonIgnoreProperties({"controlDeCambios"})
-public class Producto {
+public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @Column(name = "code", length = 32)
-    String code;
+    private String code;
 
     @Column(name = "notes")
-    String notes;
+    private String notes;
 
     /**
      * Almacena una imagen que representa al producto o una fotografía del mismo
      */
     @Lob
     @Column(name = "image")
-    private Blob imagen;
+    private Blob image;
 
     /**
      * Una pieza puede estar en ninguno, uno o muchos productos.
      */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private List<Pieza> piezas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Blob getImage() {
+        return image;
+    }
+
+    public void setImage(Blob image) {
+        this.image = image;
+    }
+
+    public List<Pieza> getPiezas() {
+        return piezas;
+    }
+
+    public void setPiezas(List<Pieza> piezas) {
+        this.piezas = piezas;
+    }
 }

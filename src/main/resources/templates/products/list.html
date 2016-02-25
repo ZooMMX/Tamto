@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div  th:each="prod, row : ${products}" th:classappend="${row.count} % 2 == 0?'row'">
+        <div class="col-md-6">
+            <!-- BEGIN Portlet PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-speech"></i>
+                        <span class="caption-subject bold uppercase" th:text="${prod.name}"></span>
+                        <span class="caption-helper">weekly stats...</span>
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" class="btn btn-circle btn-default">
+                            <i class="fa fa-pencil"></i> Edit </a>
+                        <a href="javascript:;" class="btn btn-circle btn-default">
+                            <i class="fa fa-plus"></i> Add </a>
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p><img th:src="'/product/'+${prod.id}+'/image'"/></p>
+                            <p>[Notas]</p>
+                        </div>
+                        <div class="col-md-9">
+                            <ul th:each="pieza : ${prod.piezas}">
+                                <li th:text="${pieza.descripcion}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END Portlet PORTLET-->
+        </div>
+    </div>
+</div>
+</body>
+</html>
