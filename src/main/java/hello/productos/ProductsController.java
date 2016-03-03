@@ -1,5 +1,6 @@
 package hello.productos;
 
+import hello.PageWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,15 +24,18 @@ public class ProductsController {
 
     @RequestMapping("/products")
     public String listProducts(
-            @RequestParam Integer length,
-            @RequestParam Integer start,
+            @RequestParam("page.size") Integer size,
+            @RequestParam("page.page") Integer pageNumber,
             Model model
     ) {
-        Pageable pageable = new PageRequest(start, length);
-        Page<Product> page = repo.findAll(pageable);
-        List<Product> productList = page.getContent();
 
-        model.addAttribute("products", productList);
+        Pageable pageable = new PageRequest(pageNumber-1, size);  //start from -1 to match page.page
+        Page<Product> page = repo.findAll(pageable);
+
+        PageWrapper<Product> pageWrapper = new PageWrapper<>(
+                page, "/products");
+        model.addAttribute("page", pageWrapper);
+
 
         return "products/list";
     }

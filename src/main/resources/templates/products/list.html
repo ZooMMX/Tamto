@@ -2,45 +2,117 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>Productos</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div  th:each="prod, row : ${products}" th:classappend="${row.count} % 2 == 0?'row'">
-        <div class="col-md-6">
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-gift"></i>
+                <span class="caption-subject bold uppercase">Catálogo de productos</span>
+            </div>
+            <div class="actions">
+                <a href="/calidad/documento/nuevo" class="btn btn-circle btn-default">
+                    <i class="fa fa-plus"></i>
+                        <span class="hidden-480">
+                        Alta de producto </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div  th:each="chunk : ${T(com.google.common.collect.Lists).partition(page.content, 2)}" class="row">
+        <div th:each="prod : ${chunk}">
+            <div class="col-md-6">
             <!-- BEGIN Portlet PORTLET-->
             <div class="portlet light">
+
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="icon-speech"></i>
                         <span class="caption-subject bold uppercase" th:text="${prod.name}"></span>
-                        <span class="caption-helper">weekly stats...</span>
+                        <span class="caption-helper" th:text="${prod.code}">...</span>
                     </div>
                     <div class="actions">
                         <a href="javascript:;" class="btn btn-circle btn-default">
-                            <i class="fa fa-pencil"></i> Edit </a>
-                        <a href="javascript:;" class="btn btn-circle btn-default">
-                            <i class="fa fa-plus"></i> Add </a>
+                            <i class="fa fa-pencil"></i> Editar </a>
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""> </a>
                     </div>
                 </div>
                 <div class="portlet-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <p><img th:src="'/product/'+${prod.id}+'/image'"/></p>
-                            <p>[Notas]</p>
+                        <div class="col-md-4 mt-overlay-6">
+                            <a th:id="'image'+${prod.code}" href="#" style="cursor: -moz-zoom-in; cursor: -webkit-zoom-in; cursor: zoom-in;">
+                                <p><img th:src="'/product/'+${prod.id}+'/image'" class="img-responsive thumbnail"/></p>
+                            </a>
                         </div>
-                        <div class="col-md-9">
-                            <ul th:each="pieza : ${prod.piezas}">
-                                <li th:text="${pieza.descripcion}"></li>
+                        <div th:id="'tree'+${prod.code}" class="col-md-8 jstree">
+                            <ul>
+                                <li class="jstree-open">
+                                    <a th:text="${prod.name}"/>
+                                    <ul th:each="pieza : ${prod.piezas}">
+                                        <li class="jstree-open">
+                                            <th:block th:text="${pieza.descripcion}"></th:block>
+                                            <ul>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }'>Acabado</li>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }'>Material</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info no-margin">
+                                <th:block th:utext="${prod.notes}"></th:block>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <!-- END Portlet PORTLET-->
         </div>
+        </div>
+    </div>
+    <div th:include="pagination_bar"></div>
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" data-dismiss="modal">
+            <div class="modal-content"  >
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <img src="" class="imagepreview" style="width: 100%;" />
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<!-- Page level scripts -->
+<th:block layout:fragment="scripts">
+    <!-- START fragment level CSS -->
+    <link href="/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END fragment level CSS -->
+    <!-- START fragment level plugins -->
+    <script type="text/javascript" src="/plugins/jstree/dist/jstree.js"></script>
+    <!-- END fragment level plugins -->
+    <!-- START fragment level scripts -->
+    <script>
+            jQuery(document).ready(function() {
+               $(function () {
+                    $("div[id^=tree]").jstree();
+                });
+                $(function() {
+                    $("a[id^=image]").on('click', function() {
+                        $('.imagepreview').attr('src', $(this).find('img').attr('src'));
+                        $('#imagemodal').modal('show');
+                    });
+                });
+            });
+    </script>
+    <!-- END fragment level scripts -->
+</th:block>
+<!-- End page level scripts -->
 </body>
 </html>

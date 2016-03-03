@@ -55,7 +55,7 @@ public class ProductsControllerTest {
                 .apply(springSecurity())
                 .build();
         repo.deleteAll();
-        for(int i = 0; i < 10; i++) createTestRow();
+        for(int i = 0; i < 10; i++) createTestRow(i);
     }
 
     /**
@@ -65,21 +65,21 @@ public class ProductsControllerTest {
     @WithMockUser(roles="ADMIN")
     public void testListado() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/products")
-                .param("length", "10")
-                .param("start" , "0")
+                .param("page.size", "10")
+                .param("page.page" , "1")
         )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
-    public void createTestRow() throws Exception {
+    public void createTestRow(int i) throws Exception {
         String code = RandomStringUtils.randomAlphanumeric(7);
 
         MultipartFile file = new MockMultipartFile("image","avatar1.png","image/png", downloadTestImage(new URL("http://identicon.org?t="+code+"&s=256")));
 
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/product/add")
                 .file((MockMultipartFile) file)
-                .param("name", "Prodct Name "+ RandomStringUtils.randomAlphabetic(5))
+                .param("name", "Prodct Name "+ i)
                 .param("code", code)
                 .param("notes", "notes here")
                 .param("pieza_id", "1")
