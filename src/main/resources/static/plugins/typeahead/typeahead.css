@@ -9,7 +9,6 @@
 
 .tt-hint,
 .tt-input {
-  color: #999;
   font-size: 14px;
   height: 34px;
   padding: 6px 12px;
@@ -25,8 +24,12 @@
   background-color: #fff !important;
 }
 
+.tt-hint {
+  color: #999;
+}
 
-.tt-dropdown-menu {
+
+.tt-menu {
   min-width: 160px;
   margin-top: 2px;
   padding: 5px 0;
@@ -40,28 +43,27 @@
   max-height: 250px;
 }
 
-.tt-dropdown-menu h3 {
+.tt-menu h3 {
   margin: 5px 0;
   padding: 6px 12px;
   font-size: 18px;
-  font-weight: 700; 
+  font-weight: 700;
   border-bottom: 1px solid #eee;
 }
 
-.modal-open .tt-dropdown-menu {
+.modal-open .tt-menu {
   z-index: 10055 !important;
 }
 
 .tt-suggestion {
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 16px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 16px;
 }
 
-.tt-suggestion.tt-cursor {
-  cursor: pointer;
-  background-color: #eee;
-
+.tt-suggestion:hover {
+    cursor: pointer;
+    background: #eee;
 }
 
 .tt-suggestion p {

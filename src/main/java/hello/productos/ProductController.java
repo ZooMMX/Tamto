@@ -120,7 +120,7 @@ public class ProductController {
             @RequestParam String code,
             @RequestParam String notes,
             @RequestParam("image") MultipartFile[] image,
-            @RequestParam(required = false) Long[] pieza_id,
+            @RequestParam(name = "pieza_id[]", required = false) Long[] pieza_id,
             RedirectAttributes redirectAttributes,
             HttpServletRequest request,
             Model model) throws IOException, SQLException {
@@ -165,19 +165,22 @@ public class ProductController {
             @RequestParam String code,
             @RequestParam String notes,
             @RequestParam("image") MultipartFile[] image,
-            @RequestParam Long[] pieza_id,
+            @RequestParam("pieza_id[]") Long[] pieza_id,
             RedirectAttributes redirectAttributes,
             HttpServletRequest request,
             Model model) throws IOException, SQLException {
 
-        Blob imageBlob = getImageBlobFromMultipartFile(image);
 
-        Product product = new Product();
-        product.setId(id);
+        Product product = repo.findOne(id);
         product.setName(name);
         product.setCode(code);
         product.setNotes(notes);
-        product.setImage(imageBlob);
+
+        //Cambio opcional de imagen
+        if(image != null && image.length > 0 && image[0] != null && !image[0].isEmpty()) {
+            Blob imageBlob = getImageBlobFromMultipartFile(image);
+            product.setImage(imageBlob);
+        }
 
         saveProduct(pieza_id, redirectAttributes, product);
 

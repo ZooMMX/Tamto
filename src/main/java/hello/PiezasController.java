@@ -181,6 +181,69 @@ public class PiezasController {
                 return resp;
         }
 
+    @RequestMapping(value = "/piezas/find")
+    public @ResponseBody List<Pieza> piezasFindJSON(
+            @RequestParam Integer length,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(required = false) String descripcion_filter,
+            @RequestParam(required = false) String nombre_sap_filter,
+            @RequestParam(required = false) String codigo_filter,
+            HttpServletRequest request,
+            Model model) {
+        HashMap resp = new HashMap<String, Object>();
+
+        /* Comienza filtros mediante criteria builder de JPA */
+        CriteriaBuilder qb = em.getCriteriaBuilder();
+        CriteriaQuery<Pieza> piezaQuery = qb.createQuery(Pieza.class);
+        Root<Pieza> p = piezaQuery.from(Pieza.class);
+        //Establezco una condición notNull únicamente para inicializar las condiciones
+        Predicate condiciones = qb.isNotNull(p.get(Pieza_.id));
+
+        // ** Filtro de piezas activas **
+        if(true) {
+            Predicate condicion = qb.equal(p.get(Pieza_.enabled), true);
+            condiciones = qb.and(condiciones, condicion);
+        }
+
+        // ** Filtro de código universal **
+        Predicate condicionCodigo = null;
+        if(codigo_filter != null && codigo_filter.length() > 0) {
+            condicionCodigo = qb.like(p.get(Pieza_.universalCode), '%'+codigo_filter+'%');
+        }
+
+        // ** Filtro de descripción **
+        Predicate condicionDescripcion = null;
+        if(descripcion_filter != null && descripcion_filter.length() > 0) {
+            condicionDescripcion = qb.like(p.get(Pieza_.descripcion), '%'+descripcion_filter+'%');
+        }
+
+        // Código AND descripción
+        if(condicionCodigo!=null && condicionDescripcion!=null)
+            condiciones = qb.and(condiciones, qb.or(condicionCodigo, condicionDescripcion));
+        else {
+            if(condicionCodigo!=null) condiciones = qb.and(condiciones, condicionCodigo);
+            if(condicionDescripcion!=null) condiciones = qb.and(condiciones, condicionDescripcion);
+        }
+
+        piezaQuery.where(condiciones);
+        /* **** Terminan filtros *** */
+
+        /* ** Paginación y ejecución de consulta ** */
+        TypedQuery<Pieza> piezasTypedQuery = em.createQuery( piezaQuery );
+        piezasTypedQuery.setFirstResult(page*length);
+        if(length > 0) piezasTypedQuery.setMaxResults(length); //Infinito si length es menor o igual a cero
+        List<Pieza> piezas = piezasTypedQuery.getResultList(); //Ejecución de la consulta maestra
+        CriteriaQuery countQuery = piezaQuery;
+        countQuery.select( qb.count( p.get(Pieza_.id) ) );
+        Long piezasFiltradas = (Long) em.createQuery( countQuery ).getSingleResult();   //Ejecución de la consulta conteo de elementos filtrados
+
+        //Agrega atributos HTML a la entidad
+        enhancePiezasForView(piezas, request);
+
+        /* Renderizar resultado */
+        return piezas;
+    }
+
     private List<PiezaHtmlHelper> enhancePiezasForView(List<Pieza> docs, HttpServletRequest request) {
         List<PiezaHtmlHelper> lista = new ArrayList();
 

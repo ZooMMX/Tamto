@@ -61,29 +61,57 @@
                         </ul>
                     </div>
                     <div class="col-md-9">
-                        <form role="form" id="form_profile" name="userUpdate" th:action="@{/product/add}" th:object="${product}" method="POST" enctype="multipart/form-data">
-                            <div class="tab-content">
+                        <form role="form" id="form_profile" name="userUpdate" th:action="@{/product/update}" th:object="${product}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="id" th:field="*{id}"/>
+                            <div class="row">
+                                <div class="tab-content">
                                 <div id="tab_1-1" class="tab-pane active">
-                                    <div class="form-group">
-                                        <label class="control-label">Código</label>
-                                        <input type="text" class="form-control" th:field="*{code}"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Código</label>
+                                            <input type="text" class="form-control" th:field="*{code}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Nombre</label>
+                                            <input type="text" class="form-control" th:field="*{name}"/>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Nombre</label>
-                                        <input type="text" class="form-control" th:field="*{name}"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Username</label>
-                                        <input type="text" class="form-control" readonly="readonly"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Piezas</label>
+
+                                            <div id="items">
+                                                <th:block th:each="pieza : *{piezas}">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" th:value="${pieza.descripcion}" readonly="readonly"/>
+                                                        <input type="hidden" name="pieza_id[]" th:value="${pieza.id}"/>
+                                                        <span class="input-group-btn">
+                                                            <button class="delete btn btn-danger" type="button">
+                                                                <i class="fa fa-remove fa-fw" ></i> </button>
+                                                        </span>
+                                                    </div>
+                                                </th:block>
+                                            </div>
+                                            <!--
+                                            <div id="remote">
+                                                <input id="piezas_autocomplete" class="form-control" type="text" placeholder="Descripción..."/>
+                                            </div>-->
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Agregar pieza</label>
+                                            <div class="input-group select2-bootstrap-append">
+                                                <select id="selected_pieza" class="form-control select2-allow-clear">
+                                                </select>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" id="add">
+                                                        <i class="fa fa-plus fa-fw" ></i> </button>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Pestaña change image -->
                                 <div id="tab_2-2" class="tab-pane">
-                                    <!--
-                                    <p>
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                                    </p>-->
-
                                     <div class="form-group">
                                         <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
@@ -97,7 +125,7 @@
                                                     Seleccionar imagen </span>
                                                     <span class="fileinput-exists">
                                                     Cambiar </span>
-                                                    <input type="file" name=""/>
+                                                    <input type="file" name="image"/>
                                                     </span>
                                                 <a href="javascript:;" class="btn default fileinput-exists" data-dismiss="fileinput">
                                                     Remover </a>
@@ -124,11 +152,14 @@
                                 <div id="tab_4-4" class="tab-pane">
                                 </div>
                             </div>
-                            <div class="margin-top-10">
-                                <button class="btn green" type="submit">
-                                    Guardar cambios </button>
-                                <a href="/" class="btn default">
-                                    Cancelar </a>
+                            </div>
+                            <div class="row">
+                                    <div class="margin-top-10">
+                                        <button class="btn green" type="submit">
+                                            Guardar cambios </button>
+                                        <a href="javascript:history.back();" class="btn default">
+                                            Cancelar </a>
+                                    </div>
                             </div>
                         </form>
                     </div>
@@ -141,19 +172,97 @@
 <!-- Page level scripts -->
 <th:block layout:fragment="scripts">
     <!-- Page level CSS -->
-    <link href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
     <!-- END Page level CSS -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <link href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+    <link   href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
     <script src="/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+    <link   href="/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+    <script src="/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <link   href="/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css"/>
+    <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
-    <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
     <script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
     <script th:src="'/plugins/jquery-validation/js/localization/messages_'+${#locale.language}+'.min.js'" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
-    <script>
+    <script th:inline="javascript">
+        jQuery(document).ready(function() {
 
+            //Btn agregar pieza
+            $("#add").click(function (e) {
+                 //Append a new row of code to the "#items" div
+                 var sp = $("#selected_pieza").select2('data')[0];
+                 var text = sp.text;
+                 var val = sp.id;
+                 $("#items").append(
+                    '<div class="input-group">'+
+                        '<input type="text" class="form-control" value="'+text+'" readonly="readonly"/>'+
+                        '<input type="hidden" name="pieza_id[]" value = "'+val+'"/>'+
+                        '<span class="input-group-btn">'+
+                            '<button class="delete btn btn-danger" type="button">'+
+                                '<i class="fa fa-remove fa-fw"></i> </button>'+
+                        '</span>'+
+                    '</div>');
+                 $("#selected_pieza").select2("val", "");
+            });
+
+            //Btn eliminar pieza
+            $("body").on("click", ".delete", function (e) {
+                $(this).parent("span").parent("div").remove();
+            });
+
+            //Typeahead
+            /*
+            var piezas = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('descripcion'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: '/piezas/find?length=30',
+              remote: {
+                url: [[@{/piezas/find(descripcion_filter='_QUERY_',length=30)}]],
+                wildcard: '_QUERY_'
+              }
+            });
+
+            $('#piezas_autocomplete').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 1
+            }, {
+              name: 'piezas',
+              display: 'descripcion',
+              source: piezas
+            });*/
+
+            //SELECT 2
+
+            $("#selected_pieza").select2({
+                ajax: {
+                    url: "/piezas/find",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            codigo_filter: params.term,
+                            descripcion_filter: params.term, // search term
+                            length: 10,
+                            page: params.page
+                        }
+                      return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.universalCode + ' - ' + item.descripcion,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                }
+            });
+
+        });
     </script>
 </th:block>
 <!-- End page level scripts -->

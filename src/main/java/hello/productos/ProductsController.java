@@ -24,8 +24,8 @@ public class ProductsController {
 
     @RequestMapping("/products")
     public String listProducts(
-            @RequestParam("page.size") Integer size,
-            @RequestParam("page.page") Integer pageNumber,
+            @RequestParam(name = "page.size", defaultValue = "10") Integer size,
+            @RequestParam(name = "page.page", defaultValue = "1") Integer pageNumber,
             Model model
     ) {
 

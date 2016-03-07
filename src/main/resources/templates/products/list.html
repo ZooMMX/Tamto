@@ -34,7 +34,7 @@
                         <span class="caption-helper" th:text="${prod.code}">...</span>
                     </div>
                     <div class="actions">
-                        <a href="javascript:;" class="btn btn-circle btn-default">
+                        <a th:href="'/product/'+${prod.id}" class="btn btn-circle btn-default">
                             <i class="fa fa-pencil"></i> Editar </a>
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""> </a>
                     </div>
