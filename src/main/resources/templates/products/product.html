@@ -13,13 +13,17 @@
         <div class="portlet-title">
             <div class="caption">
                 <i class="fa fa-gift"></i>
-                <span class="caption-subject bold uppercase">Producto</span>
+                <span class="caption-subject bold uppercase" th:text="${titulo}">Producto</span>
             </div>
             <div class="actions">
-                <a href="/calidad/documento/nuevo" class="btn btn-circle btn-default">
+                <a href="/product/add" class="btn btn-circle btn-default">
                     <i class="fa fa-plus"></i>
                         <span class="hidden-480">
                         Alta de producto </span>
+                </a>
+                <a class="btn btn-circle btn-default" data-target="#ajax" data-toggle="modal" th:href="@{/product/{id}/audit(id=${product.id})}">
+                    <i class="fa fa-search"></i>
+                    <span class="hidden-480"> Auditoría </span>
                 </a>
             </div>
         </div>
@@ -43,7 +47,7 @@
                             <!-- Pestaña change avatar -->
                             <li>
                                 <a data-toggle="tab" href="#tab_2-2">
-                                <i class="fa fa-picture-o"></i> Cambiar imagen </a>
+                                <i class="fa fa-picture-o"></i> Imagen / Fotografía </a>
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#tab_3-3">
@@ -53,15 +57,19 @@
                                         </span>
                                 </a>
                             </li>
-                            <!-- Pestaña privacity settings -->
-                            <!--<li>
-                                <a data-toggle="tab" href="#tab_4-4">
-                                <i class="fa fa-eye"></i> Privacity Settings </a>
-                            </li>-->
+                            <!-- Pestaña delete -->
+                            <li>
+                                <a data-toggle="tab" href="#tab_4-4" th:if="${showEliminarTab}">
+                                    <i class="fa fa-times-circle"></i>
+                                        <span>
+                                        Eliminar
+                                        </span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-md-9">
-                        <form role="form" id="form_profile" name="userUpdate" th:action="@{/product/update}" th:object="${product}" method="POST" enctype="multipart/form-data">
+                        <form role="form" id="form_profile" name="userUpdate" th:action="${action}" th:object="${product}" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="id" th:field="*{id}"/>
                             <div class="row">
                                 <div class="tab-content">
@@ -125,7 +133,7 @@
                                                     Seleccionar imagen </span>
                                                     <span class="fileinput-exists">
                                                     Cambiar </span>
-                                                    <input type="file" name="image"/>
+                                                    <input type="file" name="product_image"/>
                                                     </span>
                                                 <a href="javascript:;" class="btn default fileinput-exists" data-dismiss="fileinput">
                                                     Remover </a>
@@ -148,8 +156,19 @@
                                         <textarea id="notas" th:field="*{notes}" class="form-control" rows="6"></textarea>
                                     </div>
                                 </div>
-                                <!-- Pestaña privacity settings -->
-                                <div id="tab_4-4" class="tab-pane">
+                                <!-- Pestaña delete -->
+                                <div id="tab_4-4" class="tab-pane" th:if="${showEliminarTab}">
+                                    <div class="alert alert-block alert-danger fade in">
+                                        <h4 class="alert-heading">¡ Advertencia !</h4>
+                                        <p> <span class="label label-danger">Advertencia</span> al eliminar este producto no podrá ser recuperado.</p>
+                                        <p>Las piezas asociadas a este producto <span class="label label-danger">NO</span> serán eliminadas ni modificadas.</p>
+                                        <p></p>
+                                        <br/>
+                                        <p>
+                                            <a class="btn red" th:href="@{/product/{id}/delete(id=*{id})}" onclick="return confirm('¿Está seguro de eliminar este producto?');"> Eliminar producto </a>
+                                            <a class="btn blue" href="javascript:history.back();"> Cancelar </a>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             </div>
@@ -168,10 +187,24 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+        <div class="page-loading page-loading-boxed">
+            <img src="/img/loading-spinner-grey.gif" alt="" class="loading"/>
+                <span>
+                &nbsp;&nbsp;Cargando... </span>
+        </div>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
 </div>
 <!-- Page level scripts -->
 <th:block layout:fragment="scripts">
     <!-- Page level CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
     <!-- END Page level CSS -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link   href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />

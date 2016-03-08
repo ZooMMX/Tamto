@@ -6,6 +6,10 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- Dialogs -->
+    <th:block th:include="feedback_bar"></th:block>
+
+    <!-- Barra de título -->
     <div class="portlet box blue">
         <div class="portlet-title">
             <div class="caption">
@@ -13,7 +17,7 @@
                 <span class="caption-subject bold uppercase">Catálogo de productos</span>
             </div>
             <div class="actions">
-                <a href="/calidad/documento/nuevo" class="btn btn-circle btn-default">
+                <a href="/product/add" class="btn btn-circle btn-default">
                     <i class="fa fa-plus"></i>
                         <span class="hidden-480">
                         Alta de producto </span>
@@ -63,7 +67,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" th:if="${prod.notes.length() > 0}">
                         <div class="col-md-12">
                             <div class="alert alert-info no-margin">
                                 <th:block th:utext="${prod.notes}"></th:block>

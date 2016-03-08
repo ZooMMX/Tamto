@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class ProductsController {
             Model model
     ) {
 
-        Pageable pageable = new PageRequest(pageNumber-1, size);  //start from -1 to match page.page
+        Pageable pageable = new PageRequest(pageNumber-1, size, Sort.Direction.ASC, "code");  //start from -1 to match page.page
         Page<Product> page = repo.findAll(pageable);
 
         PageWrapper<Product> pageWrapper = new PageWrapper<>(

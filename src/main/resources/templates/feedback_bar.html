@@ -1,0 +1,12 @@
+<!-- Feedback bar -->
+
+<th:block th:fragment="feedback_bar" th:if="${message}">
+    <div class="alert alert-success alert-dismissable" th:if="${!isError}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+        <strong>Confirmación</strong> <span th:text="${message}"></span>
+    </div>
+    <div class="alert alert-danger alert-dismissable" th:if="${isError}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+        <strong>Alerta</strong> <span th:text="${message}"></span>
+    </div>
+</th:block>

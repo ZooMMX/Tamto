@@ -1,17 +1,18 @@
 package hello.productos;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import hello.*;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.hibernate.Hibernate;
+import hello.calidad.ItemAuditoria;
+import hello.calidad.ROLCS;
+import hello.productos.identicons.IdenticonGenerator;
+import hello.util.NullAwareBeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Null;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +46,9 @@ public class ProductController {
 
     @Autowired
     PiezaRepository piezaRepository;
+
+    @Autowired
+    EntityManager em;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -52,6 +63,9 @@ public class ProductController {
 
         Product p = repo.findOne(id);
         model.addAttribute("product", p);
+        model.addAttribute("titulo", "Producto");
+        model.addAttribute("action", "/product/update");
+        model.addAttribute("showEliminarTab", true);
         return "products/product";
     }
 
@@ -103,6 +117,21 @@ public class ProductController {
     }
 
     /**
+     * Add producto (View)
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/product/add")
+    public String addProductGet(Model model) {
+
+        Product p = new Product();
+        model.addAttribute("product", p);
+        model.addAttribute("titulo", "Nuevo Producto");
+        model.addAttribute("action", "/product/add");
+        return "products/product";
+    }
+
+    /**
      * Add Product
      * @param name
      * @param code
@@ -125,7 +154,9 @@ public class ProductController {
             HttpServletRequest request,
             Model model) throws IOException, SQLException {
 
-        Blob imageBlob = getImageBlobFromMultipartFile(image);
+        Blob imageBlob = image == null || image.length < 1 || image[0].isEmpty() ?
+                getImageBlobFromBytes( new IdenticonGenerator().generateIdenticonBytes(code) ) :
+                getImageBlobFromMultipartFile(image);
 
         Product product = new Product();
         product.setName(name);
@@ -146,11 +177,16 @@ public class ProductController {
         return imageBlob;
     }
 
+    private Blob getImageBlobFromBytes(byte[] bytes) throws SQLException {
+        Blob imageBlob = null;
+        if(bytes.length >0)
+            imageBlob = new javax.sql.rowset.serial.SerialBlob(bytes);
+
+        return imageBlob;
+    }
+
     /**
      * Update Product
-     * @param name
-     * @param code
-     * @param notes
      * @param image
      * @param pieza_id
      * @param redirectAttributes
@@ -160,21 +196,22 @@ public class ProductController {
      */
     @RequestMapping(value = "/product/update", method = RequestMethod.POST)
     public ModelAndView updateProductPost(
-            @RequestParam Long id,
+            /*@RequestParam Long id,
             @RequestParam String name,
             @RequestParam String code,
-            @RequestParam String notes,
-            @RequestParam("image") MultipartFile[] image,
+            @RequestParam String notes,*/
+            @ModelAttribute Product product,
+            @RequestParam("product_image") MultipartFile[] image,
             @RequestParam("pieza_id[]") Long[] pieza_id,
             RedirectAttributes redirectAttributes,
             HttpServletRequest request,
-            Model model) throws IOException, SQLException {
+            Model model) throws IOException, SQLException, InvocationTargetException, IllegalAccessException {
 
 
-        Product product = repo.findOne(id);
-        product.setName(name);
-        product.setCode(code);
-        product.setNotes(notes);
+        Product productFull = repo.findOne(product.getId());
+        NullAwareBeanUtilsBean notNull = new NullAwareBeanUtilsBean();
+        notNull.copyProperties(productFull, product);
+        product = productFull;
 
         //Cambio opcional de imagen
         if(image != null && image.length > 0 && image[0] != null && !image[0].isEmpty()) {
@@ -240,5 +277,106 @@ public class ProductController {
         public PiezaNotFoundException(String msg) {
             super(msg);
         }
+    }
+
+    @RequestMapping("/product/{id}/audit")
+    public String verAuditoria(@PathVariable("id") Long id, Model model) {
+
+        model.addAttribute("revisiones", createRevisions(id));
+
+        return "products/audit";
+    }
+
+    /**
+     * Genera una lista de auditoría con los últimos cambios realizados a un producto, características:
+     *  - Especifica quien realizó el cambio
+     *  - Especifica cuando se realizó
+     *  - Especifica cada campo que fue modificado
+     *  - Especifica el nuevo valor de cada campo modificado
+     *  - Sólo considera las últimas 100 revisiones
+     *  - Siempre agrega el autor y la fecha de creación del registro (1ra revisión) en el último elemento de la lista
+     * @param id
+     * @return
+     */
+    private List<ItemAuditoria> createRevisions(Long id) {
+
+        // ******** Datos sobre la creación de la entidad (primera revisión) ******
+        Query q0 = em.createNativeQuery("SELECT u.fullname, timestamp FROM product_aud doc JOIN revision r ON doc.rev = r.id JOIN user u ON r.username = u.username where doc.id = "+id+" ORDER BY timestamp ASC LIMIT 1");
+        Object[] firstRev = (Object[]) q0.getSingleResult();
+        //La fecha de creación también puede ser tomada directo de DocumentoInterno.created
+        Date created = (Date) Date.from(Instant.ofEpochMilli(((BigInteger) firstRev[1]).longValue()));
+        String autor = (String) firstRev[0];
+
+        // ******** Datos sobre actualizaciones a la entidad *******
+        //  (Índices del array)--------->      [0]   [1]   [2]    [3]   [4]    [5]       [6]        [7]       [8]        [9]         [10]        [11]
+        Query q = em.createNativeQuery("SELECT p.id, code, image, name, notes, code_mod, image_mod, name_mod, notes_mod, piezas_mod, u.fullname, timestamp FROM product_aud p JOIN revision r ON p.rev = r.id JOIN user u ON r.username = u.username where p.id = "+id+" ORDER BY timestamp ASC LIMIT 100 OFFSET 1");
+        List rl = q.getResultList();
+        //Hago SELECT en orden inverso para poder utilizar OFFSET y quitar el registro de creación de la entidad
+        //Con Collections.reverse pongo la lista en el sentido que requiero de más actual a más viejo
+        Collections.reverse(rl);
+
+        List<ItemAuditoria> resultados = new ArrayList<>();
+
+        for(Object object : rl) {
+            Object[] r = (Object[]) object;
+            // Mapeo manual de campos
+            String code       = (String) r[1];
+            // No obtengo la imagen
+            String  name      = (String) r[3];
+            // No obtengo las notas por ser muy largas para mostrar a detalle
+            Boolean codeMod   = (Boolean) r[5];
+            Boolean imageMod  = (Boolean) r[6];
+            Boolean nameMod   = (Boolean) r[7];
+            Boolean notesMod  = (Boolean) r[8];
+            Boolean piezasMod = (Boolean) r[9];
+            String usuario    = (String) r[10];
+            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[11]).longValue()));
+
+            // Ejemplo de la descripción de la revisión: "Juan modificó el código universal a 1009, cliente a Tamto, descripción a 'Nueva Descripción' hace 3 días"
+            StringBuilder descripcionRev = new StringBuilder();
+            descripcionRev.append("modificó ");
+
+            ArrayList<String> msgs = new ArrayList<>();
+            Boolean coma = false;
+            if(codeMod != null && codeMod) {
+                msgs.add("el código a \""+ code +"\"");
+            }
+            if(imageMod != null && imageMod) {
+                msgs.add("la imagen o fotografía");
+            }
+            if(nameMod != null && nameMod) {
+                msgs.add("el nombre del producto por \""+name+"\"");
+            }
+            if(notesMod != null && notesMod) {
+                msgs.add("las notas");
+            }
+            if(piezasMod != null && piezasMod) {
+                msgs.add("las piezas que contiene");
+            }
+
+
+            if(msgs.size() > 1) {
+                //Agregar " , " para concatenar frases
+                descripcionRev.append( String.join(", ", msgs.subList(0, msgs.size()-1)) );
+                //Agregar palabra " Y " para concatenar últimas dos frases
+                //descripcionRev.append( msgs.get(msgs.size()-2) );
+                descripcionRev.append( " y " );
+                descripcionRev.append( msgs.get(msgs.size()-1) );
+            } else
+                descripcionRev.append(msgs.get(0));
+            /* Modificó otro atributo como fileType, fileSize, updated, created
+            if(!coma) {
+                descripcionRev.append("un atributo interno");
+            }*/
+
+            ItemAuditoria item = new ItemAuditoria(usuario, descripcionRev.toString(), Util.getElapsedTimeString(revisionDate));
+
+            resultados.add( item );
+        }
+
+        DateFormat df = SimpleDateFormat.getDateInstance();
+        resultados.add( new ItemAuditoria(autor, "registró por primera vez este producto", df.format(created)));
+
+        return resultados;
     }
 }
