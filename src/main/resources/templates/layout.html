@@ -14,7 +14,7 @@
 <meta content="" name="description"/>
 <meta content="" name="author"/>
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css"/>
+<link href="css/opensans.css" rel="stylesheet" type="text/css"/>
 <link href="plugins/font-awesome/css/font-awesome.min.css" th:href="@{/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
 <link href="plugins/simple-line-icons/simple-line-icons.min.css" th:href="@{/plugins/simple-line-icons/simple-line-icons.min.css}" rel="stylesheet" type="text/css"/>
 <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" type="text/css"/>
@@ -244,6 +244,16 @@
                                 <span class="selected"></span>
                                 <span class="arrow open"></span>
                             </th:block>
+						</a>
+					</li>
+					<li th:class="${selectedMenu.contains('product') ? 'active open' : ''}">
+						<a href="/products">
+							<i class="icon-grid"></i>
+							<span class="title">Productos</span>
+							<th:block th:if="${selectedMenu.contains('product')}">
+								<span class="selected"></span>
+								<span class="arrow open"></span>
+							</th:block>
 						</a>
 					</li>
 					<li th:class="${selectedMenu.contains('pieza') ? 'active open' : ''}">

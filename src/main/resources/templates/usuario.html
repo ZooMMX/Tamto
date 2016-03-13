@@ -22,8 +22,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Estado</label>
-                            <div class="input-icon right">
-                                <i class="fa"></i>
+                            <div>
                                 <input id="userActivo" th:field="*{enabled}" type="checkbox" class="make-switch" checked="checked" data-on-color="primary" data-off-color="danger" data-on-text="&nbsp;Activo&nbsp;&nbsp;" data-off-text="&nbsp;Inactivo&nbsp;"/>
                             </div>
                         </div>
@@ -46,12 +45,9 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="control-label">Roles</label>
-                            <div class="input-icon right">
-                                <i class="fa"></i>
-                                <select id="roles" class="form-control select2 select2-offscreen" name="roles" multiple="multiple" disabled="disabled">
-                                    <option th:each="type : ${roleTypes}" th:value="${type}" th:text="${type}" th:selected="${userRoles.contains(type.toString())}">X</option>
-                                </select>
-                            </div>
+                            <select id="roles" class="form-control select2-multiple" name="roles" multiple="multiple" disabled="disabled">
+                                <option th:each="type : ${roleTypes}" th:value="${type}" th:text="${type}" th:selected="${userRoles.contains(type.toString())}">X</option>
+                            </select>
                         </div>
                     </div>
                     <!--/span-->
@@ -64,6 +60,7 @@
         <button type="button" class="btn default" data-dismiss="modal">Cerrar</button>
     </div>
 </form>
+
     <!-- END FORM-->
 <!-- END content -->
 

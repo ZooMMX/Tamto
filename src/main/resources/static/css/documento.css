@@ -43,7 +43,7 @@
 
 /* Celdas del plano */
 .celda {
-    padding: 10px;
+    padding: 5px;
     text-align: center;
 }
 
@@ -51,18 +51,23 @@
     position: absolute;
     top: 5px;
     left: 5px;
-    color: #777;
+    color: #aaa;
+    font-size: 9px;
+}
+
+.celda h2 {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .celda .cuerpo {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 /* Título plano */
 .titulo-plano {
     text-align: center;
     padding: 1px;
-    border-bottom: 1px solid #ddd;
 }
 .titulo-plano h2 {
     margin-top: 15px;
@@ -71,35 +76,51 @@
 
 /* Bloques del plano */
 .titulo-bloque {
-    text-align: center;
+    text-align: left;
+    left
     padding: 1px;
-    border-bottom: 1px dotted #ddd;
+    border-bottom: 2px solid #ddd;
     cursor: pointer;
     cursor: hand;
 
 }
+.titulo-bloque h4 {
+    margin-left: 0px;
+    margin-top: 8px;
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: normal;
+}
 .titulo-bloque .icono {
     position:absolute;
-    top: 13px;
+    top: 11px;
     left: 10px;
     display: inline-block;
     font-size: 18px;
 }
 .titulo-bloque:after {
-    content: "\f146";
+    /*content: "\f147";*/ /* Icono del bloque desplegado */
+    content: ""; /* Sin icono */
     font-family: FontAwesome;
     right:10px;
     position:absolute;
-    top:10px;
-    font-size: 16px;
+    bottom: 0px;
+    font-size: 12px;
  }
  .titulo-bloque.collapsed {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid #ddd;
  }
 
-.titulo-bloque.collapsed:after {
-    content: "\f0fe";
+.titulo-bloque.collapsed:after { /* Icono del bloque colapsado */
+    content: "\f196";
  }
+
+.titulo-bloque.outline-azul     { box-shadow: 0 3px 0 0 blue;   }
+.titulo-bloque.outline-rojo     { box-shadow: 0 3px 0 0 red;    }
+.titulo-bloque.outline-amarillo { box-shadow: 0 3px 0 0 yellow; }
+.titulo-bloque.outline-verde    { box-shadow: 0 3px 0 0 green;  }
+.titulo-bloque.outline-azul     { box-shadow: 0 3px 0 0 blue;   }
+.titulo-bloque.outline-morado   { box-shadow: 0 3px 0 0 purple; }
 
 /* Archivos en el bloque */
 .bloque-archivo {
@@ -109,9 +130,9 @@
     border-top-width: 0px;
 }
 .bloque-archivo:hover {
-    border-right-width: 7px;
+    /* border-right-width: 7px; */
     background-color: #f5f8fd;
-    border-color: #8bb4e7;
+    /* border-color: #8bb4e7; */
 }
 /*
 .bloque-archivo > div {
@@ -128,7 +149,7 @@
     display: block;
 }
 
-.bloque-archivo .file-actions {
+.bloque-archivo.file-actions {
     position: absolute;
     right: 12px;
     top: 12px;
@@ -138,7 +159,31 @@
     left: 10px;
     top: 14px;
 }
+.boton-dropdown {
+    position: absolute;
+    right: 15px;
+}
+/* Bloque-Placeholder */
+.col-md-12.bloque-placeholder {
+    padding: 0;
+}
+.bloque-placeholder .placeholder {
+    margin: 5px;
+    height: 24px;
+}
+.bloque-placeholder .placeholder.rojo {
+    border: 2px dashed red;
+    background-color: #FFD5D5;
+}
+.placeholder .icono {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+}
 
+.placeholder div {
+    text-align: center;
+}
 
 /* columns of same height styles */
 

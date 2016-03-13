@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,10 +63,11 @@ public class ProductController {
     public String viewProductGet(@PathVariable Long id, Model model) {
 
         Product p = repo.findOne(id);
-        model.addAttribute("product", p);
-        model.addAttribute("titulo", "Producto");
-        model.addAttribute("action", "/product/update");
+        model.addAttribute("product"        , p);
+        model.addAttribute("titulo"         , "Producto");
+        model.addAttribute("action"         , "/product/update");
         model.addAttribute("showEliminarTab", true);
+        model.addAttribute("selectedMenu"   , "product");
         return "products/product";
     }
 
@@ -84,9 +86,10 @@ public class ProductController {
 
         byte[] bytes = {};
         try {
-            int blobLength = (int) p.getImage().length();
-            bytes = p.getImage().getBytes(1, blobLength);
-        } catch (SQLException | NullPointerException e ) {
+            //int blobLength = (int) p.getImage().length();
+            //bytes = p.getImage().getBytes(1, blobLength);
+            bytes = p.getImage();
+        } catch (NullPointerException e ) {
             log.error(e.getLocalizedMessage(), e);
             addFeedbackMessage(redirectAttributes, e.getLocalizedMessage(), true);
         }
@@ -125,9 +128,10 @@ public class ProductController {
     public String addProductGet(Model model) {
 
         Product p = new Product();
-        model.addAttribute("product", p);
-        model.addAttribute("titulo", "Nuevo Producto");
-        model.addAttribute("action", "/product/add");
+        model.addAttribute("product"     , p);
+        model.addAttribute("titulo"      , "Nuevo Producto");
+        model.addAttribute("action"      , "/product/add");
+        model.addAttribute("selectedMenu", "product");
         return "products/product";
     }
 
@@ -154,9 +158,14 @@ public class ProductController {
             HttpServletRequest request,
             Model model) throws IOException, SQLException {
 
+        /*
         Blob imageBlob = image == null || image.length < 1 || image[0].isEmpty() ?
                 getImageBlobFromBytes( new IdenticonGenerator().generateIdenticonBytes(code) ) :
                 getImageBlobFromMultipartFile(image);
+                */
+        byte[] imageBlob = image == null || image.length < 1 || image[0].isEmpty() ?
+                new IdenticonGenerator().generateIdenticonBytes(code) :
+                image[0].getBytes();
 
         Product product = new Product();
         product.setName(name);
@@ -201,22 +210,24 @@ public class ProductController {
             @RequestParam String code,
             @RequestParam String notes,*/
             @ModelAttribute Product product,
-            @RequestParam("product_image") MultipartFile[] image,
-            @RequestParam("pieza_id[]") Long[] pieza_id,
+            @RequestParam(value = "product_image", required = false) MultipartFile[] image,
+            @RequestParam(value = "pieza_id[]", required = false) Long[] pieza_id,
             RedirectAttributes redirectAttributes,
             HttpServletRequest request,
             Model model) throws IOException, SQLException, InvocationTargetException, IllegalAccessException {
 
-
-        Product productFull = repo.findOne(product.getId());
-        NullAwareBeanUtilsBean notNull = new NullAwareBeanUtilsBean();
-        notNull.copyProperties(productFull, product);
-        product = productFull;
-
         //Cambio opcional de imagen
         if(image != null && image.length > 0 && image[0] != null && !image[0].isEmpty()) {
-            Blob imageBlob = getImageBlobFromMultipartFile(image);
+            //Blob imageBlob = getImageBlobFromMultipartFile(image);
+            byte[] imageBlob = image[0].getBytes();
             product.setImage(imageBlob);
+        } else {
+            //Por defecto debo extraer la imagen original y añadirla de nuevo
+            //  Nota: Si no hago esto image queda null
+            //  Nota 2: Intenté hacer un UPDATE sin imagen pero no pude hacer
+            //      update de la relación many-to-many
+            Product productFromBd = repo.findOne(product.getId());
+            product.setImage(productFromBd.getImage());
         }
 
         saveProduct(pieza_id, redirectAttributes, product);
@@ -230,14 +241,21 @@ public class ProductController {
      * @param redirectAttributes
      * @param product
      */
-    private void saveProduct(@RequestParam Long[] piezas_ids, RedirectAttributes redirectAttributes, Product product) {
+    public void saveProduct(Long[] piezas_ids, RedirectAttributes redirectAttributes, Product product) {
         Long[] pieza_id = piezas_ids;
         try {
-            //Recupero las piezas que contiene este producto
-            List<Pieza> piezaList = getPiezas(pieza_id);
+            if(piezas_ids != null && piezas_ids.length > 0) { //¿Hay piezas que agregar al productos?
+                //Recupero las piezas que contiene este producto
+                List<Pieza> piezaList = getPiezas(pieza_id);
 
-            //Preparo el producto para su persistencia
-            product.setPiezas(piezaList);
+                //Añado las nuevas piezas
+                if(product.getPiezas() == null)
+                    product.setPiezas(piezaList);
+                else
+                    product.getPiezas().addAll(piezaList);
+            }
+
+            //Persisto el producto
             repo.save(product);
 
             //Establezco la retroalimentación al usuario
@@ -341,9 +359,13 @@ public class ProductController {
             if(codeMod != null && codeMod) {
                 msgs.add("el código a \""+ code +"\"");
             }
+            // Cancelado por defecto, siempre se muestra modificado, el problema reside en que
+            //      hibernate siempre altera el contenido de este campo aunque sea igual al contenido
+            //      anterior, al parecer no lo diferencía
+            /*
             if(imageMod != null && imageMod) {
                 msgs.add("la imagen o fotografía");
-            }
+            }*/
             if(nameMod != null && nameMod) {
                 msgs.add("el nombre del producto por \""+name+"\"");
             }
@@ -355,15 +377,17 @@ public class ProductController {
             }
 
 
-            if(msgs.size() > 1) {
+            if(msgs.size() > 1) { //Varios cambios
                 //Agregar " , " para concatenar frases
                 descripcionRev.append( String.join(", ", msgs.subList(0, msgs.size()-1)) );
                 //Agregar palabra " Y " para concatenar últimas dos frases
-                //descripcionRev.append( msgs.get(msgs.size()-2) );
                 descripcionRev.append( " y " );
                 descripcionRev.append( msgs.get(msgs.size()-1) );
-            } else
-                descripcionRev.append(msgs.get(0));
+            } else if(msgs.size() == 1) //Un cambio
+                descripcionRev.append( msgs.get(0) );
+            else    //Ningún cambio conocido, skip
+                continue;
+
             /* Modificó otro atributo como fileType, fileSize, updated, created
             if(!coma) {
                 descripcionRev.append("un atributo interno");

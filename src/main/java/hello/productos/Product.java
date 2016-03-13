@@ -2,6 +2,7 @@ package hello.productos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.Pieza;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -17,7 +18,6 @@ import java.util.List;
 @Audited(withModifiedFlag = true)
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@JsonIgnoreProperties({"controlDeCambios"})
 public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -37,7 +37,7 @@ public class Product {
      */
     @Lob
     @Column(name = "image")
-    private Blob image;
+    private byte[] image;
 
     /**
      * Una pieza puede estar en ninguno, uno o muchos productos.
@@ -77,11 +77,11 @@ public class Product {
         this.notes = notes;
     }
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

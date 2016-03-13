@@ -56,54 +56,48 @@
                             <div class="col-md-3 col-full-height columna-datos" th:object="${pieza}">
                                 <div>
                                     <row>
-                                        <div class="col-md-12 titulo-plano">
-                                            <h2>TAM-01</h2>
+                                        <div class="col-md-6 bloque-izq">
+                                            <div class="celda">
+                                                <div class="titulo">
+                                                    ID
+                                                </div>
+                                                <div class="cuerpo" th:text="*{id}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 bloque-der">
+                                            <div class="celda">
+                                                <div class="titulo">
+                                                    Tipo
+                                                </div>
+                                                <div class="cuerpo" th:text="*{tipoPieza}"/>
+                                            </div>
                                         </div>
                                     </row>
                                     <row>
-                                        <div class="col-md-12 titulo-bloque collapsed" data-toggle="collapse" data-target="#atributos">
-                                            <i class="icono fa fa-list-alt"></i>
-                                            <h4> Atributos</h4>
+                                        <div class="col-md-12 bloque-completo">
+                                            <div class="celda">
+                                                <div class="titulo">Descripción</div>
+                                                <h2>
+                                                    <span th:text="*{descripcion}"></span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </row>
+                                    <row>
+                                        <div class="col-md-12 bloque-completo">
+                                            <div class="celda">
+                                                <div class="titulo">Descripción SAP</div>
+                                                <div class="cuerpo" th:text="*{nombreSap}"/>
+                                            </div>
+                                        </div>
+                                    </row>
+                                    <row>
+                                        <div class="col-md-12 titulo-bloque outline-azul collapsed" data-toggle="collapse" data-target="#atributos">
+                                            <h4> INFORMACIÓN</h4>
                                         </div>
                                     </row>
                                     <!-- Bloque de atributos -->
                                     <div id="atributos" class="collapse">
-                                        <row>
-                                            <div class="col-md-6 bloque-izq">
-                                                <div class="celda">
-                                                    <div class="titulo">
-                                                        ID
-                                                    </div>
-                                                    <div class="cuerpo" th:text="*{id}"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 bloque-der">
-                                                <div class="celda">
-                                                    <div class="titulo">
-                                                        Tipo
-                                                    </div>
-                                                    <div class="cuerpo" th:text="*{tipoPieza}"/>
-                                                </div>
-                                            </div>
-                                        </row>
-                                        <row>
-                                            <div class="col-md-12 bloque-completo">
-                                                <div class="celda">
-                                                    <div class="titulo">Descripción</div>
-                                                    <h2>
-                                                        <span th:text="*{descripcion}"></span>
-                                                    </h2>
-                                                </div>
-                                            </div>
-                                        </row>
-                                        <row>
-                                            <div class="col-md-12 bloque-completo">
-                                                <div class="celda">
-                                                    <div class="titulo">Descripción SAP</div>
-                                                    <div class="cuerpo" th:text="*{nombreSap}"/>
-                                                </div>
-                                            </div>
-                                        </row>
                                         <row>
                                             <div class="col-md-12 bloque-completo">
                                                 <div class="celda">
@@ -139,12 +133,58 @@
                                            </div>
                                        </row>
                                     </div>
+                                    <!-- Bloque de especificaciones -->
+                                    <row>
+                                        <row>
+                                            <div class="col-md-12 titulo-bloque outline-rojo collapse in" data-toggle="collapse" data-target="#especificaciones">
+                                                <!--<i class="icono fa fa-file-text-o"></i>-->
+                                                <h4>ESPECIFICACIONES</h4>
+                                            </div>
+                                        </row>
+                                        <row>
+                                            <div id="especificaciones" class="col-md-12 bloque-placeholder collapse in">
+                                                <div class="placeholder rojo">
+                                                    <i class="icono fa fa-file-text-o"></i>
+                                                    <div>
+                                                        Prueba
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </row>
+                                    </row>
+                                    <!-- Bloque de planeación y producción -->
+                                    <row>
+                                        <row>
+                                            <div class="col-md-12 titulo-bloque outline-verde collapse in" data-toggle="collapse" data-target="#pp">
+                                                <!--<i class="icono fa fa-file-text-o"></i>-->
+                                                <h4>P &amp; P</h4>
+                                            </div>
+                                        </row>
+                                        <div id="pp" class="col-md-12 collapse in">
+                                            <div class="celda">
+                                                <span th:text="*{notas}"></span>
+                                            </div>
+                                        </div>
+                                    </row>
+                                    <!-- Bloque de calidad -->
+                                    <row>
+                                        <row>
+                                            <div class="col-md-12 titulo-bloque outline-morado collapse in" data-toggle="collapse" data-target="#calidad">
+                                                <!--<i class="icono fa fa-file-text-o"></i>-->
+                                                <h4>CALIDAD</h4>
+                                            </div>
+                                        </row>
+                                        <div id="calidad" class="col-md-12 collapse in">
+                                            <div class="celda">
+                                                <span th:text="*{notas}"></span>
+                                            </div>
+                                        </div>
+                                    </row>
                                     <!-- Notas -->
                                     <row>
                                         <row>
-                                            <div class="col-md-12 titulo-bloque collapsed" data-toggle="collapse" data-target="#notas">
-                                                <i class="icono fa fa-file-text-o"></i>
-                                                <h4>Notas</h4>
+                                            <div class="col-md-12 titulo-bloque outline-amarillo collapse in" data-toggle="collapse" data-target="#notas">
+                                                <h4>NOTAS</h4>
                                             </div>
                                         </row>
                                         <div id="notas" class="col-md-12 collapse">
@@ -179,33 +219,39 @@
                                         </div>
                                     </row>
                                     <row>
-                                        <div class="col-md-12" style="padding: 0px;">
+                                        <div class="col-md-12 bloque-placeholder" style="padding: 0px;">
                                             <div class="">
-                                                <div style="max-height: 900px; overflow: auto;">
-                                                    <div class="list-group">
-                                                        <div class="list-group-item bloque-archivo" th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
-                                                            <!-- Icóno y contador -->
-                                                            <div class="icono">
-                                                                <div class="fa fa-file-o" style="font-size: 20px;"></div>
-                                                            </div>
-                                                            <div style="position: absolute; left: 12px; top: 15px; color: #808080; font-size: 9pt;">
-                                                                <span th:text="${iterationStatus.count}">1</span>
-                                                            </div>
-                                                            <!-- Descripción, tipo, fecha y botones -->
-                                                            <div style="margin-left: 25px;">
-                                                                <span th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span>
-                                                                <span th:utext="${archivo.getTamtoTypeHtml()}" class="ocultable">EXCEL</span>
-                                                                <!--<th:block th:if="${archivo.getUpdatedFormatted()}"><br/></th:block>-->
-                                                                <span th:text="${archivo.getUpdatedFormatted()}" class="text-success ocultable" style="font-size: 10px;">9 de Diciembre de 2014</span>
-                                                            </div>
-                                                            <!-- Botones -->
-                                                            <div class="file-actions ocultable">
-                                                                <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-circle btn-icon-only btn-default" target="viewer"><i class="fa fa-search"></i></a>
-                                                                <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}" class="btn btn-circle btn-icon-only btn-default"><i class="fa fa-download"></i></a>
-                                                            </div>
+                                                <!--<div style="max-height: 900px; overflow: auto;">-->
+                                                    <th:block th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
+                                                        <div class="placeholder bloque-archivo" style="margin-left: 5px;">
+                                                        <!-- Descripción, tipo, fecha y botones -->
+                                                        <i class="fa fa-file-o"></i>
+                                                        <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
+                                                            <a th:case="true" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer">
+                                                                <span th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span></a>
+                                                            <span th:case="false" th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span>
+                                                        </th:block>
+                                                        <div class="boton-dropdown">
+                                                            X
+                                                            <!--<a href="javascript:;">
+                                                                <i class="fa fa-ellipsis-h"></i></a>-->
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                        <!-- Información del archivo -->
+                                                        <!--
+                                                        <span th:utext="${archivo.getTamtoTypeHtml()}" class="ocultable">EXCEL</span>
+                                                        <span th:text="${archivo.getUpdatedFormatted()}" class="text-success ocultable" style="font-size: 10px;">9 de Diciembre de 2014</span>
+                                                        -->
+                                                        <!-- Botones -->
+                                                        <!--
+                                                        <div class="file-actions ocultable">
+                                                            <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-circle btn-icon-only btn-default" target="viewer"><i class="fa fa-search"></i></a>
+                                                            <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}" class="btn btn-circle btn-icon-only btn-default"><i class="fa fa-download"></i></a>
+                                                        </div>
+                                                        -->
+                                                        <!--<th:block th:if="${archivo.getUpdatedFormatted()}"><br/></th:block>-->
+                                                        </div>
+                                                    </th:block>
+                                                <!--</div>-->
                                             </div>
                                         </div>
                                     </row>

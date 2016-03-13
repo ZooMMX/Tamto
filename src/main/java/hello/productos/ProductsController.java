@@ -36,7 +36,7 @@ public class ProductsController {
         PageWrapper<Product> pageWrapper = new PageWrapper<>(
                 page, "/products");
         model.addAttribute("page", pageWrapper);
-
+        model.addAttribute("selectedMenu", "productos");
 
         return "products/list";
     }

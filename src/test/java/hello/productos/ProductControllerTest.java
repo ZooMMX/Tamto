@@ -115,8 +115,8 @@ public class ProductControllerTest {
                 .param("name", "Prodct Name 1")
                 .param("code", "PCode1")
                 .param("notes", "notes here")
-                .param("pieza_id", "1")
-                .param("pieza_id", "200")
+                .param("pieza_id[]", "1")
+                .param("pieza_id[]", "200")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .with(csrf())
         )
@@ -218,13 +218,12 @@ public class ProductControllerTest {
     @WithMockUser(roles="admin")
     public void testUpdateProduct2() throws Exception {
 
-        MultipartFile file = new MockMultipartFile("image","avatar1.png","image/png","".getBytes());
+        MultipartFile file = new MockMultipartFile("product_image","avatar1.png","image/png","abcd".getBytes());
 
         testAddProduct1();
         Product p = repo.findByCode("PCode1");
-        //Afirma que el producto tiene el nombre original y no tiene imagen asociada
+        //Afirma que el producto tiene el nombre origina
         Assert.assertNotEquals("Product Name 1 - UPDATED -", p.getName());
-        Assert.assertNull(p.getImage());
         Long id = p.getId();
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/product/update")
                 .file((MockMultipartFile) file)
@@ -244,16 +243,16 @@ public class ProductControllerTest {
                 .andExpect(flash().attribute("isError", false));
 
         p = repo.findByCode("PCode1");
-        //Afirma que el producto ya cambió de nombre y ya tiene imagen
+        //Afirma que el producto ya cambió de nombre y tiene asignada la nueva imagen
         Assert.assertEquals("Product Name 1 - UPDATED -", p.getName());
-        Assert.assertNotNull(p.getImage());
+        Assert.assertArrayEquals(file.getBytes(), p.getImage());
     }
 
     /**
      * Prueba simple de view
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="ADMIN")
     public void testView1() throws Exception {
 
         testAddProduct1();

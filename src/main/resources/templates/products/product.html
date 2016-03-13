@@ -89,12 +89,19 @@
                                             <label class="control-label">Piezas</label>
 
                                             <div id="items">
-                                                <th:block th:each="pieza : *{piezas}">
+                                                <th:block th:each="pieza, stat : *{piezas}">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" th:value="${pieza.descripcion}" readonly="readonly"/>
-                                                        <input type="hidden" name="pieza_id[]" th:value="${pieza.id}"/>
+                                                        <!-- Botón izquierdo -->
                                                         <span class="input-group-btn">
-                                                            <button class="delete btn btn-danger" type="button">
+                                                            <a class="btn btn-default" title="Ver pieza" th:href="@{/pieza/{id}(id=${pieza.id})}" data-target="#ajax" data-toggle="modal">
+                                                                <i class="fa fa-eye" ></i> </a>
+                                                        </span>
+                                                        <!-- Inputs -->
+                                                        <input type="text" class="form-control" th:value="${pieza.descripcion}" readonly="readonly"/>
+                                                        <input type="hidden" th:field="*{piezas[__${stat.index}__]}"/><!--name="pieza_id[]" th:value="${pieza.id}"/>-->
+                                                        <!-- Botón derecho -->
+                                                        <span class="input-group-btn">
+                                                            <button class="delete btn btn-danger" type="button" title="Remover pieza">
                                                                 <i class="fa fa-remove fa-fw" ></i> </button>
                                                         </span>
                                                     </div>
@@ -111,7 +118,7 @@
                                                 <select id="selected_pieza" class="form-control select2-allow-clear">
                                                 </select>
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-primary btn-sm" type="button" id="add">
+                                                    <button class="btn btn-primary btn-sm" type="button" id="add" title="Agregar pieza seleccionada">
                                                         <i class="fa fa-plus fa-fw" ></i> </button>
                                                 </span>
                                             </div>
@@ -205,6 +212,9 @@
 <th:block layout:fragment="scripts">
     <!-- Page level CSS -->
     <link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/> <!-- Pieza modal view -->
+    <link rel="stylesheet" type="text/css" href="/css/documento.css"/> <!-- Pieza modal view -->
+    <link rel="stylesheet" type="text/css" href="/css/timeline.css"/> <!-- Pieza modal view -->
     <!-- END Page level CSS -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link   href="/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
@@ -232,7 +242,7 @@
                         '<input type="text" class="form-control" value="'+text+'" readonly="readonly"/>'+
                         '<input type="hidden" name="pieza_id[]" value = "'+val+'"/>'+
                         '<span class="input-group-btn">'+
-                            '<button class="delete btn btn-danger" type="button">'+
+                            '<button class="delete btn btn-danger" type="button" title="Remover pieza">'+
                                 '<i class="fa fa-remove fa-fw"></i> </button>'+
                         '</span>'+
                     '</div>');
