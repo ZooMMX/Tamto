@@ -128,12 +128,17 @@
     border-bottom-width: 0px;
     border-left-width: 0px;
     border-top-width: 0px;
+    position: relative;
 }
-.bloque-archivo:hover {
+.bloque-archivo a, .bloque-archivo button {
+    border: 0px;
+}
+/*
+.bloque-archivo:hover {*/
     /* border-right-width: 7px; */
     background-color: #f5f8fd;
     /* border-color: #8bb4e7; */
-}
+/*}*/
 /*
 .bloque-archivo > div {
     display: none;
@@ -149,10 +154,11 @@
     display: block;
 }
 
-.bloque-archivo.file-actions {
+.bloque-archivo .file-actions {
     position: absolute;
-    right: 12px;
-    top: 12px;
+    right: 0px;
+    top: 0px;
+    display: none;
 }
 .bloque-archivo .icono {
     position: absolute;
@@ -166,19 +172,35 @@
 /* Bloque-Placeholder */
 .col-md-12.bloque-placeholder {
     padding: 0;
+    position: relative;
 }
 .bloque-placeholder .placeholder {
     margin: 5px;
     height: 24px;
+    position: relative;
 }
 .bloque-placeholder .placeholder.rojo {
     border: 2px dashed red;
     background-color: #FFD5D5;
 }
+.bloque-placeholder .placeholder.verde {
+    border: 2px dashed green ;
+    background-color: #D6E9C6;
+}
+.bloque-placeholder .placeholder.morado {
+    border: 2px dashed purple;
+    background-color: rgb(231, 199, 245);
+}
+.bloque-placeholder .placeholder .drop-area {
+    position: absolute; top:0; left: 0; right: 0; bottom: 0;
+}
+.placeholder .fijo {
+    position: relative;
+}
 .placeholder .icono {
     position: absolute;
     left: 10px;
-    top: 8px;
+    top: 2px;
 }
 
 .placeholder div {

@@ -146,7 +146,25 @@
                                                 <div class="placeholder rojo">
                                                     <i class="icono fa fa-file-text-o"></i>
                                                     <div>
-                                                        Prueba
+                                                        Acabado
+                                                    </div>
+                                                </div>
+                                                <div class="placeholder rojo">
+                                                    <i class="icono fa fa-file-text-o"></i>
+                                                    <div>
+                                                        Material
+                                                    </div>
+                                                </div>
+                                                <div class="placeholder rojo">
+                                                    <i class="icono fa fa-file-text-o"></i>
+                                                    <div>
+                                                        Cantidad de material
+                                                    </div>
+                                                </div>
+                                                <div class="placeholder rojo">
+                                                    <i class="icono fa fa-file-text-o"></i>
+                                                    <div>
+                                                        Unidad del material
                                                     </div>
                                                 </div>
                                             </div>
@@ -160,9 +178,12 @@
                                                 <h4>P &amp; P</h4>
                                             </div>
                                         </row>
-                                        <div id="pp" class="col-md-12 collapse in">
-                                            <div class="celda">
-                                                <span th:text="*{notas}"></span>
+                                        <div id="pp" class="col-md-12 bloque-placeholder collapse in">
+                                            <div class="placeholder verde">
+                                                <i class="icono fa fa-file-text-o"></i>
+                                                <div>
+                                                    Formato de planeación
+                                                </div>
                                             </div>
                                         </div>
                                     </row>
@@ -174,9 +195,16 @@
                                                 <h4>CALIDAD</h4>
                                             </div>
                                         </row>
-                                        <div id="calidad" class="col-md-12 collapse in">
-                                            <div class="celda">
-                                                <span th:text="*{notas}"></span>
+                                        <div id="calidad" class="col-md-12 bloque-placeholder collapse in">
+                                            <div class="placeholder morado">
+                                                <i class="icono fa fa-file-text-o" style=""></i>
+                                                <div>Formato de calidad</div>
+                                                <div id="placeholder-calidad" class="drop-area"></div>
+                                            </div>
+                                            <div id="container-calidad" class="placeholder">
+                                                <div class="fijo">
+                                                    <i class="icono fa fa-plus" style=""></i>
+                                                    <div>Agregar archivo...</div></div>
                                             </div>
                                         </div>
                                     </row>
@@ -220,35 +248,39 @@
                                     </row>
                                     <row>
                                         <div class="col-md-12 bloque-placeholder" style="padding: 0px;">
-                                            <div class="">
+                                            <div id="archivos-sueltos">
                                                 <!--<div style="max-height: 900px; overflow: auto;">-->
-                                                    <th:block th:each="archivo,iterationStatus  : ${pieza.getArchivos()}">
-                                                        <div class="placeholder bloque-archivo" style="margin-left: 5px;">
+                                                    <th:block th:each="archivo, iter  : ${pieza.getArchivos()}">
+                                                        <div style="margin-left: 5px;">
                                                         <!-- Descripción, tipo, fecha y botones -->
-                                                        <i class="fa fa-file-o"></i>
                                                         <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
-                                                            <a th:case="true" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer">
-                                                                <span th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span></a>
-                                                            <span th:case="false" th:text="${archivo.getFileName()}" style="color: black;">Nombre.xls</span>
+
+                                                            <div class="bloque-archivo">
+                                                                <!--<th:div th:text="${archivo.getFileName()}">Nombre.xls</th:div>-->
+                                                                <div style="overflow-x: hidden;">
+                                                                    <a class="btn btn-default btn-xs btn-block" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer" style="text-align: left;">
+                                                                        <i class="fa fa-file-o"></i>&nbsp;&nbsp; <th:block th:text="${archivo.getFileName()}">Nombre.xls</th:block></a></div>
+                                                                <button th:id="'btndrop'+${iter.count}" type="button" class="ocultable grey-mint file-actions btn btn-circle btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa fa-ellipsis-h" style="color: white;"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu pull-right" role="menu" data-th-attr="aria-labelledby='btndrop'+${iter.count}">
+                                                                    <li>
+                                                                        <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" target="viewer"><i class="fa fa-eye"></i>&nbsp; Ver</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}"><i class="fa fa-download"></i>&nbsp; Descargar</a>
+                                                                    </li>
+                                                                    <li class="divider"> </li>
+                                                                    <li class="disabled">
+                                                                        <a href="javscript:;"><i class="fa fa-tags"></i><span th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</span></a>
+                                                                    </li>
+                                                                    <li class="disabled">
+                                                                        <a href="javscript:;"><i class="fa fa-calendar-o"></i><span th:text="${archivo.getUpdatedFormatted()}" style="font-size: 10px;">9 de Diciembre de 2014</span></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
                                                         </th:block>
-                                                        <div class="boton-dropdown">
-                                                            X
-                                                            <!--<a href="javascript:;">
-                                                                <i class="fa fa-ellipsis-h"></i></a>-->
-                                                        </div>
-                                                        <!-- Información del archivo -->
-                                                        <!--
-                                                        <span th:utext="${archivo.getTamtoTypeHtml()}" class="ocultable">EXCEL</span>
-                                                        <span th:text="${archivo.getUpdatedFormatted()}" class="text-success ocultable" style="font-size: 10px;">9 de Diciembre de 2014</span>
-                                                        -->
-                                                        <!-- Botones -->
-                                                        <!--
-                                                        <div class="file-actions ocultable">
-                                                            <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-circle btn-icon-only btn-default" target="viewer"><i class="fa fa-search"></i></a>
-                                                            <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}" class="btn btn-circle btn-icon-only btn-default"><i class="fa fa-download"></i></a>
-                                                        </div>
-                                                        -->
-                                                        <!--<th:block th:if="${archivo.getUpdatedFormatted()}"><br/></th:block>-->
                                                         </div>
                                                     </th:block>
                                                 <!--</div>-->
@@ -370,5 +402,19 @@
         </div>
     </div>
     <!-- End Modal -->
-
+    <script>
+            jQuery(document).ready(function() {
+               dragula([
+                    document.querySelector('#pp'),
+                    document.querySelector('#especificaciones'),
+                    document.querySelector('#placeholder-calidad'),
+                    document.querySelector('#container-calidad'),
+                    document.querySelector('#archivos-sueltos')], {
+                        invalid: function (el, handle) {
+                          return el.className === 'fijo';
+                        }
+                    }
+                    );
+            });
+    </script>
 
