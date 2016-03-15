@@ -196,16 +196,18 @@
                                             </div>
                                         </row>
                                         <div id="calidad" class="col-md-12 bloque-placeholder collapse in">
-                                            <div class="placeholder morado">
-                                                <i class="icono fa fa-file-text-o" style=""></i>
-                                                <div>Formato de calidad</div>
-                                                <div id="placeholder-calidad" class="drop-area"></div>
-                                            </div>
-                                            <div id="container-calidad" class="placeholder">
-                                                <div class="fijo">
+                                            <ol class="list-group">
+                                                <li id="container-calidad" class="list-item placeholder morado">
+                                                    <div class="">
+                                                        <i class="icono fa fa-file-text-o" style=""></i>
+                                                        <div>Formato de calidad</div>
+                                                        <div id="placeholder-calidad" class="drop-area"></div>
+                                                    </div>
+                                                </li>
+                                                <li class="placeholder list-item">
                                                     <i class="icono fa fa-plus" style=""></i>
-                                                    <div>Agregar archivo...</div></div>
-                                            </div>
+                                                    <div>Agregar archivo...</div></li>
+                                            </ol>
                                         </div>
                                     </row>
                                     <!-- Notas -->
@@ -248,14 +250,14 @@
                                     </row>
                                     <row>
                                         <div class="col-md-12 bloque-placeholder" style="padding: 0px;">
-                                            <div id="archivos-sueltos">
+                                            <ol id="archivos-sueltos" class="list-group">
                                                 <!--<div style="max-height: 900px; overflow: auto;">-->
                                                     <th:block th:each="archivo, iter  : ${pieza.getArchivos()}">
                                                         <div style="margin-left: 5px;">
                                                         <!-- Descripción, tipo, fecha y botones -->
                                                         <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
 
-                                                            <div class="bloque-archivo">
+                                                            <li class="list-item bloque-archivo">
                                                                 <!--<th:div th:text="${archivo.getFileName()}">Nombre.xls</th:div>-->
                                                                 <div style="overflow-x: hidden;">
                                                                     <a class="btn btn-default btn-xs btn-block" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer" style="text-align: left;">
@@ -278,13 +280,13 @@
                                                                         <a href="javscript:;"><i class="fa fa-calendar-o"></i><span th:text="${archivo.getUpdatedFormatted()}" style="font-size: 10px;">9 de Diciembre de 2014</span></a>
                                                                     </li>
                                                                 </ul>
-                                                            </div>
+                                                            </li>
 
                                                         </th:block>
                                                         </div>
                                                     </th:block>
                                                 <!--</div>-->
-                                            </div>
+                                            </ol>
                                         </div>
                                     </row>
                                     <!--/row-->
@@ -412,9 +414,18 @@
                     document.querySelector('#archivos-sueltos')], {
                         invalid: function (el, handle) {
                           return el.className === 'fijo';
+                        },
+                        accepts: function (el, target, source, sibling) {
+                            if(target.className == 'morado')
+                                if(target.children.length > 0) return false;
+                            return true; // elements can be dropped in any of the `containers` by default
                         }
                     }
                     );
+
+                function hasClass(element, cls) {
+                    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+                }
             });
     </script>
 
