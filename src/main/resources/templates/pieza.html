@@ -142,7 +142,7 @@
                                             </div>
                                         </row>
                                         <row>
-                                            <div id="especificaciones" class="col-md-12 bloque-placeholder collapse in">
+                                            <div id="especificaciones" data-categoria="ESPECIFICACIONES"  class="col-md-12 bloque-placeholder collapse in">
                                                 <div class="placeholder rojo">
                                                     <i class="icono fa fa-file-text-o"></i>
                                                     <div>
@@ -178,7 +178,7 @@
                                                 <h4>P &amp; P</h4>
                                             </div>
                                         </row>
-                                        <div id="pp" class="col-md-12 bloque-placeholder collapse in">
+                                        <div id="pp" class="col-md-12 bloque-placeholder collapse in" data-categoria="PP">
                                             <div class="placeholder verde">
                                                 <i class="icono fa fa-file-text-o"></i>
                                                 <div>
@@ -196,18 +196,21 @@
                                             </div>
                                         </row>
                                         <div id="calidad" class="col-md-12 bloque-placeholder collapse in">
-                                            <ol class="list-group">
-                                                <li id="container-calidad" class="list-item placeholder morado">
-                                                    <div class="">
-                                                        <i class="icono fa fa-file-text-o" style=""></i>
-                                                        <div>Formato de calidad</div>
-                                                        <div id="placeholder-calidad" class="drop-area"></div>
-                                                    </div>
-                                                </li>
-                                                <li class="placeholder list-item">
+                                            <!-- BEGIN Placeholder formato de calidad -->
+                                            <div class="placeholder morado">
+                                                <i class="icono fa fa-file-text-o" style=""></i>
+                                                <div>Formato de calidad</div>
+                                                <div id="placeholder-calidad" data-categoria="CALIDAD" class="drop-area"></div>
+                                            </div>
+                                            <!-- END placeholder -->
+                                            <!-- BEGIN Contenedor de documentos de calidad -->
+                                            <div id="container-calidad" data-categoria="CALIDAD">
+                                                <div class="placeholder fijo">
                                                     <i class="icono fa fa-plus" style=""></i>
-                                                    <div>Agregar archivo...</div></li>
-                                            </ol>
+                                                    <div>Agregar archivo...</div>
+                                                </div>
+                                            </div>
+                                            <!-- END contenedor -->
                                         </div>
                                     </row>
                                     <!-- Notas -->
@@ -250,14 +253,13 @@
                                     </row>
                                     <row>
                                         <div class="col-md-12 bloque-placeholder" style="padding: 0px;">
-                                            <ol id="archivos-sueltos" class="list-group">
+                                            <div id="archivos-sueltos" class="list-group">
                                                 <!--<div style="max-height: 900px; overflow: auto;">-->
                                                     <th:block th:each="archivo, iter  : ${pieza.getArchivos()}">
-                                                        <div style="margin-left: 5px;">
                                                         <!-- Descripción, tipo, fecha y botones -->
                                                         <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
 
-                                                            <li class="list-item bloque-archivo">
+                                                            <div class="list-item bloque-archivo" th:id="${archivo.id}" data-item-type="FILE">
                                                                 <!--<th:div th:text="${archivo.getFileName()}">Nombre.xls</th:div>-->
                                                                 <div style="overflow-x: hidden;">
                                                                     <a class="btn btn-default btn-xs btn-block" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer" style="text-align: left;">
@@ -280,13 +282,12 @@
                                                                         <a href="javscript:;"><i class="fa fa-calendar-o"></i><span th:text="${archivo.getUpdatedFormatted()}" style="font-size: 10px;">9 de Diciembre de 2014</span></a>
                                                                     </li>
                                                                 </ul>
-                                                            </li>
+                                                            </div>
 
                                                         </th:block>
-                                                        </div>
                                                     </th:block>
                                                 <!--</div>-->
-                                            </ol>
+                                            </div>
                                         </div>
                                     </row>
                                     <!--/row-->
@@ -405,7 +406,7 @@
     </div>
     <!-- End Modal -->
     <script>
-            jQuery(document).ready(function() {
+            var dragu = function() {
                dragula([
                     document.querySelector('#pp'),
                     document.querySelector('#especificaciones'),
@@ -413,19 +414,38 @@
                     document.querySelector('#container-calidad'),
                     document.querySelector('#archivos-sueltos')], {
                         invalid: function (el, handle) {
-                          return el.className === 'fijo';
+                          return hasClass(el, 'fijo');
                         },
                         accepts: function (el, target, source, sibling) {
-                            if(target.className == 'morado')
+                            if(target.id == 'placeholder-calidad')
                                 if(target.children.length > 0) return false;
                             return true; // elements can be dropped in any of the `containers` by default
                         }
                     }
-                    );
+                    )
+                    .on('drop', function(el, target, source, sibling) {             //Llamar al servidor para cambiar categoría
+                        if(target != source) {                                      //Se mueve un bloque a otro distinto
+                            if(el.getAttribute('data-item-type') == 'FILE') {       //El item es un archivo
+                                //alert('drop '+el.id+' -> '+target.id);
+                                $.ajax({
+                                    url:   "/archivoEdicion/"+el.id+"/categoria",
+                                    data:  {'categoria':target.getAttribute('data-categoria')},
+                                    async: false,
+                                    success: function(data) {
+                                        //alert(data);
+                                    }
+                                });
+                            }
+                        }
+                    });
 
-                function hasClass(element, cls) {
-                    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-                }
+            };
+
+            $('#ajax').on('loaded.bs.modal', function (e) {
+                dragu();
             });
+            function hasClass( target, className ) {
+                return new RegExp('(\\s|^)' + className + '(\\s|$)').test(target.className);
+            }
     </script>
 

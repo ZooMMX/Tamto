@@ -24,6 +24,10 @@ public class Archivo {
     private long id;
 
     @Column
+    @Enumerated(EnumType.STRING)
+    CategoriaArchivo categoria;
+
+    @Column
     String fileName;
 
     @Column
@@ -82,6 +86,14 @@ public class Archivo {
 
     public void setPieza(Pieza pieza) {
         this.pieza = pieza;
+    }
+
+    public CategoriaArchivo getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaArchivo categoria) {
+        this.categoria = categoria;
     }
 
     public String getFileName() {
@@ -236,4 +248,7 @@ public class Archivo {
             return sb.toString();
         }
 
+    public enum CategoriaArchivo {
+        ESPECIFICACIONES, PP, CALIDAD, PROGRAMAS
+    }
 }

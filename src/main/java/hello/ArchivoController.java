@@ -27,6 +27,21 @@ public class ArchivoController {
     @Autowired
     ArchivoRepository archivoRepository;
 
+    @RequestMapping("/archivoEdicion/{id}/categoria")
+    public @ResponseBody String updateCategoria(
+            @PathVariable Long id,
+            @RequestParam Archivo.CategoriaArchivo categoria,
+            Model model
+    ) {
+        Archivo a = archivoRepository.findOne(id);
+        if(a != null) {
+            a.setCategoria(categoria);
+            archivoRepository.save(a);
+            return "ok";
+        } else
+            return "Archivo no encontrado";
+    }
+
     @PreAuthorize("hasPermission(#archivoId, 'archivo', 'EDITAR')")
     @RequestMapping(value = "/archivoEdicion/{archivoId}", method = RequestMethod.GET)
     public String archivoEdicion(
