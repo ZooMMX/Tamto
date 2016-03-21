@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -71,7 +72,10 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
         //Reviso los permisos por tipo de entidad ligada
         if(targetType.equalsIgnoreCase("ARCHIVO")) {
             //Permisos para las entidades Archivo
-            return _permisosArchivos(roles, (Long)targetId, (String) permission);
+            if(permission.equals("UPLOAD"))
+                    return _permisosArchivosConArchivos(roles, targetId, (String) permission);
+                else
+                    return _permisosArchivos(roles, (Long)targetId, (String) permission);
         } else if(targetType.equalsIgnoreCase("PIEZA")) {
             return _permisosPiezas(roles, (Long) targetId, (String) permission);
         } else if(targetType.equalsIgnoreCase("LISTAMAESTRA")) {
@@ -154,6 +158,57 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     }
 
     /**
+     * Enruta las peticiones con uno o varios archivos.
+     * Cuando se le pasan varios archivo, sólo resolverá TRUE si todos son permitidos y FALSE si cualquier es rechazado.
+     * @param roles
+     * @param files
+     * @param permiso
+     * @return
+     */
+    private boolean _permisosArchivosConArchivos(HashSet<Roles> roles, Object files, String permiso) {
+        if(files instanceof MultipartFile[]) {
+            MultipartFile[] files1 = (MultipartFile[]) files;
+            for (MultipartFile file :
+                    files1) {
+                Boolean aprobado = _permisosArchivosConArchivo(roles, file, permiso);
+                if(!aprobado) return false;
+            }
+            return true;
+        } else if(files instanceof MultipartFile) {
+            return _permisosArchivosConArchivo(roles, (MultipartFile) files, permiso);
+        }
+        return false;
+
+    }
+
+    /**
+     * Comportamiento pesimista.
+     * Otorga permiso a cargas de archivos con la siguiente lógica:
+     * UPLOAD -> Cualquier tipo (dibujo, programa,etc) -> ROLE_PLANEACION
+     * UPLOAD -> PROGRAMA -> ROLE_PRODUCCION
+     * @param roles
+     * @param file
+     * @param permiso
+     * @return
+     */
+    private boolean _permisosArchivosConArchivo(HashSet<Roles> roles, MultipartFile file, String permiso) {
+
+        if(file == null) return false;
+
+        TipoArchivo tipo = TipoArchivo.fromFilename(file.getOriginalFilename());
+
+        switch (permiso) {
+            case "UPLOAD":
+                if(roles.contains(Roles.ROLE_PLANEACION)) return true;
+                if(roles.contains(Roles.ROLE_PRODUCCION)) {
+                    if(tipo == TipoArchivo.PROGRAMA) return true; else return false;
+                }
+                break;
+        }
+        return false;
+    }
+
+    /**
      * Permisos por default falsos, excepto en los siguientes casos.
      * Permisos concedidos:
      *  EDITAR -> DIBUJO -> PIEZA DE CLIENTE -> Sólo PDF -> ROLE_VENTAS
@@ -167,7 +222,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
      *  EDITAR -> ITEM -> PIEZA ESPECIAL -> ROLE_PLANEACIÓN
      *  EDITAR -> ITEM -> PIEZA ESPECIAL -> ROLE_PRODUCCIÓN
      *
-     *  EDITAR -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACIÓN
+     *  EDITAR -> PROGRAMA -> PC, PL, PE -> ROLE_PLANEACIÓN, ROLE_PRODUCCION
      *
      *  VER -> DIBUJO -> PC, PL, PE -> * -> ROLE_PLANEACIÓN, ROLE_PRODUCCIÓN, ROLE_VENTAS, ROLE_CALIDAD
      *  VER -> ITEM -> PC, PL, PE -> ROLE_PLANEACION, ROLE_PRODUCCION, ROLE_VENTAS, ROLE_CALIDAD
@@ -196,13 +251,12 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                         /* PERMISOS PARA UN DIBUJO */
                         switch (p.getTipoPieza()) {
                             case PC:
-                                if(roles.contains(Roles.ROLE_VENTAS) && a.getFileType().contains("application/pdf")) return true;
+//                                if(roles.contains(Roles.ROLE_VENTAS) && a.getFileType().contains("application/pdf")) return true;
                                 if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                             case PL:
                                 if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                             case PE:
-                                if(roles.contains(Roles.ROLE_PLANEACION)) return true;
-                                if(roles.contains(Roles.ROLE_PRODUCCION)) return true; break;
+                                if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                         }
                         break;
                     case ITEM:
@@ -212,8 +266,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PL:
                                 if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                             case PE:
-                                if(roles.contains(Roles.ROLE_PLANEACION)) return true;
-                                if(roles.contains(Roles.ROLE_PRODUCCION)) return true; break;
+                                if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
                         }
                         break;
                     case PROGRAMA:
@@ -222,7 +275,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                             case PC:
                             case PL:
                             case PE:
-                                if(roles.contains(Roles.ROLE_PLANEACION)) return true; break;
+                                if(roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION)) return true; break;
                         }
                         break;
                 }
@@ -342,7 +395,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
     public boolean permisosPiezas(HashSet<Roles> roles, Pieza p, String permiso) {
         switch(permiso) {
             case "AGREGAR":
-                if(roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
+                if(roles.contains(Roles.ROLE_PLANEACION))
                     return true;
                 break;
             case "VER":
@@ -352,7 +405,7 @@ public class TamtoPermissionEvaluator implements PermissionEvaluator {
                     if(p.isEnabled()) return true;
                 break;
             case "EDITAR":
-                if(roles.contains(Roles.ROLE_VENTAS) || roles.contains(Roles.ROLE_PLANEACION) || roles.contains(Roles.ROLE_PRODUCCION))
+                if(roles.contains(Roles.ROLE_PLANEACION))
                     //Protección por departamento, sólo el mismo depa puede editar -- Deshabilitado por impráctico --
                     //if( p.isEnabled() && roles.contains(p.getRole()) ) return true;
                     if( p.isEnabled() ) return true;

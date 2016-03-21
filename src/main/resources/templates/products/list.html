@@ -17,7 +17,7 @@
                 <span class="caption-subject bold uppercase">Catálogo de productos</span>
             </div>
             <div class="actions">
-                <a href="/product/add" class="btn btn-circle btn-default">
+                <a href="/product/add" sec:authorize="hasRole('ROLE_PLANEACION')" class="btn btn-circle btn-default">
                     <i class="fa fa-plus"></i>
                         <span class="hidden-480">
                         Alta de producto </span>
@@ -38,7 +38,7 @@
                         <span class="caption-helper" th:text="${prod.code}">...</span>
                     </div>
                     <div class="actions">
-                        <a th:href="'/product/'+${prod.id}" class="btn btn-circle btn-default">
+                        <a th:href="'/product/'+${prod.id}" sec:authorize="hasRole('ROLE_PLANEACION')" class="btn btn-circle btn-default">
                             <i class="fa fa-pencil"></i> Editar </a>
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""> </a>
                     </div>
@@ -61,8 +61,10 @@
                                                 <a class="" th:href="@{/pieza/{id}(id=${pieza.id})}" data-target="#ajax" data-toggle="modal"><i class="fa fa-eye" ></i></a>
                                             </span>
                                             <ul>
-                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }'>Acabado</li>
-                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }'>Material</li>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }' th:text="${'Acabado: '+pieza.atributos['ACABADO']}" th:if="${pieza.atributos['ACABADO']}">Acabado</li>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }' th:text="${'Material: '+pieza.atributos['MATERIAL']}" th:if="${pieza.atributos['MATERIAL']}">Material</li>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }' th:text="${'Cantidad: '+pieza.atributos['CANTIDAD_MATERIAL']}" th:if="${pieza.atributos['CANTIDAD_MATERIAL']}">Cantidad</li>
+                                                <li data-jstree='{&quot;icon&quot; : &quot;fa fa-file icon-state-success&quot; }' th:text="${'Unidad: '+pieza.atributos['UNIDAD_MATERIAL']}" th:if="${pieza.atributos['UNIDAD_MATERIAL']}">Unidad</li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -112,6 +114,9 @@
 <!-- Page level scripts -->
 <th:block layout:fragment="scripts">
     <!-- BEGIN Page level CSS -->
+    <link rel="stylesheet" type="text/css" href="/plugins/dragula/dragula.css"/>
+    <link href="/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <link href="/fonts/material-design-iconic-font/css/material-design-iconic-font.css" rel="stylesheet"/>
     <link href="/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/> <!-- Pieza modal view -->
     <link rel="stylesheet" type="text/css" href="/css/documento.css"/> <!-- Pieza modal view -->
@@ -119,6 +124,8 @@
     <!-- END page level CSS -->
     <!-- START fragment level plugins -->
     <script type="text/javascript" src="/plugins/jstree/dist/jstree.js"></script>
+    <script type="text/javascript" src="/plugins/dragula/dragula.min.js"/>
+    <script src="/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.js"></script>
     <!-- END fragment level plugins -->
     <!-- START fragment level scripts -->
     <script>

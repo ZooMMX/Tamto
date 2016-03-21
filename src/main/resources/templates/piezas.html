@@ -65,7 +65,7 @@
                 </div>
                 <div class="portlet-body">
                     <div class="table-container">
-                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="table-actions-wrapper" sec:authorize="hasRole('ROLE_ADMIN_PLANEACION')">
                             <span>
                             </span>
                             <select class="table-group-action-input form-control input-inline input-small input-sm">
@@ -185,7 +185,9 @@
     <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/>
     <link rel="stylesheet" type="text/css" href="/css/documento.css"/>
     <link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
-    <link rel="stylesheet" type="text/css" href="/plugins/dragula/dragula.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/plugins/dragula/dragula.css"/>
+    <link href="/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <link href="/fonts/material-design-iconic-font/css/material-design-iconic-font.css" rel="stylesheet"/>
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script type="text/javascript" src="/plugins/dragula/dragula.min.js"/>
     <script type="text/javascript" src="plugins/select2/select2.min.js" th:href="@{/plugins/select2/select2.min.js}"></script>
@@ -195,6 +197,7 @@
     <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
     <script type="text/javascript" src="/plugins/htmltable_export/tableExport.js"></script>
     <script type="text/javascript" src="/plugins/htmltable_export/jquery.base64.js"></script>
+    <script src="/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.js"></script>
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="scripts/datatable.js" th:href="@{/scripts/datatable.js}"></script>

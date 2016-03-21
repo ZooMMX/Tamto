@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Audited(withModifiedFlag = true)
@@ -44,6 +45,9 @@ public class Pieza {
     private String controlDeCambios;
     @Column(nullable = false)
     private boolean enabled = true;
+    @Lob
+    @Column(length=1024)
+    HashMap<String, String> atributos;
 
     //Las piezas se agrupan en productos, una pieza puede pertenecer a ninguno, uno o varios productos.
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
@@ -70,6 +74,24 @@ public class Pieza {
 
     public void setArchivos(List<Archivo> archivos) {
         this.archivos = archivos;
+    }
+
+    public HashMap<String, String> getAtributos() {
+        if(atributos == null)
+            atributos = new HashMap<>();
+        return atributos;
+    }
+
+    public void setAtributos(HashMap<String, String> atributos) {
+        this.atributos = atributos;
+    }
+
+    public String getAtributo(String name) {
+        return getAtributos().get(name);
+    }
+
+    public void setAtributo(String name, String value) {
+        getAtributos().put(name, value);
     }
 
     @Override

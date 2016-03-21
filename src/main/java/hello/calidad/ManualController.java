@@ -31,7 +31,7 @@ public class ManualController {
      */
     @RequestMapping("/calidad/manual")
     private String verManual(Model model) {
-        List<DocumentoInterno> docs = repo.findByNivel(1);
+        List<DocumentoInterno> docs = repo.findByNivelAndEnabled(1, true);
 
         model.addAttribute("selectedMenu", "calidad");
         if(docs.size()>0)

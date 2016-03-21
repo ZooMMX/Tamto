@@ -12,6 +12,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +25,9 @@ import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -63,7 +66,7 @@ public class ProductControllerTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testAddProduct1() throws Exception {
 
 
@@ -85,7 +88,7 @@ public class ProductControllerTest {
      * Prueba de inserción de código repetido, debe enviar error controlado
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testAddProduct2() throws Exception {
 
         testAddProduct1();
@@ -108,7 +111,7 @@ public class ProductControllerTest {
      * Prueba de inserción con producto inválido
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testAddProduct3() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/product/add")
@@ -130,7 +133,7 @@ public class ProductControllerTest {
      * Prueba de inserción con imagen
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testAddProduct4() throws Exception {
 
         MultipartFile file = new MockMultipartFile("image","avatar1.png","image/png","".getBytes());
@@ -152,6 +155,28 @@ public class ProductControllerTest {
         Product p = repo.findByCode("PCode1");
         Assert.assertNotNull( p );
         Assert.assertNotNull( p.getImage() );
+    }
+
+    /**
+     * Test agregar Producto sin piezas
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser(roles="PLANEACION")
+    public void testAddProduct5() throws Exception {
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/add")
+                .param("name", "Prodct Name 1")
+                .param("code", "PCode1")
+                .param("notes", "notes here")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .with(csrf())
+        )
+                .andExpect(redirectedUrl("/products"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attributeExists("isError"))
+                .andExpect(flash().attribute("isError", false));
     }
 
     /**
@@ -182,7 +207,7 @@ public class ProductControllerTest {
      * Prueba simple de actualización de un atributo
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testUpdateProduct1() throws Exception {
 
         testAddProduct1();
@@ -215,7 +240,7 @@ public class ProductControllerTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testUpdateProduct2() throws Exception {
 
         MultipartFile file = new MockMultipartFile("product_image","avatar1.png","image/png","abcd".getBytes());
@@ -249,13 +274,45 @@ public class ProductControllerTest {
     }
 
     /**
+     * Método que agrega un Producto de pruebas
+     */
+    public void addMockProduct() {
+        Product p = new Product();
+        p.setName("Product Name 1");
+        p.setCode("PCode1");
+        p.setNotes("notes here");
+
+        repo.save(p);
+    }
+
+    /**
+     * Prueba niveles de acceso
+     */
+
+    @Test
+    @WithMockUser(roles="ADMIN")
+    public void testSecurity() throws Exception {
+        addMockProduct();
+        Product p = repo.findByCode("PCode1");
+        Long id = p.getId();
+
+        UserRequestPostProcessor userAdmin           = user("admin").password("abcd1234").roles("ADMIN");
+        UserRequestPostProcessor userPlaneacion      = user("admin").password("abcd1234").roles("PLANEACION");
+        UserRequestPostProcessor userAdminPlaneacion = user("admin").password("abcd1234").roles("ADMIN_PLANEACION");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/"+id).with(userAdmin)).andExpect(status().isForbidden());
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/"+id).with(userPlaneacion)).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/"+id+"/delete").with(userAdminPlaneacion)).andExpect(status().is3xxRedirection());
+    }
+
+    /**
      * Prueba simple de view
      */
     @Test
     @WithMockUser(roles="ADMIN")
     public void testView1() throws Exception {
 
-        testAddProduct1();
+        addMockProduct();
         Product p = repo.findByCode("PCode1");
         Long id = p.getId();
 
@@ -272,10 +329,10 @@ public class ProductControllerTest {
      * Prueba simple de delete
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="ADMIN_PLANEACION")
     public void testDelete1() throws Exception {
 
-        testAddProduct1();
+        addMockProduct();
         Product p = repo.findByCode("PCode1");
         Long id = p.getId();
 
@@ -293,7 +350,7 @@ public class ProductControllerTest {
      * Delete de un producto inexistente. Asumo que el producto 1 000 000 no existe.
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="ADMIN_PLANEACION")
     public void testDelete2() throws Exception {
 
         Long id = 1_000_000l;

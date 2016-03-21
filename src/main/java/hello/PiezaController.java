@@ -6,6 +6,8 @@ import hello.util.CloudConvertConnector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -48,6 +50,29 @@ public class PiezaController {
 
     @Autowired
     EntityManager em;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
+    @RequestMapping(value = "/piezaEdicion/atributo", method = RequestMethod.POST)
+    public @ResponseBody String updateAttribute(
+            @RequestParam Long pk,
+            @RequestParam String name,
+            @RequestParam String value,
+            Model model
+    ) {
+        try {
+            Pieza p = piezaRepository.findOne(pk);
+            p.setAtributo(name, value);
+            piezaRepository.save(p);
+
+            return "ok";
+        } catch(Exception e) {
+
+            log.debug("Error actualizando atributo "+name+" con valor "+value, e);
+            return "error";
+        }
+    }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#piezaId, 'pieza', 'VER')")
     @RequestMapping("/pieza/{piezaId}")
@@ -233,6 +258,8 @@ public class PiezaController {
      * @return
      */
     //TODO Pasar a ArchivoController y cambiar nomenclatura
+    //TODO Confluir con ArchivoController.archivoEdicionPost(...)
+    @PreAuthorize("hasPermission(#files, 'archivo', 'UPLOAD')")
     @RequestMapping(value = "/piezaUpload/{piezaId}", method = RequestMethod.POST)
     public @ResponseBody
     List<Archivo> upload(
@@ -241,41 +268,43 @@ public class PiezaController {
             @RequestParam("file") MultipartFile[] files,
             Model model) {
 
+        CloudConvertConnector connector = new CloudConvertConnector();
+
         /* Guardar archivos */
         String fileName = null;
         String msg = "";
         List<Archivo> fileMetas;
 
         if (files != null && files.length >0) {
-                    for(int i =0 ;i< files.length; i++){
-                        try {
-                            fileName = files[i].getOriginalFilename();
-                            Blob blob = new javax.sql.rowset.serial.SerialBlob(files[i].getBytes());
+            for(int i =0 ;i< files.length; i++){
+                try {
+                    fileName = files[i].getOriginalFilename();
+                    Blob blob = new javax.sql.rowset.serial.SerialBlob(files[i].getBytes());
 
-                            Archivo archivo = new Archivo();
-                            archivo.setFileName(files[i].getOriginalFilename());
-                            archivo.setFileSize(String.valueOf(files[i].getSize()));
-                            archivo.setFileType(files[i].getContentType());
-                            archivo.setTamtoType(TipoArchivo.fromFilename(files[i].getOriginalFilename()));
-                            archivo.setBytes(blob);
-                            archivo.setPieza_fk(piezaId);
+                    Archivo archivo = new Archivo();
+                    archivo.setFileName(files[i].getOriginalFilename());
+                    archivo.setFileSize(String.valueOf(files[i].getSize()));
+                    archivo.setFileType(files[i].getContentType());
+                    archivo.setTamtoType(TipoArchivo.fromFilename(files[i].getOriginalFilename()));
+                    if(archivo.getTamtoType() == TipoArchivo.PROGRAMA) archivo.setCategoria(Archivo.CategoriaArchivo.PROGRAMAS);
+                    archivo.setBytes(blob);
+                    archivo.setPieza_fk(piezaId);
 
-                            //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
-                            CloudConvertConnector connector = new CloudConvertConnector();
-                            connector.addPdfPreview(archivo);
+                    //Genera la vista previa (PDF) de este archivo usando CloudConvert al Archivo archivo
+                    connector.addPdfPreview(archivo);
 
-                            archivoRepository.save(archivo);
+                    archivoRepository.save(archivo);
 
-                            msg += "Archivo exitosamente cargado " + fileName +"<br/>";
-                        } catch (Exception e) {
-                            System.out.println( "Falla al cargar archivo " + fileName + ": " + e.getMessage() +"<br/>" );
-                            e.printStackTrace();
-                        }
-                    }
-                    System.out.println( msg );
-                } else {
-                    System.out.println( "No es posible subir el archivo ya que está vacío." );
+                    msg += "Archivo exitosamente cargado " + fileName +"<br/>";
+                } catch (Exception e) {
+                    System.out.println( "Falla al cargar archivo " + fileName + ": " + e.getMessage() +"<br/>" );
+                    e.printStackTrace();
                 }
+            }
+            System.out.println( msg );
+        } else {
+            System.out.println( "No es posible subir el archivo ya que está vacío." );
+        }
 
         /* Preparar html */
         fileMetas = piezaRepository.findOne(piezaId).getArchivos();
@@ -308,8 +337,8 @@ public class PiezaController {
 
     private List<String> createRevisionsPieza(Long piezaId) {
 
-        //  (Índices del array)--------->      [0]    [1]             [2]      [3]          [4]         [5]         [6]              [7]            [8]                 [9]          [10]             [11]            [12]       [13]            [14]                 [15]               [16]       [17]
-        Query q = em.createNativeQuery("SELECT pa.id, universal_code, cliente, descripcion, nombre_sap, tipo_pieza, work_order_date, work_order_no, universal_code_mod, cliente_mod, descripcion_mod, nombre_sap_mod, notas_mod, tipo_pieza_mod, work_order_date_mod, work_order_no_mod, timestamp, u.fullname FROM pieza_aud pa JOIN revision r ON pa.rev = r.id JOIN user u ON r.username = u.username where pa.id = "+piezaId+" ORDER BY timestamp DESC LIMIT 10");
+        //  (Índices del array)--------->      [0]    [1]             [2]      [3]          [4]         [5]         [6]              [7]            [8]                 [9]          [10]             [11]            [12]       [13]            [14]                 [15]               [16]           [17]       [18]
+        Query q = em.createNativeQuery("SELECT pa.id, universal_code, cliente, descripcion, nombre_sap, tipo_pieza, work_order_date, work_order_no, universal_code_mod, cliente_mod, descripcion_mod, nombre_sap_mod, notas_mod, tipo_pieza_mod, work_order_date_mod, work_order_no_mod, atributos_mod, timestamp, u.fullname FROM pieza_aud pa JOIN revision r ON pa.rev = r.id JOIN user u ON r.username = u.username where pa.id = "+piezaId+" ORDER BY timestamp DESC LIMIT 10");
         List rl = q.getResultList();
 
         List<String> resultados = new ArrayList<>();
@@ -332,8 +361,9 @@ public class PiezaController {
             Boolean tipoPiezaMod = (Boolean) r[13];
             Boolean workOrderDateMod = (Boolean) r[14];
             Boolean workOrderNoMod = (Boolean) r[15];
-            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[16]).longValue()));
-            String usuario = (String) r[17];
+            Boolean atributosMod   = (Boolean) r[16];
+            Date revisionDate = Date.from(Instant.ofEpochMilli(((BigInteger) r[17]).longValue()));
+            String usuario = (String) r[18];
 
             // Ejemplo de la descripción de la revisión: "Juan modificó el código universal a 1009, cliente a Tamto, descripción a 'Nueva Descripción' hace 3 días"
             StringBuilder descripcionRev = new StringBuilder();
@@ -378,6 +408,11 @@ public class PiezaController {
             if(workOrderNoMod) {
                 if(coma) { descripcionRev.append(", "); }
                 descripcionRev.append("cambió el número de orden de trabajo a \""+workOrderNo+"\"");
+                coma = true;
+            }
+            if(atributosMod != null && atributosMod) {
+                if(coma) { descripcionRev.append(", "); }
+                descripcionRev.append("modificó las especificaciones");
                 coma = true;
             }
             if(!coma) {

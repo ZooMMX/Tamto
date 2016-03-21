@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Fragment archivos</title>
+</head>
+<body>
+<div>
+    <th:block th:each="archivo, iter  : ${collection}" th:fragment="archivos (collection)">
+        <!-- Descripción, tipo, fecha y botones -->
+        <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
+
+            <div class="list-item bloque-archivo" th:id="${archivo.id}" data-item-type="FILE">
+                <i class="icono fa fa-file-o"></i>
+                <div style="overflow-x: hidden;">
+                    <a th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" class="btn btn-default btn-xs btn-block" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer" style="text-align: left;">
+                        <th:block th:text="${archivo.getFileName()}">Nombre.xls</th:block></a>
+                    <div th:unless="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" th:text="${archivo.getFileName()}">Nombre.xls</div></div>
+                <button th:id="'btndrop'+${iter.count}" type="button" class="ocultable grey-mint file-actions btn btn-circle btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-h" style="color: white;"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu" data-th-attr="aria-labelledby='btndrop'+${iter.count}">
+                    <li>
+                        <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" target="viewer"><i class="fa fa-eye"></i>&nbsp; Ver</a>
+                    </li>
+                    <li>
+                        <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}"><i class="fa fa-download"></i>&nbsp; Descargar</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li class="disabled">
+                        <a href="javscript:;"><i class="fa fa-tags"></i><span th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</span></a>
+                    </li>
+                    <li class="disabled">
+                        <a href="javscript:;"><i class="fa fa-calendar-o"></i><span th:text="${archivo.getUpdatedFormatted()}" style="font-size: 10px;">9 de Diciembre de 2014</span></a>
+                    </li>
+                </ul>
+            </div>
+
+        </th:block>
+    </th:block>
+</div>
+</body>
+</html>

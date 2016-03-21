@@ -249,6 +249,6 @@ public class Archivo {
         }
 
     public enum CategoriaArchivo {
-        ESPECIFICACIONES, PP, CALIDAD, PROGRAMAS
+        ESPECIFICACIONES, PP, PP_FORMATO, CALIDAD, CALIDAD_FORMATO, PROGRAMAS
     }
 }

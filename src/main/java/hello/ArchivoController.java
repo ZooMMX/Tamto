@@ -17,7 +17,6 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 /**
- * Proyecto Omoikane: SmartPOS 2.0
  * User: octavioruizcastillo
  * Date: 13/12/14
  * Time: 19:18
@@ -27,6 +26,7 @@ public class ArchivoController {
     @Autowired
     ArchivoRepository archivoRepository;
 
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping("/archivoEdicion/{id}/categoria")
     public @ResponseBody String updateCategoria(
             @PathVariable Long id,
@@ -55,7 +55,7 @@ public class ArchivoController {
         return "archivo_editar";
     }
 
-    @PreAuthorize("hasPermission(#archivoId, 'archivo', 'EDITAR')")
+    @PreAuthorize("hasPermission(#archivoId, 'archivo', 'EDITAR') && hasPermission(#file, 'archivo', 'UPLOAD')")
     @RequestMapping(value = "/archivoEdicion/{archivoId}", method = RequestMethod.POST)
     public @ResponseBody
     Archivo archivoEdicionPost(
@@ -80,6 +80,8 @@ public class ArchivoController {
                         archivo.setFileName(file.getOriginalFilename());
                         archivo.setFileSize(String.valueOf(file.getSize()));
                         archivo.setFileType(file.getContentType());
+                        archivo.setTamtoType(TipoArchivo.fromFilename(file.getOriginalFilename()));
+                        if(archivo.getTamtoType() == TipoArchivo.PROGRAMA) archivo.setCategoria(Archivo.CategoriaArchivo.PROGRAMAS);
                         archivo.setBytes(blob);
                         connector.addPdfPreview(archivo);
 

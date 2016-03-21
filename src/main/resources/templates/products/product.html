@@ -21,7 +21,7 @@
                         <span class="hidden-480">
                         Alta de producto </span>
                 </a>
-                <a class="btn btn-circle btn-default" data-target="#ajax" data-toggle="modal" th:href="@{/product/{id}/audit(id=${product.id})}">
+                <a class="btn btn-circle btn-default" data-target="#ajax" data-toggle="modal" th:href="@{/product/{id}/audit(id=${product.id})}" th:if="${product.id}">
                     <i class="fa fa-search"></i>
                     <span class="hidden-480"> Auditoría </span>
                 </a>
@@ -58,7 +58,7 @@
                                 </a>
                             </li>
                             <!-- Pestaña delete -->
-                            <li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN_PLANEACION')">
                                 <a data-toggle="tab" href="#tab_4-4" th:if="${showEliminarTab}">
                                     <i class="fa fa-times-circle"></i>
                                         <span>

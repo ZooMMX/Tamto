@@ -5,7 +5,7 @@
     </div>-->
     <!-- BEGIN FORM-->
     <form action="#" class="horizontal-form" id="formi">
-    <div class="modal-body" style="padding: 0px;">
+    <div class="modal-body" style="padding: 0px;" ondragstart="alert('Sólo planeación puede arrastrar archivos'); return false;" ondrop="return false;">
 
         <!-- Begin content -->
         <div class="portlet light" style="margin-bottom: 0px;">
@@ -142,49 +142,72 @@
                                             </div>
                                         </row>
                                         <row>
-                                            <div id="especificaciones" data-categoria="ESPECIFICACIONES"  class="col-md-12 bloque-placeholder collapse in">
-                                                <div class="placeholder rojo">
-                                                    <i class="icono fa fa-file-text-o"></i>
-                                                    <div>
-                                                        Acabado
-                                                    </div>
+                                            <div id="especificaciones" class="col-md-12 bloque-placeholder collapse in">
+                                                <div class="placeholder rojo" th:attrappend="style=${#authorization.expression('hasRole(''ROLE_PLANEACION'')')}?'cursor:pointer':'cursor:not-allowed'">
+                                                    <!-- Fragment args: (div_id, spec_name, icon_css_class, title)-->
+                                                    <div th:replace="pieza_fragment_especificacion :: especificacion ('acabado','ACABADO','zmdi zmdi-gradient zmdi-hc-lg', 'Establecer acabado')"></div>
                                                 </div>
-                                                <div class="placeholder rojo">
-                                                    <i class="icono fa fa-file-text-o"></i>
-                                                    <div>
-                                                        Material
-                                                    </div>
+                                                <div class="placeholder rojo" th:attrappend="style=${#authorization.expression('hasRole(''ROLE_PLANEACION'')')}?'cursor:pointer':'cursor:not-allowed'">
+                                                    <!-- Fragment args: (div_id, spec_name, icon_css_class, title)-->
+                                                    <div th:replace="pieza_fragment_especificacion :: especificacion ('material','MATERIAL','fa fa-cube', 'Establecer material')"></div>
                                                 </div>
-                                                <div class="placeholder rojo">
-                                                    <i class="icono fa fa-file-text-o"></i>
-                                                    <div>
-                                                        Cantidad de material
-                                                    </div>
+                                                <div class="placeholder rojo" th:attrappend="style=${#authorization.expression('hasRole(''ROLE_PLANEACION'')')}?'cursor:pointer':'cursor:not-allowed'">
+                                                    <!-- Fragment args: (div_id, spec_name, icon_css_class, title)-->
+                                                    <div th:replace="pieza_fragment_especificacion :: especificacion ('cantidad_material','CANTIDAD_MATERIAL','zmdi zmdi-exposure zmdi-hc-lg', 'Establecer cantidad')"></div>
                                                 </div>
-                                                <div class="placeholder rojo">
-                                                    <i class="icono fa fa-file-text-o"></i>
-                                                    <div>
-                                                        Unidad del material
-                                                    </div>
+                                                <div class="placeholder rojo" th:attrappend="style=${#authorization.expression('hasRole(''ROLE_PLANEACION'')')}?'cursor:pointer':'cursor:not-allowed'">
+                                                    <!-- Fragment args: (div_id, spec_name, icon_css_class, title)-->
+                                                    <div th:replace="pieza_fragment_especificacion :: especificacion ('unidad_material','UNIDAD_MATERIAL','zmdi zmdi-ruler zmdi-hc-lg', 'Establecer unidad')"></div>
                                                 </div>
+                                                <!-- BEGIN Container of general documents -->
+                                                <div id="container-especificaciones" data-categoria="ESPECIFICACIONES">
+                                                    <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).ESPECIFICACIONES]})"></div></div>
+                                                <!-- END Container -->
                                             </div>
                                         </row>
                                     </row>
                                     <!-- Bloque de planeación y producción -->
                                     <row>
                                         <row>
-                                            <div class="col-md-12 titulo-bloque outline-verde collapse in" data-toggle="collapse" data-target="#pp">
+                                            <div class="col-md-12 titulo-bloque outline-verde" data-toggle="collapse" data-target="#pp">
                                                 <!--<i class="icono fa fa-file-text-o"></i>-->
                                                 <h4>P &amp; P</h4>
                                             </div>
                                         </row>
-                                        <div id="pp" class="col-md-12 bloque-placeholder collapse in" data-categoria="PP">
+                                        <div id="pp" class="col-md-12 bloque-placeholder">
+                                            <!-- BEGIN placeholder "formato de planeación" -->
                                             <div class="placeholder verde">
                                                 <i class="icono fa fa-file-text-o"></i>
-                                                <div>
-                                                    Formato de planeación
-                                                </div>
+                                                <div>Formato de planeación</div>
+                                                <div id="placeholder-pp" data-categoria="PP_FORMATO" class="drop-area">
+                                                    <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).PP_FORMATO]})"></div></div>
                                             </div>
+                                            <!-- END placeholder -->
+                                            <!-- BEGIN Container of general documents -->
+                                            <div id="container-pp" data-categoria="PP">
+                                                <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).PP]})"></div></div>
+                                            <!-- END Container -->
+                                        </div>
+                                    </row>
+                                    <!-- Bloque de programas -->
+                                    <row>
+                                        <row>
+                                            <div class="col-md-12 titulo-bloque outline-naranja" data-toggle="collapse" data-target="#programas" style="margin-bottom: 5px;">
+                                                <!--<i class="icono fa fa-file-text-o"></i>-->
+                                                <h4>PROGRAMAS</h4>
+                                            </div>
+                                        </row>
+                                        <div id="programas" class="col-md-12 bloque-placeholder">
+                                            <!-- BEGIN Placeholder formato de calidad -->
+                                            <!-- END placeholder -->
+                                            <!-- BEGIN Contenedor de documentos de calidad -->
+                                            <div id="container-programas" data-categoria="PROGRAMAS">
+                                                <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).PROGRAMAS]})"></div></div>
+                                            <!--<div class="placeholder fijo">
+                                                <i class="icono fa fa-plus" style=""></i>
+                                                <div>Agregar archivo...</div>
+                                            </div>-->
+                                            <!-- END contenedor -->
                                         </div>
                                     </row>
                                     <!-- Bloque de calidad -->
@@ -200,16 +223,17 @@
                                             <div class="placeholder morado">
                                                 <i class="icono fa fa-file-text-o" style=""></i>
                                                 <div>Formato de calidad</div>
-                                                <div id="placeholder-calidad" data-categoria="CALIDAD" class="drop-area"></div>
+                                                <div id="placeholder-calidad" data-categoria="CALIDAD_FORMATO" class="drop-area">
+                                                    <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).CALIDAD_FORMATO]})"></div></div>
                                             </div>
                                             <!-- END placeholder -->
                                             <!-- BEGIN Contenedor de documentos de calidad -->
                                             <div id="container-calidad" data-categoria="CALIDAD">
-                                                <div class="placeholder fijo">
-                                                    <i class="icono fa fa-plus" style=""></i>
-                                                    <div>Agregar archivo...</div>
-                                                </div>
-                                            </div>
+                                                <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == T(hello.Archivo.CategoriaArchivo).CALIDAD]})"></div></div>
+                                            <!--<div class="placeholder fijo">
+                                                <i class="icono fa fa-plus" style=""></i>
+                                                <div>Agregar archivo...</div>
+                                            </div>-->
                                             <!-- END contenedor -->
                                         </div>
                                     </row>
@@ -226,66 +250,18 @@
                                             </div>
                                         </div>
                                     </row>
-                                    <!-- Control de versiones -->
-                                    <!--
                                     <row>
                                         <div class="col-md-12">
                                             <div class="celda">
-                                                <h2>Versiones</h2>
-                                            </div>
-                                        </div>
-                                    </row>
-                                    <row>
-                                        <div class="col-md-12 bloque-completo" style="padding: 0px;">
-                                            <div class="list-group">
-                                                <a th:href="'/calidad/documento/'+${version[0]}+'/'+*{id}" th:each="version, i : ${versiones}" class="list-group-item">Versión&nbsp;<span th:text="${version[2]}"></span><span class="badge badge-info" th:text="${T(hello.Util).timestamp2String(version[1])}">17 May 2015</span></a>
-                                            </div>
-                                        </div>
-                                    </row>
-                                    -->
-                                    <!--/control de versiones-->
-                                    <row>
-                                        <div class="col-md-12">
-                                            <div class="celda">
-                                                <h2>Archivos</h2>
+                                                <h4>Archivos sueltos</h4>
                                             </div>
                                         </div>
                                     </row>
                                     <row>
                                         <div class="col-md-12 bloque-placeholder" style="padding: 0px;">
-                                            <div id="archivos-sueltos" class="list-group">
+                                            <div id="container-archivos-sueltos">
                                                 <!--<div style="max-height: 900px; overflow: auto;">-->
-                                                    <th:block th:each="archivo, iter  : ${pieza.getArchivos()}">
-                                                        <!-- Descripción, tipo, fecha y botones -->
-                                                        <th:block th:switch="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}">
-
-                                                            <div class="list-item bloque-archivo" th:id="${archivo.id}" data-item-type="FILE">
-                                                                <!--<th:div th:text="${archivo.getFileName()}">Nombre.xls</th:div>-->
-                                                                <div style="overflow-x: hidden;">
-                                                                    <a class="btn btn-default btn-xs btn-block" th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" target="viewer" style="text-align: left;">
-                                                                        <i class="fa fa-file-o"></i>&nbsp;&nbsp; <th:block th:text="${archivo.getFileName()}">Nombre.xls</th:block></a></div>
-                                                                <button th:id="'btndrop'+${iter.count}" type="button" class="ocultable grey-mint file-actions btn btn-circle btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa fa-ellipsis-h" style="color: white;"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu pull-right" role="menu" data-th-attr="aria-labelledby='btndrop'+${iter.count}">
-                                                                    <li>
-                                                                        <a th:href="${'/plugins/PDFJS/web/viewer.html?file=/archivo/view/'+archivo.getId()+'.pdf'}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" target="viewer"><i class="fa fa-eye"></i>&nbsp; Ver</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}"><i class="fa fa-download"></i>&nbsp; Descargar</a>
-                                                                    </li>
-                                                                    <li class="divider"> </li>
-                                                                    <li class="disabled">
-                                                                        <a href="javscript:;"><i class="fa fa-tags"></i><span th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</span></a>
-                                                                    </li>
-                                                                    <li class="disabled">
-                                                                        <a href="javscript:;"><i class="fa fa-calendar-o"></i><span th:text="${archivo.getUpdatedFormatted()}" style="font-size: 10px;">9 de Diciembre de 2014</span></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-
-                                                        </th:block>
-                                                    </th:block>
+                                                    <div th:replace="pieza_fragment_archivos :: archivos (${pieza.getArchivos().?[categoria == null]})"></div>
                                                 <!--</div>-->
                                             </div>
                                         </div>
@@ -405,20 +381,25 @@
         </div>
     </div>
     <!-- End Modal -->
-    <script>
+    <script th:inline="javascript" sec:authorize="hasRole('ROLE_PLANEACION')">
+
+            /* Configura el drag and drop para clasificar archivos */
+
             var dragu = function() {
                dragula([
-                    document.querySelector('#pp'),
-                    document.querySelector('#especificaciones'),
+                    document.querySelector('#container-pp'),
+                    document.querySelector('#placeholder-pp'),
+                    document.querySelector('#container-especificaciones'),
                     document.querySelector('#placeholder-calidad'),
+                    document.querySelector('#container-programas'),
                     document.querySelector('#container-calidad'),
-                    document.querySelector('#archivos-sueltos')], {
+                    document.querySelector('#container-archivos-sueltos')], {
                         invalid: function (el, handle) {
                           return hasClass(el, 'fijo');
                         },
                         accepts: function (el, target, source, sibling) {
-                            if(target.id == 'placeholder-calidad')
-                                if(target.children.length > 0) return false;
+                            if(target.id.indexOf('placeholder-')>-1)            //Reglas para placeholders
+                                if(target.children.length > 0) return false;    //Máximo un elemento en placeholders
                             return true; // elements can be dropped in any of the `containers` by default
                         }
                     }
@@ -441,9 +422,51 @@
 
             };
 
+            /* Hace editables los specs */
+
+            var xeditable = function() {
+                $('#acabado').editable();
+                $('#acabado').css('border-bottom', 'none');
+                $('#material').editable();
+                $('#material').css('border-bottom', 'none');
+                $('#cantidad_material').editable();
+                $('#cantidad_material').css('border-bottom', 'none');
+                $('#unidad_material').editable();
+                $('#unidad_material').css('border-bottom', 'none');
+            }
+
+            /* Persiste el estado "colapsado" de los bloques (info, specs, pp, calidad, programas) */
+
+            var collapse = function() {
+                $('.bloque-placeholder').each(function() {
+                    if (this.id)
+                    if (localStorage[this.id] == true ) {
+                        $(this).collapse('hide');
+                    } else {
+                        $(this).collapse('hide');
+                    }
+                });
+
+                $('.bloque-placeholder').collapse().on('hidden.bs.collapse', function() {
+                    if (this.id) {
+                        localStorage[this.id] = true;
+                    }
+                }).on('shown.bs.collapse', function() {
+                    if (this.id) {
+                        localStorage.removeItem(this.id);
+                    }
+                });
+            }
+
+            /* Evento que se ejecuta cuando se termina de cargar el modal */
+
             $('#ajax').on('loaded.bs.modal', function (e) {
                 dragu();
+                xeditable();
+                collapse();
             });
+
+            /* Función compatible con exploradores viejos para saber si un objeto tiene una clase */
             function hasClass( target, className ) {
                 return new RegExp('(\\s|^)' + className + '(\\s|$)').test(target.className);
             }

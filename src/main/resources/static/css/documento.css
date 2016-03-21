@@ -119,7 +119,7 @@
 .titulo-bloque.outline-rojo     { box-shadow: 0 3px 0 0 red;    }
 .titulo-bloque.outline-amarillo { box-shadow: 0 3px 0 0 yellow; }
 .titulo-bloque.outline-verde    { box-shadow: 0 3px 0 0 green;  }
-.titulo-bloque.outline-azul     { box-shadow: 0 3px 0 0 blue;   }
+.titulo-bloque.outline-naranja  { box-shadow: 0 3px 0 0 orange;   }
 .titulo-bloque.outline-morado   { box-shadow: 0 3px 0 0 purple; }
 
 /* Archivos en el bloque */
@@ -130,23 +130,19 @@
     border-top-width: 0px;
     position: relative;
 }
+.bloque-archivo div a, .bloque-archivo div div {
+    padding-left: 32px;
+}
+.bloque-archivo div div { /* Archivo sin link, link prohibido */
+    cursor: default;
+    background-color: white;
+    text-align: left;
+    min-height: 21px;
+
+}
 .bloque-archivo a, .bloque-archivo button {
     border: 0px;
 }
-/*
-.bloque-archivo:hover {*/
-    /* border-right-width: 7px; */
-    background-color: #f5f8fd;
-    /* border-color: #8bb4e7; */
-/*}*/
-/*
-.bloque-archivo > div {
-    display: none;
-}
-.bloque-archivo > div:first-child {
-    display: block;
-}
-*/
 .bloque-archivo .ocultable {
     display: none;
 }
@@ -162,8 +158,8 @@
 }
 .bloque-archivo .icono {
     position: absolute;
-    left: 10px;
-    top: 14px;
+    left: 14px;
+    top: 2px;
 }
 .boton-dropdown {
     position: absolute;
@@ -174,9 +170,9 @@
     padding: 0;
     position: relative;
 }
-.bloque-placeholder .placeholder,.bloque-placeholder .place {
+.bloque-placeholder .placeholder {
     margin: 5px;
-    height: 24px;
+    height: 25px;
     position: relative;
 }
 .bloque-placeholder .placeholder.rojo {
@@ -194,12 +190,15 @@
 .bloque-placeholder .placeholder .drop-area {
     position: absolute; top:0; left: 0; right: 0; bottom: 0;
 }
+.bloque-placeholder div[id^='container-'] {
+    min-height: 8px;
+}
 .placeholder .fijo {
     position: relative;
 }
 .placeholder .icono {
     position: absolute;
-    left: 10px;
+    left: 7px;
     top: 2px;
 }
 

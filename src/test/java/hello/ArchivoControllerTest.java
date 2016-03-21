@@ -66,7 +66,7 @@ public class ArchivoControllerTest {
      * @throws Exception
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testUpdateCategoria() throws Exception {
         //********** Prueba 1 ************
         /* ** Realiza el cambio de categoría ** */

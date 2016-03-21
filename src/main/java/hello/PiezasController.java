@@ -94,8 +94,12 @@ public class PiezasController {
                     // ** ¿Borrar? ** sólo si es administrador
                     if(customActionName != null && customActionName.equals("softdelete")
                             && id != null
-                            && request.isUserInRole("ROLE_ADMIN"))
+                            && request.isUserInRole("ROLE_ADMIN_PLANEACION")) {
                         ocultarPiezas(id);
+                        resp.put("softdeleted", true); //Señal para tests y msgs al usuario
+                    } else {
+                        resp.put("softdeleted", false);//Señal para tests y msgs al usuario
+                    }
                 /* Terminan acciones */
 
                 /* Comienza filtros mediante criteria builder de JPA */

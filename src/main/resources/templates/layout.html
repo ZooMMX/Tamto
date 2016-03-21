@@ -14,7 +14,7 @@
 <meta content="" name="description"/>
 <meta content="" name="author"/>
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link href="css/opensans.css" rel="stylesheet" type="text/css"/>
+<link href="/css/opensans.css" rel="stylesheet" type="text/css"/>
 <link href="plugins/font-awesome/css/font-awesome.min.css" th:href="@{/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
 <link href="plugins/simple-line-icons/simple-line-icons.min.css" th:href="@{/plugins/simple-line-icons/simple-line-icons.min.css}" rel="stylesheet" type="text/css"/>
 <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" type="text/css"/>
@@ -79,7 +79,11 @@
                     </li>
 					<li>
 						<a href="/piezaNueva">
-						<i class="icon-tag"></i> Nueva pieza </a>
+						<i class="icon-puzzle"></i> Nueva pieza </a>
+					</li>
+					<li>
+					<a href="/product/add">
+						<i class="icon-grid"></i> Nuevo producto </a>
 					</li>
 				</ul>
 			</div>
@@ -176,7 +180,12 @@
 					<!-- END NOTIFICATION DROPDOWN -->
 					<!-- BEGIN USER LOGIN DROPDOWN -->
 					<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-					<li class="dropdown dropdown-user">
+					<li class="dropdown dropdown-extended quick-sidebar-toggler" th:if="${#authentication}==null">
+						<form id="logoutForm" target="_self" action="/logout"></form>
+						<a href="javascript:;" onclick="logoutForm.submit();" class="dropdown-toggle">
+						<i class="icon-logout"></i></a>
+					</li>
+					<li class="dropdown dropdown-user" th:if="${#authentication}!=null">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<!-- Imagen de perfil: <img alt="" class="img-circle" src="/img/avatar3_small.jpg"/> -->
 						<span class="username username-hide-on-mobile" th:inline="text">

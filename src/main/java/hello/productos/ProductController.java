@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -59,6 +60,7 @@ public class ProductController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping(value = "/product/{id}")
     public String viewProductGet(@PathVariable Long id, Model model) {
 
@@ -100,6 +102,7 @@ public class ProductController {
     /**
      * Delete Product
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN_PLANEACION')")
     @RequestMapping(value = "/product/{id}/delete")
     public ModelAndView deleteProductGet(@PathVariable Long id, RedirectAttributes redirectAttributes, Model model) {
 
@@ -124,6 +127,7 @@ public class ProductController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping(value = "/product/add")
     public String addProductGet(Model model) {
 
@@ -147,6 +151,7 @@ public class ProductController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping(value = "/product/add", method = RequestMethod.POST)
     public ModelAndView addProductPost(
             @RequestParam String name,
@@ -203,6 +208,7 @@ public class ProductController {
      * @param model
      * @return
      */
+    @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping(value = "/product/update", method = RequestMethod.POST)
     public ModelAndView updateProductPost(
             /*@RequestParam Long id,

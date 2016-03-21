@@ -45,6 +45,9 @@ var FormFileUpload = function () {
                     },
                     start: function(e) {
                         Metronic.startPageLoading({ message: "Ten paciencia, cargando y convirtiendo..." });
+                    },
+                    fail: function (e, data) {
+                        alert(data.textStatus + " " + data.errorThrown );
                     }
 
                     //dropZone: $('#dropzone')

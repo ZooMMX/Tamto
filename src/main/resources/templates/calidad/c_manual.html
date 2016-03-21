@@ -5,16 +5,15 @@
         <title>Manual de calidad</title>
     </head>
     <body>
-    <div class="row" layout:fragment="calidad_content">
+    <div style="left-margin: 15px; right-margin:15px;" layout:fragment="calidad_content">
         <div class="fluidMedia" th:if="${id!=null}">
-            <iframe name="viewer" id="viewer" th:src="'/plugins/PDFJS/web/viewer.html?file=/calidad/documento/0/'+${id}+'.pdf'" width='566' height='400' style="text-align:center;" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen">
-            </iframe>
+            <iframe name="viewer" id="viewer" th:src="'/plugins/PDFJS/web/viewer.html?file=/calidad/documento/0/'+${id}+'.pdf'" width='566' height='400' style="text-align:center; border:0;" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
         </div>
         <div th:if="${id==null}">
             <h2>No se ha registrado el manual de gestión de calidad</h2>
         </div>
     </div>
-    <th:block layout:fragment="scripts">
+    <th:block layout:fragment="calidad_scripts">
         <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/>
     </th:block>
     </body>

@@ -1,6 +1,8 @@
 package hello.productos;
 
 import hello.IntegrationTestApplication;
+import hello.Pieza;
+import hello.PiezaRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -8,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -34,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by octavioruiz on 25/02/16.
  */
+@SuppressWarnings("unused")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = IntegrationTestApplication.class)
 @WebAppConfiguration
@@ -43,6 +48,9 @@ public class ProductsControllerTest {
 
     @Autowired
     ProductRepository repo;
+
+    @Autowired
+    PiezaRepository repoPieza;
 
     @Autowired
     ProductController controller;
@@ -77,6 +85,17 @@ public class ProductsControllerTest {
 
         MultipartFile file = new MockMultipartFile("image","avatar1.png","image/png", downloadTestImage(new URL("http://identicon.org?t="+code+"&s=256")));
 
+        List<Pieza> piezas = repoPieza.findAll(new PageRequest(0,2)).getContent();
+
+        Product p = new Product();
+        p.setName("Product Name " + i);
+        p.setCode(code);
+        p.setNotes("notes here");
+        p.setPiezas(piezas);
+        p.setImage(file.getBytes());
+
+        repo.save(p);
+        /*
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/product/add")
                 .file((MockMultipartFile) file)
                 .param("name", "Prodct Name "+ i)
@@ -92,7 +111,7 @@ public class ProductsControllerTest {
                 .andExpect(redirectedUrl("/products"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attributeExists("isError"))
-                .andExpect(flash().attribute("isError", false));
+                .andExpect(flash().attribute("isError", false));*/
 
     }
 
@@ -100,8 +119,7 @@ public class ProductsControllerTest {
         InputStream is = null;
         try {
             is = url.openStream ();
-            byte[] imageBytes = IOUtils.toByteArray(is);
-            return imageBytes;
+            return IOUtils.toByteArray(is);
         }
         catch (IOException e) {
             System.err.printf ("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());

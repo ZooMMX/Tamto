@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Fragmento especificación</title>
+</head>
+<body>
+    <th:block th:fragment="especificacion (div_id, spec_name, icon_css_class, title)">
+        <i class="icono" th:attrappend="class=${' ' + icon_css_class}"></i>
+        <div th:id="${div_id}" data-type="text"
+             th:attr="data-pk=*{id},data-params='{_csrf:\''+${_csrf.token}+'\'}',data-name=${spec_name},data-title=${title}"
+             data-placement="left" data-url="/piezaEdicion/atributo">
+
+            <th:block th:switch="${#strings.isEmpty(pieza.atributos.get( spec_name ))}">
+                <th:block th:case="false"  th:utext="${pieza.atributos.get( spec_name )}"/>
+                <th:block th:case="true" th:text="${title}"></th:block></th:block>
+        </div>
+    </th:block>
+</body>
+</html>
