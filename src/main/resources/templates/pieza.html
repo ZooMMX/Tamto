@@ -92,12 +92,12 @@
                                         </div>
                                     </row>
                                     <row>
-                                        <div class="col-md-12 titulo-bloque outline-azul collapsed" data-toggle="collapse" data-target="#atributos">
+                                        <div class="col-md-12 titulo-bloque outline-azul collapse in" data-toggle="collapse" data-target="#atributos">
                                             <h4> INFORMACIÓN</h4>
                                         </div>
                                     </row>
                                     <!-- Bloque de atributos -->
-                                    <div id="atributos" class="collapse">
+                                    <div id="atributos" class="bloque-placeholder colapsable collapse in">
                                         <row>
                                             <div class="col-md-12 bloque-completo">
                                                 <div class="celda">
@@ -142,7 +142,7 @@
                                             </div>
                                         </row>
                                         <row>
-                                            <div id="especificaciones" class="col-md-12 bloque-placeholder collapse in">
+                                            <div id="especificaciones" class="col-md-12 bloque-placeholder colapsable collapse in">
                                                 <div class="placeholder rojo" th:attrappend="style=${#authorization.expression('hasRole(''ROLE_PLANEACION'')')}?'cursor:pointer':'cursor:not-allowed'">
                                                     <!-- Fragment args: (div_id, spec_name, icon_css_class, title)-->
                                                     <div th:replace="pieza_fragment_especificacion :: especificacion ('acabado','ACABADO','zmdi zmdi-gradient zmdi-hc-lg', 'Establecer acabado')"></div>
@@ -169,12 +169,12 @@
                                     <!-- Bloque de planeación y producción -->
                                     <row>
                                         <row>
-                                            <div class="col-md-12 titulo-bloque outline-verde" data-toggle="collapse" data-target="#pp">
+                                            <div class="col-md-12 titulo-bloque outline-verde collapse in" data-toggle="collapse" data-target="#pp">
                                                 <!--<i class="icono fa fa-file-text-o"></i>-->
                                                 <h4>P &amp; P</h4>
                                             </div>
                                         </row>
-                                        <div id="pp" class="col-md-12 bloque-placeholder">
+                                        <div id="pp" class="col-md-12 bloque-placeholder colapsable collapse in">
                                             <!-- BEGIN placeholder "formato de planeación" -->
                                             <div class="placeholder verde">
                                                 <i class="icono fa fa-file-text-o"></i>
@@ -192,12 +192,12 @@
                                     <!-- Bloque de programas -->
                                     <row>
                                         <row>
-                                            <div class="col-md-12 titulo-bloque outline-naranja" data-toggle="collapse" data-target="#programas" style="margin-bottom: 5px;">
+                                            <div class="col-md-12 titulo-bloque outline-naranja collapse in" data-toggle="collapse" data-target="#programas">
                                                 <!--<i class="icono fa fa-file-text-o"></i>-->
                                                 <h4>PROGRAMAS</h4>
                                             </div>
                                         </row>
-                                        <div id="programas" class="col-md-12 bloque-placeholder">
+                                        <div id="programas" class="col-md-12 bloque-placeholder colapsable collapse in" style="margin-top: 5px;">
                                             <!-- BEGIN Placeholder formato de calidad -->
                                             <!-- END placeholder -->
                                             <!-- BEGIN Contenedor de documentos de calidad -->
@@ -218,7 +218,7 @@
                                                 <h4>CALIDAD</h4>
                                             </div>
                                         </row>
-                                        <div id="calidad" class="col-md-12 bloque-placeholder collapse in">
+                                        <div id="calidad" class="col-md-12 bloque-placeholder colapsable collapse in">
                                             <!-- BEGIN Placeholder formato de calidad -->
                                             <div class="placeholder morado">
                                                 <i class="icono fa fa-file-text-o" style=""></i>
@@ -244,7 +244,7 @@
                                                 <h4>NOTAS</h4>
                                             </div>
                                         </row>
-                                        <div id="notas" class="col-md-12 collapse">
+                                        <div id="notas" class="col-md-12 bloque-placeholder colapsable collapse in">
                                             <div class="celda">
                                                 <span th:text="*{notas}"></span>
                                             </div>
@@ -438,22 +438,24 @@
             /* Persiste el estado "colapsado" de los bloques (info, specs, pp, calidad, programas) */
 
             var collapse = function() {
-                $('.bloque-placeholder').each(function() {
-                    if (this.id)
-                    if (localStorage[this.id] == true ) {
-                        $(this).collapse('hide');
-                    } else {
-                        $(this).collapse('hide');
+                $('.colapsable').each(function() {
+                    if (this.id) {
+                        if (localStorage[this.id] == 1) {
+                            console.log(this.id+" "+localStorage[this.id]+" true");
+                            $(this).collapse('show');
+                        } else {
+                            console.log(this.id+" "+localStorage[this.id]+" false");
+                            $(this).collapse('hide');
+                        }
                     }
                 });
-
-                $('.bloque-placeholder').collapse().on('hidden.bs.collapse', function() {
+                $('.colapsable').collapse().on('hidden.bs.collapse', function() {
                     if (this.id) {
-                        localStorage[this.id] = true;
+                        localStorage[this.id] = 0;
                     }
                 }).on('shown.bs.collapse', function() {
                     if (this.id) {
-                        localStorage.removeItem(this.id);
+                        localStorage[this.id] = 1;
                     }
                 });
             }
