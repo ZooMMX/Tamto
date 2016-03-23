@@ -25,6 +25,21 @@
             </div>
         </div>
     </div>
+    <!-- BEGIN buscador -->
+    <div class="row search-form-default">
+        <form method="get">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input placeholder="Búsqueda por código y nombre de producto..." class="form-control" type="text" name="q"/>
+                    <span class="input-group-btn">
+                        <button class="btn blue uppercase" type="submit">Buscar <i class="m-icon-swapright m-icon-white"></i></button>
+                        <a class="btn grey-steel uppercase" href="?">Reset</a>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- END buscador -->
     <div  th:each="chunk : ${T(com.google.common.collect.Lists).partition(page.content, 2)}" class="row">
         <div th:each="prod : ${chunk}">
             <div class="col-md-6">
@@ -118,6 +133,7 @@
     <link href="/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
     <link href="/fonts/material-design-iconic-font/css/material-design-iconic-font.css" rel="stylesheet"/>
     <link href="/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/css/search-page-results.css"/>
     <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/> <!-- Pieza modal view -->
     <link rel="stylesheet" type="text/css" href="/css/documento.css"/> <!-- Pieza modal view -->
     <link rel="stylesheet" type="text/css" href="/css/timeline.css"/> <!-- Pieza modal view -->

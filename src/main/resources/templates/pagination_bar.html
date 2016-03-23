@@ -5,23 +5,23 @@
             <ul class='pagination pagination-lg'>
                 <li th:class="${page.firstPage}? 'hide' : ''">
                 <span th:if='${page.firstPage}'>← Primera</span>
-                <a th:if='${not page.firstPage}' th:href='@{${page.url}(page.page=1,page.size=${page.size})}'>← Primera</a>
+                <a th:if='${not page.firstPage}' th:href='@{${page.url}(page.page=1,page.size=${page.size},q=${q})}'>← Primera</a>
                 </li>
                 <li th:class="${page.hasPreviousPage}? '' : 'disabled'">
                 <span th:if='${not page.hasPreviousPage}'>«</span>
-                <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(page.page=${page.number-1},page.size=${page.size})}' title='Página previa'>«</a>
+                <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(page.page=${page.number-1},page.size=${page.size},q=${q})}' title='Página previa'>«</a>
                 </li>
                 <li th:each='item : ${page.items}' th:class="${item.current}? 'active' : ''">
                 <span th:if='${item.current}' th:text='${item.number}'>1</span>
-                <a th:if='${not item.current}' th:href='@{${page.url}(page.page=${item.number},page.size=${page.size})}'><span th:text='${item.number}'>1</span></a>
+                <a th:if='${not item.current}' th:href='@{${page.url}(page.page=${item.number},page.size=${page.size},q=${q})}'><span th:text='${item.number}'>1</span></a>
                 </li>
                 <li th:class="${page.hasNextPage}? '' : 'disabled'">
                 <span th:if='${not page.hasNextPage}'>»</span>
-                <a th:if='${page.hasNextPage}' th:href='@{${page.url}(page.page=${page.number+1},page.size=${page.size})}' title='Página siguiente'>»</a>
+                <a th:if='${page.hasNextPage}' th:href='@{${page.url}(page.page=${page.number+1},page.size=${page.size},q=${q})}' title='Página siguiente'>»</a>
                 </li>
                 <li th:class="${page.lastPage}? 'disabled' : ''">
                 <span th:if='${page.lastPage}'>Última →</span>
-                <a th:if='${not page.lastPage}' th:href='@{${page.url}(page.page=${page.totalPages},page.size=${page.size})}'>Última →</a>
+                <a th:if='${not page.lastPage}' th:href='@{${page.url}(page.page=${page.totalPages},page.size=${page.size},q=${q})}'>Última →</a>
                 </li>
             </ul>
         </div>
