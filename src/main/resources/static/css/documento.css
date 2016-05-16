@@ -99,8 +99,8 @@
     font-size: 18px;
 }
 .titulo-bloque:after {
-    /*content: "\f147";*/ /* Icono del bloque desplegado */
-    content: ""; /* Sin icono */
+    content: "\f147"; /* Icono del bloque desplegado */
+    /*content: "";*/ /* Sin icono */
     font-family: FontAwesome;
     right:10px;
     position:absolute;
@@ -172,8 +172,11 @@
 }
 .bloque-placeholder .placeholder {
     margin: 5px;
-    height: 25px;
+    min-height: 25px;
     position: relative;
+}
+.bloque-placeholder div.editable {
+    padding-left: 20px;
 }
 .bloque-placeholder .placeholder.rojo {
     border: 2px dashed red;

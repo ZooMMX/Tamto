@@ -101,7 +101,7 @@ public class ArchivoControllerTest {
      * Prueba de errores, intenta con un id erróneo
      */
     @Test
-    @WithMockUser(roles="admin")
+    @WithMockUser(roles="PLANEACION")
     public void testUpdateCategoria2() throws Exception {
 
 

@@ -30,7 +30,7 @@
         <form method="get">
             <div class="col-md-12">
                 <div class="input-group">
-                    <input placeholder="Búsqueda por código y nombre de producto..." class="form-control" type="text" name="q"/>
+                    <input placeholder="Búsqueda por código, cliente y nombre de producto..." class="form-control" type="text" name="q"/>
                     <span class="input-group-btn">
                         <button class="btn blue uppercase" type="submit">Buscar <i class="m-icon-swapright m-icon-white"></i></button>
                         <a class="btn grey-steel uppercase" href="?">Reset</a>
@@ -49,10 +49,12 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-cube"></i>
-                        <span class="caption-subject bold uppercase" th:text="${prod.name}"></span>
+                        <!--<span class="caption-subject bold uppercase" th:text="${prod.name}"></span>-->
                         <span class="caption-helper" th:text="${prod.code}">...</span>
                     </div>
                     <div class="actions">
+                        <div class="btn btn-circle yellow-casablanca">
+                            <i class="fa fa-user"></i>&nbsp;<th:block th:text="${#strings.abbreviate(prod.client,16)}"></th:block></div>
                         <a th:href="'/product/'+${prod.id}" sec:authorize="hasRole('ROLE_PLANEACION')" class="btn btn-circle btn-default">
                             <i class="fa fa-pencil"></i> Editar </a>
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""> </a>
@@ -60,12 +62,12 @@
                 </div>
                 <div class="portlet-body">
                     <div class="row">
-                        <div class="col-md-4 mt-overlay-6">
+                        <div class="col-md-4 col-sm-2 mt-overlay-6">
                             <a th:id="'image'+${prod.code}" href="#" style="cursor: -moz-zoom-in; cursor: -webkit-zoom-in; cursor: zoom-in;">
                                 <p><img th:src="'/product/'+${prod.id}+'/image'" class="img-responsive thumbnail"/></p>
                             </a>
                         </div>
-                        <div th:id="'tree'+${prod.code}" class="col-md-8 jstree">
+                        <div th:id="'tree'+${prod.code}" class="col-md-8 col-sm-10 jstree">
                             <ul>
                                 <li class="jstree-open">
                                     <a th:text="${prod.name}"/>
@@ -137,6 +139,7 @@
     <link rel="stylesheet" type="text/css" href="/css/fluid-iframe.css"/> <!-- Pieza modal view -->
     <link rel="stylesheet" type="text/css" href="/css/documento.css"/> <!-- Pieza modal view -->
     <link rel="stylesheet" type="text/css" href="/css/timeline.css"/> <!-- Pieza modal view -->
+    <link rel="stylesheet" type="text/css" href="/css/products.css"/> <!-- Pieza modal view -->
     <!-- END page level CSS -->
     <!-- START fragment level plugins -->
     <script type="text/javascript" src="/plugins/jstree/dist/jstree.js"></script>

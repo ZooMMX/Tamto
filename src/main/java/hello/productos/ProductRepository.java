@@ -16,6 +16,6 @@ import java.util.List;
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
     public Product findByCode(String code);
 
-    @Query("SELECT p FROM Product p WHERE p.code LIKE %:searchTerm% OR p.name LIKE %:searchTerm%")
+    @Query("SELECT p FROM Product p WHERE p.code LIKE %:searchTerm% OR p.name LIKE %:searchTerm% OR p.client LIKE %:searchTerm%")
     public Page<Product> search(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

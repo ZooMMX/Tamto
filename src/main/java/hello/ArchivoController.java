@@ -26,6 +26,13 @@ public class ArchivoController {
     @Autowired
     ArchivoRepository archivoRepository;
 
+    /**
+     * Modifica la categoría de un archivo
+     * @param id
+     * @param categoria
+     * @param model
+     * @return
+     */
     @PreAuthorize("hasAnyRole('ROLE_PLANEACION')")
     @RequestMapping("/archivoEdicion/{id}/categoria")
     public @ResponseBody String updateCategoria(
@@ -33,10 +40,9 @@ public class ArchivoController {
             @RequestParam Archivo.CategoriaArchivo categoria,
             Model model
     ) {
-        Archivo a = archivoRepository.findOne(id);
-        if(a != null) {
-            a.setCategoria(categoria);
-            archivoRepository.save(a);
+        Boolean exists = archivoRepository.exists(id);
+        if(exists) {
+            archivoRepository.updateCategory(id, categoria);
             return "ok";
         } else
             return "Archivo no encontrado";

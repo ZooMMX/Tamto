@@ -6,6 +6,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -172,6 +173,16 @@ public class Archivo {
 
     public void setBytes(Blob bytes) {
         this.bytes = bytes;
+    }
+
+    public String getFileSizeFormatted() {
+        long size = Long.parseLong(getFileSize());
+
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+
     }
 
     public String getFileNamePdf() { return fileNamePdf; }

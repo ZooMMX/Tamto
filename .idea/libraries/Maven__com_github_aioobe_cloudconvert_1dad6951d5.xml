@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.aioobe:cloudconvert:1dad6951d5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/aioobe/cloudconvert/1dad6951d5/cloudconvert-1dad6951d5.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/aioobe/cloudconvert/1dad6951d5/cloudconvert-1dad6951d5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/aioobe/cloudconvert/1dad6951d5/cloudconvert-1dad6951d5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

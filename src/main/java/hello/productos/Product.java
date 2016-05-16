@@ -26,6 +26,9 @@ public class Product {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "client")
+    private String client;
+
     @Column(name = "code", length = 32)
     private String code;
 
@@ -92,4 +95,8 @@ public class Product {
     public void setPiezas(List<Pieza> piezas) {
         this.piezas = piezas;
     }
+
+    public String getClient() { return client; }
+
+    public void setClient(String client) { this.client = client; }
 }

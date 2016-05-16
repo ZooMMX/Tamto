@@ -309,7 +309,7 @@ public class ProductControllerTest {
      * Prueba simple de view
      */
     @Test
-    @WithMockUser(roles="ADMIN")
+    @WithMockUser(roles="PLANEACION")
     public void testView1() throws Exception {
 
         addMockProduct();
