@@ -32,6 +32,7 @@ public enum TipoArchivo {
             case "TIFF":
                 return TipoArchivo.DIBUJO;
             case "TXT":
+            case "DAT":
             case "NC":
                 return TipoArchivo.PROGRAMA;
             default:

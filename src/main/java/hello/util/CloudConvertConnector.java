@@ -72,8 +72,14 @@ public class CloudConvertConnector {
     }
 
     public byte[] toPDF(InputStream inputStream, String originalFilename) throws URISyntaxException, IOException, ParseException, InterruptedException {
-        String tipoOrigen  = FilenameUtils.getExtension(originalFilename);
+        String filename    = originalFilename;
+        String tipoOrigen  = FilenameUtils.getExtension(filename);
         String tipoDestino = "pdf";
+
+        //Filter text like filetypes.
+        if(tipoOrigen.equalsIgnoreCase("dat") || tipoOrigen.equalsIgnoreCase("nc")) {
+            filename = filename.replace( FilenameUtils.getExtension(filename), "txt");
+            tipoOrigen = "txt"; }
 
         // Create service object
         CloudConvertService service = new CloudConvertService("9fTb6FvyfjORsM1fsh-0SPbKdXu-cpHopiWqRpFFkIzx9iFb2_Nzr85sCBPCU7PjgZXHFv_bRM1J3gZFbZawfw");
@@ -82,7 +88,7 @@ public class CloudConvertConnector {
         ConvertProcess process = service.startProcess(tipoOrigen, tipoDestino);
 
         // Perform conversion
-        process.startConversion( inputStream, originalFilename );
+        process.startConversion( inputStream, filename );
 
         // Wait for result
         ProcessStatus status;
