@@ -205,6 +205,9 @@ public class ListaMaestraController {
         documentoQuery.where(condiciones);
         /* **** Terminan filtros *** */
 
+        /* ** Ordenación ** */
+        documentoQuery.orderBy(qb.asc(p.get(DocumentoInterno_.nivel)));
+
         /* ** Paginación y ejecución de consulta ** */
         TypedQuery<DocumentoInterno> docTypedQuery = em.createQuery( documentoQuery );
         docTypedQuery.setFirstResult(start);

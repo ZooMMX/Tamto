@@ -1,0 +1,38 @@
+<th:block th:fragment="versiones_fragment()">
+    <h4>Versiones anteriores</h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <table id="versiones" class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            Versión
+                        </th>
+                        <th>
+                            Nombre del archivo
+                        </th>
+                        <th>
+                            Fecha
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="version,iterationStatus  : ${versiones}">
+                        <td th:text="${iterationStatus.size-iterationStatus.index}">1</td>
+                        <td th:text="${version[2]}">Nombre.xls</td>
+                        <td th:text="${#dates.format(version[3], 'dd MMM yyyy hh:mm aa')}">20/06/2016</td>
+                        <td>
+                            <a th:href="${'/pieza/archivo/'+version[1]+'/'+version[0]+'/'}" th:if="${@permissionEvaluator.permisosArchivos(roles, version[0], 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--/span-->
+    </div>
+</th:block>

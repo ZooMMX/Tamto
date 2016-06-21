@@ -23,4 +23,7 @@ public interface ArchivoRepository extends PagingAndSortingRepository<Archivo, L
     @Transactional
     @Query("update Archivo archivo set archivo.categoria =:newCategory where archivo.id =:archivoId")
     void updateCategory(@Param("archivoId") Long archivoId, @Param("newCategory") Archivo.CategoriaArchivo newCategory);
+
+    @Query(value = "select id, rev, file_name, updated FROM archivo_aud WHERE id = ? ORDER BY updated DESC LIMIT 999999 OFFSET 1;", nativeQuery = true)
+    public List<Object> getVersiones(Long archivoId);
 }

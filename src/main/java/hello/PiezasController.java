@@ -163,6 +163,9 @@ public class PiezasController {
                 piezaQuery.where(condiciones);
                 /* **** Terminan filtros *** */
 
+                /* ** Ordenación ** */
+                piezaQuery.orderBy(qb.desc(p.get(Pieza_.id)));
+
                 /* ** Paginación y ejecución de consulta ** */
                 TypedQuery<Pieza> piezasTypedQuery = em.createQuery( piezaQuery );
                 piezasTypedQuery.setFirstResult(start);

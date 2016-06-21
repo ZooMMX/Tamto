@@ -26,6 +26,9 @@
                     <li>
                         <a th:href="${'/piezaDownload/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'DESCARGAR')}"><i class="fa fa-download"></i>&nbsp; Descargar</a>
                     </li>
+                    <li>
+                        <a th:href="${'/archivo/detalles/'+archivo.getId()}" th:if="${@permissionEvaluator.permisosArchivos(roles, archivo, 'VER')}" data-target="#archivo_detalles" data-toggle="modal" ><i class="glyphicon glyphicon-repeat"></i>&nbsp;Versiones</a>
+                    </li>
                     <li class="divider"> </li>
                     <li class="disabled">
                         <a href="javscript:;"><i class="fa fa-tags"></i><span th:utext="${archivo.getTamtoTypeHtml()}">EXCEL</span></a>

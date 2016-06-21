@@ -19,4 +19,5 @@ public interface PiezaRepository extends PagingAndSortingRepository<Pieza, Long>
 
     @Query("SELECT count(p) FROM Pieza p WHERE p.enabled = 1")
     public Long countEnabled();
+
 }
