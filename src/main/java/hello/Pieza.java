@@ -1,7 +1,10 @@
 package hello;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.productos.Product;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -36,7 +39,8 @@ public class Pieza {
     @Enumerated(EnumType.STRING)
     private TipoPieza tipoPieza;        //Tipo de pieza
     @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY, mappedBy = "pieza")
-    List<Archivo> archivos;
+    @JsonIgnore
+    private List<Archivo> archivos;
     @Lob
     @Column
     private String notas;
@@ -51,7 +55,7 @@ public class Pieza {
 
     //Las piezas se agrupan en productos, una pieza puede pertenecer a ninguno, uno o varios productos.
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    List<Product> products;
+    private List<Product> products;
 
     //Clase encargada de renderizar trozos de html relacionados con esta entidad
     @Transient
