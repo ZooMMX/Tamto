@@ -24,9 +24,11 @@
                     <tr th:each="version,iterationStatus  : ${versiones}">
                         <td th:text="${iterationStatus.size-iterationStatus.index}">1</td>
                         <td th:text="${version[2]}">Nombre.xls</td>
-                        <td th:text="${#dates.format(version[3], 'dd MMM yyyy hh:mm aa')}">20/06/2016</td>
+                        <td th:text="${version[3] != null} ? ${#dates.format(version[3], 'dd MMM yyyy hh:mm aa')} : '-'">20/06/2016</td>
                         <td>
+                            <!--
                             <a th:href="${'/pieza/archivo/'+version[1]+'/'+version[0]+'/'}" th:if="${@permissionEvaluator.permisosArchivos(roles, version[0], 'VER')}" class="btn btn-xs green"><i class="icon-cloud-download"></i> Descargar</a>
+                            -->
                         </td>
                     </tr>
                     </tbody>

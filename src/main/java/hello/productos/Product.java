@@ -33,6 +33,7 @@ public class Product {
     private String code;
 
     @Column(name = "notes")
+    @Lob
     private String notes;
 
     /**
