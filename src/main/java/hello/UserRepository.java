@@ -20,4 +20,5 @@ public interface UserRepository extends CrudRepository<User, String> {
 
     @Query("SELECT u FROM User u WHERE u.enabled = 0 ORDER BY u.fullname ASC")
     public List<User> findInactiveUsers();
+
 }

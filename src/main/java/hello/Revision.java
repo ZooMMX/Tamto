@@ -1,6 +1,9 @@
 package hello;
 
 import javax.persistence.Entity;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.DefaultTrackingModifiedEntitiesRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
@@ -13,6 +16,8 @@ import org.hibernate.envers.RevisionEntity;
  */
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @RevisionEntity(CustomRevisionListener.class)
 public class Revision extends DefaultTrackingModifiedEntitiesRevisionEntity {
 

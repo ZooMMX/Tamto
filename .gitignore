@@ -2,4 +2,6 @@
 target/**
 cache/**
 build/**
+.idea/**
 *.iws
+log/**

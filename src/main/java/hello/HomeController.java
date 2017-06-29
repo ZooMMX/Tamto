@@ -55,7 +55,7 @@ public class HomeController implements ErrorController {
     EntityManager em;
 
     @RequestMapping("/")
-    public String dashboard(Model model) {
+    public String dashboard(Model model) throws ClassNotFoundException {
 
         List<DocumentoInterno> calidadProximasRevisiones = listaMaestraRepository.getDocumentosProximaRevision();
         List<DocumentoInterno> calidadRevisionesVencidas = listaMaestraRepository.getDocumentosRevisionVencida();
@@ -209,24 +209,27 @@ public class HomeController implements ErrorController {
         return usuarios;
     }
 
-    private List<Rev> createRevisions() {
+    private List<Rev> createRevisions() throws ClassNotFoundException {
         AuditReader reader = AuditReaderFactory.get(em);
         Class[] clases = new Class[] {Pieza.class, User.class, Archivo.class, DocumentoInterno.class};
         TreeMap<Long, Rev> map = new TreeMap<>(Comparator.<Long>reverseOrder());
         HashMap<String, User> usuarios = getUsuarios();
 
-        for (Class clase : clases) {
-            AuditQuery query = reader.createQuery()
-            .forRevisionsOfEntity(clase, false, true)
-            .addOrder(AuditEntity.revisionProperty("timestamp").desc())
-            .setMaxResults(5);
+        Query qUser    = em.createNativeQuery("SELECT rv.entityname, r.id, r.username, ua.revtype, r.timestamp FROM revision r JOIN revchanges rv ON rv.rev = r.id JOIN user_aud ua ON ua.rev = rv.rev WHERE rv.entityname = \"hello.User\" ORDER BY r.timestamp DESC LIMIT 5;");
+        Query qPieza   = em.createNativeQuery("SELECT rv.entityname, r.id, r.username, pa.revtype, r.timestamp FROM revision r JOIN revchanges rv ON rv.rev = r.id JOIN pieza_aud pa ON pa.rev = rv.rev WHERE rv.entityname = \"hello.Pieza\" ORDER BY r.timestamp DESC LIMIT 5;");
+        Query qArchivo = em.createNativeQuery("SELECT rv.entityname, r.id, r.username, aa.revtype, r.timestamp FROM revision r JOIN revchanges rv ON rv.rev = r.id JOIN archivo_aud aa ON aa.rev = rv.rev WHERE rv.entityname = \"hello.Archivo\" ORDER BY r.timestamp DESC LIMIT 5;");
+        Query qDoc     = em.createNativeQuery("SELECT rv.entityname, r.id, r.username, da.revtype, r.timestamp FROM revision r JOIN revchanges rv ON rv.rev = r.id JOIN documento_interno_aud da ON da.rev = rv.rev WHERE rv.entityname = \"hello.calidad.DocumentoInterno\" ORDER BY r.timestamp DESC LIMIT 5;");
+        List<List<Object[]>> cambios = Arrays.asList( qUser.getResultList(), qPieza.getResultList(), qArchivo.getResultList(), qDoc.getResultList() );
 
-            List<Object[]> results = query.getResultList();
+        for (List<Object[]> results : cambios) {
 
             for(Object[] o : results) {
-                Revision track = (Revision) o[1];
-                RevisionType changeType = (RevisionType) o[2];
-                Class entityClass = o[0].getClass();
+                Revision track = new Revision(); // Revision) o[1];
+                track.setUsername((String) o[2]);
+                track.setId((Integer) o[1]);
+                track.setTimestamp(((BigInteger)o[4]).longValue());
+                RevisionType changeType = RevisionType.fromRepresentation(o[3]);
+                Class entityClass = Class.forName(String.valueOf(o[0]));
                 Rev rev = new Rev(entityClass, track, changeType, usuarios);
                 map.put(track.getTimestamp(), rev);
             }
