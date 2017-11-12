@@ -1,6 +1,7 @@
 package hello;
 
 import hello.calidad.DocumentoInterno;
+import hello.calidad.DocumentoInternoSinBinarios;
 import hello.calidad.ListaMaestraRepository;
 import hello.util.CloudConvertConnector;
 import org.hibernate.envers.*;
@@ -57,8 +58,14 @@ public class HomeController implements ErrorController {
     @RequestMapping("/")
     public String dashboard(Model model) throws ClassNotFoundException {
 
-        List<DocumentoInterno> calidadProximasRevisiones = listaMaestraRepository.getDocumentosProximaRevision();
-        List<DocumentoInterno> calidadRevisionesVencidas = listaMaestraRepository.getDocumentosRevisionVencida();
+        List<Object[]> calidadProximasRevisiones = listaMaestraRepository.getDocumentosProximaRevision();
+        List<Object[]> calidadRevisionesVencidas = listaMaestraRepository.getDocumentosRevisionVencida();
+
+        List<DocumentoInterno> proximasRevisionesDI = new ArrayList<>();
+        objectArrayToDocumentoInterno(calidadProximasRevisiones, proximasRevisionesDI);
+
+        List<DocumentoInterno> revisionesVencidasDI = new ArrayList<>();
+        objectArrayToDocumentoInterno(calidadRevisionesVencidas, revisionesVencidasDI);
 
         List usuarios = (List) userRepository.findActiveUsers();
         Long piezaSize = piezaRepository.count();
@@ -76,10 +83,20 @@ public class HomeController implements ErrorController {
         model.addAttribute("noArchivos", archivoSize);
         model.addAttribute("graphData", graphData);
         model.addAttribute("revisiones", revisiones);
-        model.addAttribute("calidadProximasRevisiones", calidadProximasRevisiones);
-        model.addAttribute("calidadRevisionesVencidas", calidadRevisionesVencidas);
+        model.addAttribute("calidadProximasRevisiones", proximasRevisionesDI);
+        model.addAttribute("calidadRevisionesVencidas", revisionesVencidasDI);
 
         return "home";
+    }
+
+    private void objectArrayToDocumentoInterno(List<Object[]> from, List<DocumentoInterno> to) {
+        for(Object[] o : from) {
+            DocumentoInterno di = new DocumentoInterno();
+            di.setId(((BigInteger)o[0]).longValue());
+            di.setTitulo((String) o[1]);
+            di.setProximaRevision((Date) o[2]);
+            to.add(di);
+        }
     }
 
     @RequestMapping("/info")
